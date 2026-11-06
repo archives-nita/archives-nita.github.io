@@ -554,10 +554,10 @@ function inv(){
 
 function pretCard(p){
   const op=p.statut==="en_cours";
-  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${esc(p.docLabel)}</b><span class="b ${op?(late(p)?"er":"wa"):"ok"}">${op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
+  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${tab==="pret"?`<input type="checkbox" class="psel" value="${p.id}" ${PS.has(p.id)?"checked":""} style="width:auto;min-height:0;margin-right:6px;vertical-align:middle">`:""}${esc(p.docLabel)}</b><span class="b ${op?(late(p)?"er":"wa"):"ok"}">${op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
   <div class="mu">${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>
   <div class="mu">Sortie ${fmt(p.sortie)} · retour prévu ${fmt(p.prevu)}${p.retour?" · rendu le "+fmt(p.retour):""}${p.valide?" · validé par "+esc(p.valide):""}${p.valideUid?` · validé par <span data-uid="${p.valideUid}"></span>`:""}${p.par?` · saisi par <span data-uid="${p.par}"></span>`:""}</div>
-  ${op?`<div class="acts"><button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button></div>`:""}</div>`;
+  ${op?`<div class="acts"><button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button></div>`:`<div class="acts"><button class="sm" data-a="undo" data-v="${p.id}">Annuler le retour</button></div>`}</div>`;
 }
 function grpCard(k,L){
   const o=L.filter(p=>p.statut==="en_cours"),p0=L[0],lt=o.some(late),c={};
@@ -566,8 +566,8 @@ function grpCard(k,L){
   return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(p0.ref||"Sortie")} · ${L.length} documents</b>${bd}</div>
   <div class="mu">${esc(p0.demandeur)} (${esc(p0.service)}) · ${esc(p0.mode)} · ${Object.entries(c).map(([t,n])=>n+" "+esc(t)).join(", ")}</div>
   <div class="mu">Sortie ${fmt(p0.sortie)} · retour prévu ${p0.prevu?fmt(p0.prevu):"non précisé"}${p0.valide?" · validé par "+esc(p0.valide):""}${p0.par?` · saisi par <span data-uid="${p0.par}"></span>`:""}${o.length&&o.length<L.length?` · ${L.length-o.length} déjà rendu(s)`:""}</div>
-  <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${p.id}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)}</span>`}</div>`).join("")}</details>
-  <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="entree" data-v="${esc(k)}">Entrée / retour (${o.length})</button>`:""}${[...new Set(L.map(p=>p.refEntree).filter(Boolean))].map(r=>`<button class="sm" data-a="bone" data-v="${esc(r)}">Bon d’entrée ${esc(r)}</button>`).join("")}</div></div>`;
+  <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${p.id}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)} <button class="sm" data-a="undo" data-v="${p.id}">Annuler</button></span>`}</div>`).join("")}</details>
+  <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="entree" data-v="${esc(k)}">Entrée / retour (${o.length})</button>`:""}${[...new Set(L.map(p=>p.refEntree).filter(Boolean))].map(r=>`<button class="sm" data-a="bone" data-v="${esc(r)}">Bon d’entrée ${esc(r)}</button><button class="sm" data-a="undoent" data-v="${esc(r)}">Annuler l’entrée ${esc(r)}</button>`).join("")}</div></div>`;
 }
 function cards(arr,full){
   const seen=new Set(),out=[];
@@ -585,7 +585,7 @@ function pbody(){
 function pret(){
   return `<div class="row"><button class="pri rq" data-a="dem">Demander une consultation</button><button class="w" data-a="lend">Sortie directe</button></div>${demSec()}
   <div class="row"><button class="${pv==="cours"?"pri":""}" data-a="pvw" data-v="cours">Documents en prêt (${prets.filter(p=>p.statut==="en_cours").length})</button><button class="${pv===""?"pri":""}" data-a="pvw" data-v="">Tout l’historique</button></div>
-  <input id="pq" placeholder="Rechercher (demandeur, service, document, mode…)" value="${esc(pq)}" style="margin:8px 0"><div id="plst">${pbody()}</div>`;
+  <input id="pq" placeholder="Rechercher (demandeur, service, document, mode…)" value="${esc(pq)}" style="margin:8px 0"><div id="psb">${psBarHtml()}</div><div id="plst">${pbody()}</div>`;
 }
 
 let rqT=0,qT=0;
@@ -767,10 +767,10 @@ async function pdfMail(){
   pdfSave();toast("PDF téléchargé : joignez-le au message qui s’ouvre.");
   setTimeout(()=>{location.href="mailto:"+encodeURIComponent(to).replace(/%40/g,"@")+"?subject="+encodeURIComponent(BON.subject)+"&body="+encodeURIComponent(BON.body+"\n\n(Le PDF est joint à ce message.)")},600);
 }
-const bonItems=(L,etat)=>L.map(p=>({titre:p.titre||p.docLabel,type:p.type||"",annee:p.annee||"",cote:p.cote||"",loc:(p.direction||"")+(p.dservice?" > "+p.dservice:""),etat:etat||(p.statut==="rendu"?"Rendu "+fmtR(p.retour):"Sorti")}));
+const bonItems=(L,etat)=>L.map(p=>{const d=docs.find(x=>x.id===p.docId)||{},dir=p.direction||d.direction||"",sv=p.dservice||d.service||"";return {titre:p.titre||d.intitule||p.docLabel,type:p.type||d.type||"",annee:p.annee||d.annee||"",cote:p.cote||d.cote||"",loc:dir+(sv?" > "+sv:""),etat:etat||(p.statut==="rendu"?"Rendu "+fmtR(p.retour):"Sorti")}});
 const recapT=its=>{const c={};its.forEach(i=>{const t=i.type||"Autre";c[t]=(c[t]||0)+1});return Object.entries(c).sort((a,b)=>{const i=TYPES.indexOf(a[0]),j=TYPES.indexOf(b[0]);return (i<0?99:i)-(j<0?99:j)}).map(([k,n])=>n+" "+k).join(", ")};
-function bonSortie(k){
-  const L=grpOf(k);if(!L.length)return;const p0=L[0],ref=p0.ref||("BS-"+p0.id.slice(0,6)),items=bonItems(L);
+function bonSortie(k,list){
+  const L=list||grpOf(k);if(!L.length)return;const p0=L[0],ref=p0.ref||("BS-"+p0.id.slice(0,6)),items=bonItems(L);
   const blob=pdfBuild({titre:"BON DE SORTIE DE DOCUMENTS",ref,logo:pdfLogo(),types:TYPES,items,recapType:recapT(items),
     meta:[["Emprunteur",p0.demandeur],["Service",p0.service],["Modalité",p0.mode],["Validée par",p0.valide||"–"],["Date de sortie",fmtR(p0.sortie)],["Retour prévu",p0.prevu?fmtR(p0.prevu):"Non précisé"],["Établi par",P.name||"–"]],
     note:"L’emprunteur s’engage à restituer l’intégralité des documents ci-dessus au Service Archivage en bon état"+(p0.prevu?".":", à une date à convenir avec le Service Archivage."),
@@ -814,6 +814,45 @@ async function saveEntree(k){
   }catch(e){if(btn)btn.disabled=false;fail(e)}
 }
 let ENT=null;
+const PS=new Set();
+function psBar(){const el=$("#psb");if(el)el.innerHTML=psBarHtml()}
+function psBarHtml(){
+  const n=PS.size,open=prets.filter(p=>p.statut==="en_cours"&&!p.grp).length;
+  return n?`<div class="card" style="border-color:var(--ac)"><b>${n}</b> sortie(s) sélectionnée(s)<div class="acts"><button class="sm pri" data-a="psrep">Rapport groupé (PDF)</button><button class="sm w" data-a="psgrp">Regrouper en une seule sortie</button><button class="sm" data-a="psnone">Tout désélectionner</button></div></div>`
+  :(open>1?`<div class="acts" style="margin:6px 0"><button class="sm" data-a="psall">Sélectionner les ${open} sorties individuelles en cours</button><span class="mu" style="font-size:12px;align-self:center">ou cochez les cases pour faire un rapport groupé</span></div>`:"");
+}
+function psSel(){return [...PS].map(id=>prets.find(x=>x.id===id)).filter(Boolean)}
+function psRapport(){
+  const L=psSel();if(!L.length)return;const u=(f)=>[...new Set(L.map(f).filter(Boolean))],items=bonItems(L),sd=L.map(p=>p.sortie).filter(Boolean).sort(),pv=u(p=>p.prevu?fmtR(p.prevu):""),ou=L.filter(p=>p.statut==="en_cours").length;
+  const ref="RG-"+today().replace(/-/g,"")+"-"+String(L.length).padStart(2,"0");
+  const blob=pdfBuild({titre:"RAPPORT GROUPÉ DE SORTIES",ref,logo:pdfLogo(),types:TYPES,items,recapType:recapT(items),
+    meta:[["Emprunteur(s)",u(p=>p.demandeur).join(", ")],["Service(s)",u(p=>p.service).join(", ")],["Modalité",u(p=>p.mode).join(", ")],["Validée par",u(p=>p.valide).join(", ")||"–"],["Date(s) de sortie",sd.length?(sd[0]===sd[sd.length-1]?fmtR(sd[0]):fmtR(sd[0])+" au "+fmtR(sd[sd.length-1])):"–"],["Retour prévu",pv.length?pv.join(", "):"Non précisé"],["Situation",ou+" en cours, "+(L.length-ou)+" rendu(s)"],["Établi par",P.name||"–"]],
+    sign:["L’emprunteur","Validation","Archiviste","Chef du Service Archivage"]});
+  pdfDialog("Rapport groupé ("+L.length+" documents)","rapport-groupe-"+today()+"-"+L.length+"-documents.pdf",blob,"Rapport de sorties groupé – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver le rapport groupé de ${L.length} document(s) (${recapT(items)}) sortis par ${u(p=>p.demandeur).join(", ")}.\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
+async function psRegrouper(){
+  const L=psSel().filter(p=>!p.grp);if(L.length<2)return toast("Sélectionnez au moins 2 sorties individuelles.");
+  const dem=[...new Set(L.map(p=>p.demandeur))];
+  if(!await ask(`Regrouper ces ${L.length} documents en une seule sortie ?${dem.length>1?" Les demandeurs diffèrent : « "+L[0].demandeur+" » sera utilisé pour l’en-tête.":""}`,"Regrouper"))return;
+  const ref=lsRef(),ups=L.map(p=>{const d=docs.find(x=>x.id===p.docId)||{};return {p,u:{ref,grp:ref,titre:p.titre||d.intitule||"",type:p.type||d.type||"",cote:p.cote||d.cote||"",annee:p.annee||d.annee||"",direction:p.direction||d.direction||"",dservice:p.dservice||d.service||"",demandeur:L[0].demandeur,service:L[0].service,mode:L[0].mode,valide:L[0].valide||"",sortie:L.map(x=>x.sortie).filter(Boolean).sort()[0]||L[0].sortie,prevu:L.every(x=>x.prevu)?L.map(x=>x.prevu).sort().pop():""}}});
+  try{
+    for(let i=0;i<ups.length;i+=20)await Promise.all(ups.slice(i,i+20).map(x=>db.doc("prets/"+x.p.id).update(x.u)));
+    jr("Regroupement de sorties",ref+" · "+L.length+" document(s)");PS.clear();
+    bonSortie(ref,ups.map(x=>({...x.p,...x.u})));
+  }catch(e){fail(e)}
+}
+async function undoBack(id){
+  const p=prets.find(x=>x.id===id);if(!p||p.statut!=="rendu")return;
+  const d=docs.find(x=>x.id===p.docId);if(d&&d.statut==="en_pret")return toast("Impossible : ce document est de nouveau en sortie (autre prêt en cours).");
+  if(!await ask("Annuler le retour de « "+(p.titre||p.docLabel)+" » ? Le document repasse « en sortie ».","Annuler le retour"))return;
+  try{await db.doc("prets/"+id).update({retour:"",statut:"en_cours",retourPar:"",refEntree:"",entreeRendu:"",entreeRecu:"",entreeObs:""});await db.doc("docs/"+p.docId).update({statut:"en_pret"});jr("Annulation de retour",(p.ref||"")+" · "+(p.titre||p.docLabel))}catch(e){fail(e)}
+}
+async function undoEntree(ref){
+  const L=prets.filter(p=>p.refEntree===ref&&p.statut==="rendu");if(!L.length)return;
+  const bad=L.filter(p=>{const d=docs.find(x=>x.id===p.docId);return d&&d.statut==="en_pret"});if(bad.length)return toast(bad.length+" document(s) sont de nouveau en sortie : annulation impossible.");
+  if(!await ask(`Annuler l’entrée ${ref} ? Les ${L.length} document(s) repassent « en sortie ».`,"Annuler l’entrée"))return;
+  try{for(let i=0;i<L.length;i+=20)await Promise.all(L.slice(i,i+20).map(async p=>{await db.doc("prets/"+p.id).update({retour:"",statut:"en_cours",retourPar:"",refEntree:"",entreeRendu:"",entreeRecu:"",entreeObs:""});await db.doc("docs/"+p.docId).update({statut:"en_pret"})}));jr("Annulation d’entrée",ref+" · "+L.length+" document(s)")}catch(e){fail(e)}
+}
 async function back(id){
   const p=prets.find(x=>x.id===id);if(!p)return;
   try{await db.doc("prets/"+id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"})}catch(e){fail(e)}
@@ -1179,6 +1218,7 @@ async function ficheDoc(id){
   const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Fiche ${esc(d.cote||d.intitule)}</title><style>body{font:14px Arial,sans-serif;color:#111;max-width:760px;margin:24px auto;padding:0 16px}img{height:48px}h1{font-size:20px;margin:10px 0}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #999;padding:6px 8px;text-align:left;vertical-align:top}th{width:32%;background:#eef}.s{margin-top:44px;display:flex;gap:40px}.s div{flex:1;border-top:1px solid #333;padding-top:4px;font-size:12px}@media print{button{display:none}}</style><body><button onclick="print()">Imprimer</button> ${logo?`<img src="${logo}">`:""}<h1>Fiche d’entrée d’archives</h1><table>${row("Cote",esc(d.cote))}${row("Intitulé",esc(d.intitule))}${row("Direction › service",esc(d.direction)+" › "+esc(d.service))}${row("Année",d.annee+(d.mois?" · "+esc(d.mois):""))}${row("Support",esc(d.type)+" · "+d.nb+" unité(s)")}${row("Emplacement",esc(d.empl))}${row("Conservation",c?esc(c[1])+" · "+SORT[c[3]]+(fin(d)?" · jusqu’à fin "+fin(d):""):"Non classée")}${row("Statut",d.statut==="detruit"?"Détruit"+(d.pv?" · "+esc(d.pv):""):d.statut==="en_pret"?"En sortie":"Disponible")}${d.ctl?row("Dernier contrôle",d.ctl==="absent"?"Introuvable":"Dégradé"):""}${row("Mots-clés",esc(d.mots))}${row("Observations",esc(d.obs))}</table><h3>Historique des sorties (${hist.length})</h3>${hist.length?`<table><tr><th>Sortie</th><th>Retour</th><th>Demandeur</th><th>Service</th><th>Mode</th></tr>${hist.map(p=>`<tr><td>${fmt(p.sortie)}</td><td>${p.retour?fmt(p.retour):"en cours"}</td><td>${esc(p.demandeur)}</td><td>${esc(p.service)}</td><td>${esc(p.mode)}</td></tr>`).join("")}</table>`:"<p>Aucune sortie enregistrée.</p>"}<p>Édité le ${fmt(today())}.</p><div class="s"><div>Archiviste</div><div>Chef du Service Archivage</div></div></body></html>`;
   try{await dl.save({filename:"fiche-"+String(d.cote||d.id).replace(/[^\w-]+/g,"_")+".html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Enregistrement impossible : "+(e&&e.message||e))}
 }
+document.addEventListener('change',e=>{const c=e.target;if(c&&c.classList&&c.classList.contains('psel')){c.checked?PS.add(c.value):PS.delete(c.value);psBar()}});
 let SMP=null;try{PF.use("sample").then(s=>{SMP=s;const b=$("#nia");if(b&&s)b.style.display=""}).catch(()=>{})}catch(e){}
 let ASSETS=null;try{PF.use("assets").then(a=>{ASSETS=a;const e=$("#cfwrap");if(e)e.style.display=a?"":"none"}).catch(()=>{})}catch(e){}
 let iaTurns=[],iaCur="",iaBusy=false,iaCtl=null,iaDraft="",iaSug=[],iaSugMsg="";
@@ -2031,7 +2071,7 @@ document.addEventListener("click",async e=>{
   else if(a==="lend")openLend(v);
   else if(a==="close")$("#dlg").close();
   else if(a==="savedoc")saveDoc(v);
-  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
+  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="undo")undoBack(v);else if(a==="undoent")undoEntree(v);else if(a==="psrep")psRapport();else if(a==="psgrp")psRegrouper();else if(a==="psnone"){PS.clear();document.querySelectorAll(".psel").forEach(c=>c.checked=false);psBar()}else if(a==="psall"){prets.filter(p=>p.statut==="en_cours"&&!p.grp).forEach(p=>PS.add(p.id));document.querySelectorAll(".psel").forEach(c=>c.checked=PS.has(c.value));psBar()}else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
   else if(a==="back")back(v);
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
