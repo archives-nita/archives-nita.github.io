@@ -1916,6 +1916,17 @@ async function saveVers(){
   let num;try{num=await freeNum("versements","VERS",versements)}catch(e){return fail(e)}
   try{await db.doc("versements/"+hid(num)).set({num,statut:"a_controler",direction:g("direction"),service:g("service"),type:g("type"),annee:+g("annee"),periode:g("periode")||g("annee"),date:g("date"),empl:g("empl"),cat:g("cat"),lignes,obs:g("obs"),par:P.id||"x",creeLe:today()});jr("Versement enregistré",num+" · "+g("direction")+" › "+g("service"));$("#dlg").close()}catch(e){fail(e)}
 }
+function versPdf(id){
+  const v=versements.find(x=>x.id===id);if(!v)return;const an=v.lignes.filter(l=>l[2]),n=v.lignes.reduce((t,l)=>t+(+l[1]||1),0);
+  const st=v.statut==="a_controler"?"À contrôler":"Accepté"+(v.accepteLe?" le "+fmtR(v.accepteLe):"");
+  const sec=[];
+  if(an.length)sec.push({titre:"Anomalies signalées ("+an.length+")",cols:[{w:240},{w:275.28}],head:["Dossier","Anomalie"],rows:an.map(l=>[l[0],l[2]])});
+  sec.push({titre:"Liste des dossiers ("+v.lignes.length+")",cols:[{w:30,al:"r"},{w:350},{w:40,al:"r"},{w:95.28}],head:["N°","Intitulé","Nb","Anomalie"],rows:[...v.lignes].map((l,i)=>[String(i+1),l[0],String(l[1]||1),l[2]?"Oui":""])});
+  const blob=pdfBuild({titre:"RAPPORT DE VERSEMENT",ref:v.num,logo:pdfLogo(),types:TYPES,items:[],recapType:"",
+    meta:[["Direction",v.direction],["Service",v.service],["Type",v.type],["Période",v.periode||String(v.annee)],["Prise en charge",v.date?fmtR(v.date):"Non renseignée (régularisation historique)"],["Emplacement",v.empl||"–"],["Statut",st],["Dossiers",v.lignes.length+(n!==v.lignes.length?" ("+n+" unités)":"")],["Anomalies",String(an.length)],["Établi par",P.name||"–"]],
+    obs:v.obs||"",sections:sec,sign:["Service versant","Archiviste","Chef du Service Archivage"]});
+  pdfDialog("Rapport du versement "+v.num,"rapport-versement-"+v.num.replace(/[^\w-]+/g,"_")+".pdf",blob,"Rapport de versement "+v.num+" – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver le rapport du versement ${v.num} (${v.direction} › ${v.service}) : ${v.lignes.length} dossier(s) ${v.type}, ${an.length} anomalie(s) signalée(s).\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
 function vdet(id){
   const v=versements.find(x=>x.id===id);if(!v)return;
   const an=v.lignes.filter(l=>l[2]);
@@ -1923,7 +1934,7 @@ function vdet(id){
   ${an.length?`<h2 style="margin-top:12px">Anomalies (${an.length})</h2>${an.map(l=>`<div class="mu">• ${esc(l[0])} : ${esc(l[2])}</div>`).join("")}`:'<p class="mu">Aucune anomalie signalée dans la liste.</p>'}
   ${v.obs?`<h2 style="margin-top:12px">Observations et recommandations</h2><div class="mu">${esc(v.obs)}</div>`:""}
   <details style="margin-top:8px"><summary class="mu">Liste des dossiers (${v.lignes.length})</summary>${v.lignes.map(l=>`<div class="mu">• ${esc(l[0])}${l[1]>1?" ("+l[1]+")":""}</div>`).join("")}</details>
-  <div class="acts">${v.statut==="a_controler"?`<button class="pri w" data-a="vacc" data-v="${id}">Accepter et créer les entrées</button>`:""}<button data-a="vexp" data-v="${id}">Exporter le bordereau</button><button data-a="close">Fermer</button></div>`;
+  <div class="acts">${v.statut==="a_controler"?`<button class="pri w" data-a="vacc" data-v="${id}">Accepter et créer les entrées</button>`:""}<button class="pri" data-a="vpdf" data-v="${id}">Rapport PDF / e-mail</button><button data-a="vexp" data-v="${id}">Exporter le bordereau (Excel)</button><button data-a="close">Fermer</button></div>`;
   $("#dlg").showModal();
 }
 async function accVers(id){
@@ -2139,7 +2150,7 @@ document.addEventListener("click",async e=>{
   else if(a==="lend")openLend(v);
   else if(a==="close")$("#dlg").close();
   else if(a==="savedoc")saveDoc(v);
-  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="actrap")actRapport();else if(a==="ddet")demDetail(v);else if(a==="dpdf")demPdf(v);else if(a==="dcan")demCancel(v);else if(a==="canpret")cancelPret(v);else if(a==="undo")undoBack(v);else if(a==="undoent")undoEntree(v);else if(a==="psrep")psRapport();else if(a==="psgrp")psRegrouper();else if(a==="psnone"){PS.clear();document.querySelectorAll(".psel").forEach(c=>c.checked=false);psBar()}else if(a==="psall"){prets.filter(p=>p.statut==="en_cours"&&!p.grp).forEach(p=>PS.add(p.id));document.querySelectorAll(".psel").forEach(c=>c.checked=PS.has(c.value));psBar()}else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
+  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="vpdf")versPdf(v);else if(a==="actrap")actRapport();else if(a==="ddet")demDetail(v);else if(a==="dpdf")demPdf(v);else if(a==="dcan")demCancel(v);else if(a==="canpret")cancelPret(v);else if(a==="undo")undoBack(v);else if(a==="undoent")undoEntree(v);else if(a==="psrep")psRapport();else if(a==="psgrp")psRegrouper();else if(a==="psnone"){PS.clear();document.querySelectorAll(".psel").forEach(c=>c.checked=false);psBar()}else if(a==="psall"){prets.filter(p=>p.statut==="en_cours"&&!p.grp).forEach(p=>PS.add(p.id));document.querySelectorAll(".psel").forEach(c=>c.checked=PS.has(c.value));psBar()}else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
   else if(a==="back")back(v);
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
