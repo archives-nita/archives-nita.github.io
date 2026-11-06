@@ -516,16 +516,18 @@ function dash(){
 }
 
 const SK=new WeakMap();
-const skey=d=>{let k=SK.get(d);if(k===undefined){k=[d.intitule,d.cote,d.mots,d.direction,d.service,d.empl,d.obs,d.annee,d.mois].join(" ").toLowerCase();SK.set(d,k)}return k};
+const skey=d=>{let k=SK.get(d);if(k===undefined){k=" "+norm([d.intitule,d.cote,d.mots,d.direction,d.service,d.empl,d.obs,d.annee,d.mois].join(" "))+" ";SK.set(d,k)}return k};
+/* Recherche par mots : sans accents ni majuscules, espaces en trop ignorés, ordre des mots libre, « salaires » trouve aussi « salaire » */
+const sword=w=>w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
 function filtered(){
-  const q=f.q.toLowerCase();
-  return docs.filter(d=>(!f.dir||d.direction===f.dir)&&(!f.an||String(d.annee)===f.an)&&(!f.typ||d.type===f.typ)&&(!q||skey(d).includes(q)));
+  const ws=norm(f.q).split(" ").filter(Boolean).map(sword);
+  return docs.filter(d=>(!f.dir||d.direction===f.dir)&&(!f.an||String(d.annee)===f.an)&&(!f.typ||d.type===f.typ)&&(!ws.length||ws.every(w=>skey(d).includes(w))));
 }
 function listHTML(){
   const SORTS={cote:(x,y)=>cmp(x.cote||"",y.cote||""),recent:(x,y)=>y.annee-x.annee||cmp(x.intitule,y.intitule),titre:(x,y)=>cmp(x.intitule,y.intitule)},flat=!!SORTS[f.s];
   const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
   if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
-  let h="",k1="",k2="",k3="";
+  let h=(f.q||f.dir||f.an||f.typ)?`<div class="mu" style="margin:2px 0 4px"><b>${a.length}</b> entrée(s) trouvée(s)</div>`:"",k1="",k2="",k3="";
   for(const d of a.slice(0,lim)){
     if(!flat&&d.direction!==k1){h+=`<h3>${esc(d.direction)}</h3>`;k1=d.direction;k2="";k3=""}
     if(!flat&&d.service!==k2){h+=`<h4>${esc(d.service)}</h4>`;k2=d.service;k3=""}
