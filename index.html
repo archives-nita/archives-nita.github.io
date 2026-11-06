@@ -451,7 +451,7 @@ html{scroll-behavior:smooth}
 const PF={use:async k=>{try{if(window.claude&&window.claude.use)return await window.claude.use(k);const f=(window.PLATFORM||{})[k];return f?await f():null}catch(e){return null}}};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const COL=new Intl.Collator("fr"),cmp=(a,b)=>COL.compare(String(a),String(b));
+const COL=new Intl.Collator("fr"),cmp=(a,b)=>COL.compare(String(a),String(b)),OCOL=new Intl.Collator("fr",{ignorePunctuation:true}),ocmp=(a,b)=>OCOL.compare(String(a),String(b));
 const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const today=()=>ymd(new Date());
 const plus=n=>{const d=new Date();d.setDate(d.getDate()+n);return ymd(d)};
@@ -523,7 +523,7 @@ function filtered(){
 }
 function listHTML(){
   const SORTS={cote:(x,y)=>cmp(x.cote||"",y.cote||""),recent:(x,y)=>y.annee-x.annee||cmp(x.intitule,y.intitule),titre:(x,y)=>cmp(x.intitule,y.intitule)},flat=!!SORTS[f.s];
-  const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>cmp(x.direction,y.direction)||cmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
   if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
   let h="",k1="",k2="",k3="";
   for(const d of a.slice(0,lim)){
@@ -541,7 +541,7 @@ function listHTML(){
 }
 function inv(){
   const opt=(arr,v,all)=>`<option value="">${all}</option>`+arr.map(x=>`<option ${String(x)===v?"selected":""}>${esc(x)}</option>`).join("");
-  const dirs=[...new Set(docs.map(d=>d.direction))].sort(cmp),ans=[...new Set(docs.map(d=>String(d.annee)))].sort();
+  const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp),ans=[...new Set(docs.map(d=>String(d.annee)))].sort();
   return `<div class="row"><input id="q" placeholder="Rechercher (intitulé, cote, mot-clé…)" value="${esc(f.q)}">
   <button class="pri w" data-a="new">+ Ajouter</button></div>
   <div class="row tools"><button class="adm" data-a="imp">Importer</button><button class="adm" data-a="exp">Exporter</button><button class="w" data-a="labs">Étiquettes</button></div>
@@ -778,7 +778,7 @@ function bulkPreview(){
   $("#go2").disabled=!s.length||!$("#f_bc").value;
 }
 function openBulk(){
-  const dirs=[...new Set(docs.map(d=>d.direction))].sort(cmp);
+  const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   $("#dlg").innerHTML=`<h2>Affecter une catégorie en masse</h2>
   ${inp("bq","Intitulé contenant ou commençant par (ex. Journal Achat)")}
   <label for="f_bm">Recherche</label><select id="f_bm"><option value="contient">Contient</option><option value="debut">Commence par</option></select>
@@ -838,7 +838,7 @@ function repAnn(){
   {titre:"Activités d’entrée et de versement",head:H,rows:[row("Versements reçus (nbre)",vg,g=>g.length),row("Articles versés (nbre)",vg,g=>g.reduce((n,v)=>n+art(v),0))]},
   {titre:"Communication et consultation",head:H,rows:[row("Demandes de consultation",dg,g=>g.length),row("Documents communiqués (sorties)",pg,g=>g.length),row("Consultations sur place",pg,g=>g.filter(p=>p.mode==="Consultation sur place").length),row("Demandes refusées",dg,g=>g.filter(d=>d.statut==="refusee").length)]},
   {titre:"Traitement archivistique",head:["Indicateur","Valeur"],rows:[["Entrées d’inventaire (état actuel)",docs.length],["Unités archivées (état actuel)",docs.filter(d=>d.statut!=="detruit").reduce((n,d)=>n+(+d.nb||0),0)],["Procès-verbaux de destruction de l’année",el.length],["Éliminations réalisées (unités)",el.reduce((n,x)=>n+(x.items||[]).reduce((s,i)=>s+(+i.nb||0),0),0)]]},
-  {titre:"Inventaire par direction (état actuel)",head:["Direction","Entrées","Unités"],rows:[...new Set(docs.map(d=>d.direction))].sort(cmp).map(dn=>{const a=docs.filter(d=>d.direction===dn&&d.statut!=="detruit");return[dn,a.length,a.reduce((n,d)=>n+(+d.nb||0),0)]})},
+  {titre:"Inventaire par direction (état actuel)",head:["Direction","Entrées","Unités"],rows:[...new Set(docs.map(d=>d.direction))].sort(ocmp).map(dn=>{const a=docs.filter(d=>d.direction===dn&&d.statut!=="detruit");return[dn,a.length,a.reduce((n,d)=>n+(+d.nb||0),0)]})},
   {titre:"À compléter manuellement",head:["Rubrique","Indicateurs non suivis dans l’application"],rows:[["Ressources humaines et matérielles","Effectifs, formations, locaux, équipements, travaux"],["Entrées","Métrage linéaire reçu, dons et dépôts"],["Traitement","Documents numérisés ou restaurés, instruments de recherche"],["Bilan financier","Personnel, fonctionnement, équipements (prévu et réalisé)"]]},
   {titre:"Visa et approbation",head:VISA[0],rows:VISA.slice(1)}]};
 }
@@ -883,7 +883,7 @@ const RMAKE={glob:repGlob,mens:repMens,ann:repAnn,inv:repInv};
 const tbl=(h,r)=>`<div style="overflow-x:auto"><table><tr>${h.map(x=>`<th>${esc(x)}</th>`).join("")}</tr>${r.map(x=>`<tr>${x.map(c=>`<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</table></div>`;
 function repHTML(r){return `<h2 style="margin-top:14px">${esc(r.titre)}</h2><div class="mu">Réf. ${esc(r.ref)}</div>`+(r.meta||[]).map(m=>`<div class="mu">${esc(m[0])} : <b>${esc(m[1])}</b></div>`).join("")+r.sections.map(s=>`<h3>${esc(s.titre)}</h3>${s.text?`<div class="mu">${esc(s.text)}</div>`:""}${s.head?tbl(s.head,s.rows):""}`).join("")}
 function rapports(){
-  const dirs=[...new Set(docs.map(d=>d.direction))].sort(cmp);
+  const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   const sel=(id,o,v)=>`<select id="${id}">${o.map(x=>`<option value="${esc(x[0])}" ${x[0]===v?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`;
   return `<div class="row">${sel("rt",[["mens","Rapport mensuel des documents reçus"],["ann","Rapport annuel d’activité"],["inv","Inventaire et situation juridique"],["glob","Rapport global de l’inventaire"]],rp.t)}</div>
   <div class="row">${rp.t==="mens"?`<input type="month" id="rym" value="${rp.ym}">`:rp.t==="ann"?`<input type="number" id="ry" value="${rp.y}">`:sel("rd",[["","Toutes les directions"],...dirs.map(x=>[x,x])],rp.dir)}</div>
@@ -925,7 +925,7 @@ function ctlView(){
   ${f.slice(0,150).map(i=>{const s=r[i[0]];return `<div class="card"><b>${esc(i[1])}</b><div class="mu">${esc(i[2]||"sans emplacement")}${s?` · <span class="b ${CS[s][1]}">${CS[s][0]}</span>`:""}</div>${clos?"":`<div class="acts">${Object.keys(CS).map(x=>`<button class="sm w ${s===x?"pri":""}" data-a="cset" data-v="${c.id}" data-k="${i[0]}" data-s="${x}">${CS[x][0]}</button>`).join("")}</div>`}</div>`}).join("")||'<p class="mu">Rien à afficher.</p>'}${f.length>150?`<p class="mu">… et ${f.length-150} autres : la liste se renouvelle au fur et à mesure.</p>`:""}`;
 }
 function openCtl(){
-  const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(cmp);
+  const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   $("#dlg").innerHTML=`<h2>Nouveau contrôle</h2><label for="f_ce">Emplacement</label><select id="f_ce"><option value="*">Tous les emplacements</option>${em.map(x=>`<option value="${esc(x)}">${esc(x||"Sans emplacement")}</option>`).join("")}</select>
   <label for="f_cd">Direction</label><select id="f_cd"><option value="">Toutes</option>${dirs.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
   <div class="mu">Chaque entrée de l’inventaire est à vérifier physiquement : présente, absente ou dégradée. Limite : 800 entrées par contrôle.</div>
@@ -1316,13 +1316,45 @@ async function copieView(fid){
   }catch(e){toast('Aperçu impossible : '+((e&&e.message)||e))}
 }
 let refDir=[],refSrv=[];
-const orgDirs=()=>[...new Set([...refDir.map(x=>x.nom),...docs.map(d=>d.direction)])].filter(Boolean).sort((a,b)=>cmp(a,b));
-const orgSrvs=dir=>[...new Set([...refSrv.filter(x=>!dir||x.direction===dir).map(x=>x.nom),...docs.filter(x=>!dir||x.direction===dir).map(x=>x.service)])].filter(Boolean).sort((a,b)=>cmp(a,b));
+const orgDirs=()=>[...new Set([...refDir.map(x=>x.nom),...docs.map(d=>d.direction)])].filter(Boolean).sort(ocmp);
+const orgSrvs=dir=>[...new Set([...refSrv.filter(x=>!dir||x.direction===dir).map(x=>x.nom),...docs.filter(x=>!dir||x.direction===dir).map(x=>x.service)])].filter(Boolean).sort(ocmp);
 function srvList(dir){const o=$("#dl_srv");if(!o)return;const l=dir&&orgSrvs(dir).length?orgSrvs(dir):orgSrvs();o.innerHTML=l.map(x=>`<option value="${esc(x)}">`).join("")}
 function orgHTML(){
   const cnt=(d,s)=>docs.filter(x=>x.direction===d&&(s===undefined||x.service===s)).length;
-  return `<div class="adm"><h2 style="margin-top:16px">Organisation</h2><p class="mu">Directions (divisions) et services proposés dans les formulaires. Créez-les ici ou directement depuis le formulaire de saisie.</p><div class="row"><button class="pri" data-a="odir">+ Nouvelle direction</button></div><div id="omsg" class="mu"></div>`
-  +orgDirs().map(d=>{const ss=orgSrvs(d),rd=refDir.find(x=>x.nom===d);return `<div class="card"><div class="top"><b>${esc(d)}</b><span class="mu">${cnt(d)} entrée(s)</span></div>${ss.map(s=>{const rs=refSrv.find(x=>x.direction===d&&x.nom===s);return `<div class="mu">• ${esc(s)} · ${cnt(d,s)} entrée(s) <button class="sm" data-a="oren" data-v="${esc(d)}" data-s="${esc(s)}">Renommer</button>${rs&&!cnt(d,s)?` <button class="sm" data-a="osdel" data-v="${esc(rs.id)}">Supprimer</button>`:""}</div>`}).join("")||'<div class="mu">Aucun service.</div>'}<div class="acts"><button class="sm" data-a="osrv" data-v="${esc(d)}">+ Service</button><button class="sm" data-a="oren" data-v="${esc(d)}">Renommer</button>${rd&&!ss.length&&!cnt(d)?`<button class="sm" data-a="oddel" data-v="${esc(rd.id)}">Supprimer la direction</button>`:""}</div></div>`}).join("")+`</div>`;
+  return `<div class="adm"><h2 style="margin-top:16px">Organisation</h2><p class="mu">Directions et services proposés dans les formulaires, classés par ordre alphabétique. Vous pouvez en ajouter, les renommer, les supprimer (quand ils sont vides) ou transférer un service, avec toutes ses entrées, vers une autre direction.</p><div class="row"><button class="pri" data-a="odir">+ Nouvelle direction</button></div><div id="omsg" class="mu"></div>`
+  +orgDirs().map(d=>{const ss=orgSrvs(d),rd=refDir.find(x=>x.nom===d);return `<div class="card"><div class="top"><b>${esc(d)}</b><span class="mu">${cnt(d)} entrée(s)</span></div>${ss.map(s=>{const rs=refSrv.find(x=>x.direction===d&&x.nom===s);return `<div class="mu">• ${esc(s)} · ${cnt(d,s)} entrée(s) <button class="sm" data-a="oren" data-v="${esc(d)}" data-s="${esc(s)}">Renommer</button> <button class="sm" data-a="otr" data-v="${esc(d)}" data-s="${esc(s)}">Transférer</button>${rs&&!cnt(d,s)?` <button class="sm" data-a="osdel" data-v="${esc(rs.id)}">Supprimer</button>`:""}</div>`}).join("")||'<div class="mu">Aucun service.</div>'}<div class="acts"><button class="sm" data-a="osrv" data-v="${esc(d)}">+ Service</button><button class="sm" data-a="oren" data-v="${esc(d)}">Renommer</button>${rd&&!ss.length&&!cnt(d)?`<button class="sm" data-a="oddel" data-v="${esc(rd.id)}">Supprimer la direction</button>`:""}</div></div>`}).join("")+`</div>`;
+}
+async function orgTransfer(dir,svc){
+  const dests=orgDirs().filter(x=>x!==dir);
+  if(!dests.length)return toast("Il n’y a pas d’autre direction : créez-en une d’abord.");
+  const n=docs.filter(d=>d.direction===dir&&d.service===svc).length;
+  $("#dlg").innerHTML=`<h2>Transférer un service</h2><div class="card"><b>${esc(svc)}</b><div class="mu">Direction actuelle : ${esc(dir)} · ${n} entrée(s)</div></div>
+  <label for="f_td">Nouvelle direction</label><select id="f_td">${dests.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>
+  <div class="mu">Toutes les entrées d’inventaire et les versements de ce service suivent le service. Les cotes déjà attribuées ne changent pas. Les anciennes listes de destruction restent telles quelles.</div>
+  <div class="acts"><button class="pri" data-a="otrgo" data-v="${esc(dir)}" data-s="${esc(svc)}">Transférer</button><button data-a="close">Annuler</button></div>`;
+  $("#dlg").showModal();
+}
+async function orgTransferGo(dir,svc){
+  const dest=String(($("#f_td")||{}).value||"");
+  if(!dest||dest===dir)return toast("Choisissez la direction de destination.");
+  $("#dlg").close();
+  const exist=orgSrvs(dest).find(x=>norm(x)===norm(svc)),n=exist||svc;
+  const aff=docs.filter(d=>d.direction===dir&&d.service===svc),vs=versements.filter(v=>v.direction===dir&&v.service===svc);
+  const msg="Transférer « "+svc+" » de « "+dir+" » vers « "+dest+" » ?"+(exist?"\nCe service existe déjà dans la direction de destination : les deux seront fusionnés.":"")+"\n"+aff.length+" entrée(s) d’inventaire et "+vs.length+" versement(s) seront déplacés.";
+  if(!(await ask(msg,"Transférer")))return;
+  const ops=[],U=(q,o)=>ops.push(["u",q,o]),D=q=>ops.push(["d",q]);
+  aff.forEach(d=>U("docs/"+d.id,{direction:dest,service:n}));
+  vs.forEach(v=>U("versements/"+v.id,{direction:dest,service:n}));
+  const ro=refSrv.find(x=>x.direction===dir&&x.nom===svc),rn=refSrv.find(x=>x.direction===dest&&norm(x.nom)===norm(svc));
+  if(ro&&rn)D("services/"+ro.id);else if(ro)U("services/"+ro.id,{direction:dest,nom:n});else if(!rn)ops.push(["s","services",{nom:n,direction:dest,t:new Date().toISOString(),par:P.id||""}]);
+  try{
+    for(let i=0;i<ops.length;i+=20){
+      await Promise.all(ops.slice(i,i+20).map(([k,q,o])=>k==="u"?db.doc(q).update(o):k==="d"?db.doc(q).delete():db.collection(q).doc().set(o)));
+      const m=$("#omsg");if(m)m.textContent="Transfert : "+Math.min(i+20,ops.length)+" / "+ops.length;
+    }
+    jr("Service transféré",dir+" › "+svc+" → "+dest+" · "+aff.length+" entrée(s)"+(exist?" (fusion)":""));
+    toast("Service transféré vers « "+dest+" » : "+aff.length+" entrée(s) déplacée(s).");
+  }catch(e){fail(e)}
 }
 async function orgAddDir(){
   const n=((await askText("Nom de la nouvelle direction (division) ?"))||"").trim().slice(0,80);if(!n)return null;
@@ -1436,7 +1468,7 @@ function labPreview(){
   o.innerHTML=`<b>${n}</b> étiquette(s)`+(n>200?" : trop nombreuses (200 maximum), affinez la sélection":"");$("#go3").disabled=!n||n>200;
 }
 function openLabs(){
-  const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].filter(Boolean).sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(cmp);
+  const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].filter(Boolean).sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   $("#dlg").innerHTML=`<h2>Étiquettes</h2>${inp("lq","Intitulé contenant")}
   <label for="f_ld">Direction</label><select id="f_ld"><option value="">Toutes</option>${dirs.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
   ${inp("lan","Année (facultatif)","",'type="number"')}
@@ -1722,7 +1754,7 @@ async function exportCsv(){
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
   const H=["Direction","Service","Année","Mois","Type","Intitulé","Nombre","Cote","Emplacement","Mots-clés","Observations","Statut"];
   const q=v=>{let s=String(v??"");if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
-  const rows=[...docs].sort((x,y)=>cmp(x.direction,y.direction)||cmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>[d.direction,d.service,d.annee,d.mois||"",d.type,d.intitule,d.nb,d.cote||"",d.empl||"",d.mots||"",d.obs||"",d.statut==="en_pret"?"En sortie":"Disponible"]);
+  const rows=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>[d.direction,d.service,d.annee,d.mois||"",d.type,d.intitule,d.nb,d.cote||"",d.empl||"",d.mots||"",d.obs||"",d.statut==="en_pret"?"En sortie":"Disponible"]);
   const csv="\ufeff"+[H,...rows].map(r=>r.map(q).join(";")).join("\r\n");
   try{await dl.save({filename:"inventaire-archives-"+today()+".csv",data:csv});toast("Bibliothèque Excel indisponible : export CSV enregistré (s’ouvre dans Excel).")}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+((e&&e.message)||e))}
 }
@@ -1730,7 +1762,7 @@ async function exportXls(){
   if(!window.XLSX)return exportCsv();
   let dl=null;try{dl=await PF.use("downloads")}catch(e){}
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
-  const A=[...docs].sort((x,y)=>cmp(x.direction,y.direction)||cmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Type":d.type,"Intitulé":d.intitule,"Nombre":d.nb,"Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Observations":d.obs||"","Statut":d.statut==="en_pret"?"En sortie":"Disponible"}));
+  const A=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Type":d.type,"Intitulé":d.intitule,"Nombre":d.nb,"Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Observations":d.obs||"","Statut":d.statut==="en_pret"?"En sortie":"Disponible"}));
   const B=prets.map(p=>({"Document":p.docLabel,"Demandeur":p.demandeur,"Service":p.service,"Modalité":p.mode,"Validé par":p.valide||"","Sortie":p.sortie,"Retour prévu":p.prevu,"Retour réel":p.retour||"","Statut":p.statut==="en_cours"?"En cours":"Rendu"}));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(A),"Inventaire");
@@ -1836,7 +1868,7 @@ document.addEventListener("click",async e=>{
   else if(a==="dup"){const d=docs.find(x=>x.id===v);if(d){openDoc();for(const k of["direction","service","annee","mois","type","cat","empl","mots"]){const e=$("#f_"+k);if(e&&d[k]!==undefined&&d[k]!==null)e.value=d[k]}toast("Entrée copiée : modifiez l’intitulé puis enregistrez.")}}
   else if(a==="fopen"){fcur=v||"";fq="";render()}else if(a==="fnew")ficNewFolder();else if(a==="fren")ficRename(v,b.dataset.k);else if(a==="fdeld")ficDelFolder(v);else if(a==="fdelf")ficDelFile(v);else if(a==="fdl")ficDl(v);else if(a==="fmove")ficMove(v);else if(a==="fmovedo")ficMoveDo(v);
   else if(a==="rexph")expRepHtml();else if(a==="odir")orgAddDir();else if(a==="osrv")orgAddSrv(v);else if(a==="pvgo"){tab="pret";pv="cours";render()}else if(a==="oloclist")expRepHtml(repEmpl(v));else if(a==="mloc")openMoveLoc(v);else if(a==="mlocsave")moveLocSave(v);else if(a==="oloc")openCompLoc(v);
-  else if(a==="pvw"){pv=v||"";render()}else if(a==="pvprint")expRepHtml(repPrets());else if(a==="oren")orgRename(v,b.dataset.s);else if(a==="osdel")orgDel("services",v);else if(a==="oddel")orgDel("directions",v);else if(a==="qdir")qDir();else if(a==="qsrv")qSrv();
+  else if(a==="pvw"){pv=v||"";render()}else if(a==="pvprint")expRepHtml(repPrets());else if(a==="oren")orgRename(v,b.dataset.s);else if(a==="otr")orgTransfer(v,b.dataset.s);else if(a==="otrgo")orgTransferGo(v,b.dataset.s);else if(a==="osdel")orgDel("services",v);else if(a==="oddel")orgDel("directions",v);else if(a==="qdir")qDir();else if(a==="qsrv")qSrv();
   else if(a==="cotes")assignCotes();else if(a==="comp")openComp();else if(a==="compdo")compDo();
   else if(a==="cview")copieView(v);else if(a==="copie")openCopie(v);else if(a==="cdl")copieDl(v);else if(a==="creuse")copieReuseSet(v);else if(a==="csave")saveCopie();else if(a==="ccopy")copyMsg();
   else if(a==="iask")iaAsk();else if(a==="istop"){if(iaCtl)iaCtl.abort()}else if(a==="iclr"){iaTurns=[];iaCur="";iaPaint()}else if(a==="isug")iaSuggest();else if(a==="iapply")iaApply();
