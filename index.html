@@ -567,7 +567,7 @@ function grpCard(k,L){
   <div class="mu">${esc(p0.demandeur)} (${esc(p0.service)}) · ${esc(p0.mode)} · ${Object.entries(c).map(([t,n])=>n+" "+esc(t)).join(", ")}</div>
   <div class="mu">Sortie ${fmt(p0.sortie)} · retour prévu ${p0.prevu?fmt(p0.prevu):"non précisé"}${p0.valide?" · validé par "+esc(p0.valide):""}${p0.par?` · saisi par <span data-uid="${p0.par}"></span>`:""}${o.length&&o.length<L.length?` · ${L.length-o.length} déjà rendu(s)`:""}</div>
   <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${p.id}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)}</span>`}</div>`).join("")}</details>
-  <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="backall" data-v="${esc(k)}">Retour de tous (${o.length})</button>`:""}</div></div>`;
+  <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="entree" data-v="${esc(k)}">Entrée / retour (${o.length})</button>`:""}${[...new Set(L.map(p=>p.refEntree).filter(Boolean))].map(r=>`<button class="sm" data-a="bone" data-v="${esc(r)}">Bon d’entrée ${esc(r)}</button>`).join("")}</div></div>`;
 }
 function cards(arr,full){
   const seen=new Set(),out=[];
@@ -691,27 +691,129 @@ async function saveLend(){
   }catch(e){if(btn)btn.disabled=false;fail(e)}
 }
 const grpOf=k=>prets.filter(p=>(p.grp||p.id)===k);
-async function backAll(k){
-  const o=grpOf(k).filter(p=>p.statut==="en_cours");if(!o.length)return;
-  if(!await ask(`Enregistrer le retour des ${o.length} document(s) restants de cette sortie ?`,"Confirmer"))return;
-  try{for(let i=0;i<o.length;i+=20)await Promise.all(o.slice(i,i+20).map(async p=>{await db.doc("prets/"+p.id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"})}));jr("Retour groupé",(o[0].ref||k)+" · "+o.length+" document(s)")}catch(e){fail(e)}
+/* ---- Mini générateur PDF (sans dépendance) ---- */
+const fmtR=d=>d?String(d).split("-").reverse().join("/"):"–";
+function pdfBuild(o){
+  const W=595.28,H=841.89,M=40,CW=W-2*M,pages=[];let cur,y;
+  const HW=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+  const SPC={"’":0x92,"‘":0x91,"“":0x93,"”":0x94,"–":0x96,"—":0x97,"…":0x85,"œ":0x9C,"›":0x3E,"‹":0x3C,"€":0x80};
+  const cw=(c,b)=>{let k=c.charCodeAt(0);if(k<32||k>126){const n=c.normalize("NFD")[0].charCodeAt(0);k=n>=32&&n<=126?n:(c==="’"?39:109)}return HW[k-32]*(b?1.06:1)};
+  const tw=(t,sz,b)=>{let w=0;for(const c of t)w+=cw(c,b);return w*sz/1000};
+  const enc=t=>{let r="";for(const c of t){let k=c.charCodeAt(0);if(k>255||(k>=128&&k<160))k=SPC[c]||63;if(k<32)k=32;const ch=String.fromCharCode(k);r+=(ch==="\\"||ch==="("||ch===")")?"\\"+ch:ch}return r};
+  const col=h=>{h=h.replace("#","");return [0,2,4].map(i=>(parseInt(h.substr(i,2),16)/255).toFixed(3)).join(" ")};
+  const np=()=>{cur=[];pages.push(cur);y=M};
+  const wrap=(t,w,sz,b)=>{const out=[];String(t==null?"":t).split("\n").forEach(par=>{let l="";par.split(/\s+/).forEach(wd=>{if(!wd)return;while(tw(wd,sz,b)>w&&wd.length>1){let i=wd.length;while(i>1&&tw(wd.slice(0,i),sz,b)>w)i--;if(l){out.push(l);l=""}out.push(wd.slice(0,i));wd=wd.slice(i)}const t2=l?l+" "+wd:wd;if(tw(t2,sz,b)>w&&l){out.push(l);l=wd}else l=t2});out.push(l)});return out};
+  const T=(t,x,yy,sz,b,c,al,w)=>{if(!t)return;if(al==="c")x+=(w-tw(t,sz,b))/2;else if(al==="r")x+=w-tw(t,sz,b);cur.push(`BT /${b?"F2":"F1"} ${sz} Tf ${col(c||"#111111")} rg ${x.toFixed(2)} ${(H-yy-sz*0.8).toFixed(2)} Td (${enc(t)}) Tj ET`)};
+  const R=(x,yy,w,h,c)=>cur.push(`${col(c)} rg ${x.toFixed(2)} ${(H-yy-h).toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re f`);
+  const L=(x1,y1,x2,y2,c,lw)=>cur.push(`${lw||0.5} w ${col(c||"#999999")} RG ${x1.toFixed(2)} ${(H-y1).toFixed(2)} m ${x2.toFixed(2)} ${(H-y2).toFixed(2)} l S`);
+  const need=h=>{if(y+h>H-M-14)np()};
+  const par=(t,sz,b,c,gap)=>{const ls=wrap(t,CW,sz,b);ls.forEach(l=>{need(sz*1.3);T(l,M,y,sz,b,c);y+=sz*1.3});y+=gap||0};
+  const table=(cols,head,rows)=>{
+    const sz=8.5,pd=3,draw=(cells,bold,fill,hdr)=>{const ls=cells.map((c,i)=>wrap(c,cols[i].w-2*pd,sz,bold)),h=Math.max(...ls.map(a=>a.length))*sz*1.25+2*pd;need(h+(hdr?0:0));
+      if(fill)R(M,y,CW,h,fill);let x=M;cells.forEach((c,i)=>{ls[i].forEach((l,j)=>T(l,x+pd,y+pd+j*sz*1.25,sz,bold,"#111111",cols[i].al,cols[i].w-2*pd));x+=cols[i].w});
+      L(M,y+h,M+CW,y+h,"#999999",0.4);let xx=M;for(let i=0;i<=cols.length;i++){L(xx,y,xx,y+h,"#999999",0.4);xx+=(cols[i]||{}).w||0}L(M,y,M+CW,y,"#999999",0.4);y+=h};
+    const hd=()=>draw(head,true,"#E6E9F7");hd();
+    rows.forEach(r=>{if(r.band){const h=sz*1.25+2*pd;if(y+h*2>H-M-14){np();hd()}R(M,y,CW,h,"#F3F4F9");T(r.band,M+pd,y+pd,sz,true,"#2B3A8C");L(M,y+h,M+CW,y+h,"#999999",0.4);L(M,y,M,y+h,"#999999",0.4);L(M+CW,y,M+CW,y+h,"#999999",0.4);y+=h}
+      else{const ls=r.map((c,i)=>wrap(c,cols[i].w-2*pd,sz,false)),h=Math.max(...ls.map(a=>a.length))*sz*1.25+2*pd;if(y+h>H-M-14){np();hd()}draw(r,false)}})};
+  np();
+  let hx=M;if(o.logo){try{const lh=34,lw=lh*o.logo.w/o.logo.h;cur.push(`q ${lw.toFixed(2)} 0 0 ${lh} ${M} ${(H-y-lh).toFixed(2)} cm /Im1 Do Q`);hx=M+lw+10}catch(e){}}
+  T("NITA SA – Service Archivage",hx,y+4,10,true,"#555555");T("Niamey, le "+fmtR(today()),hx,y+18,9,false,"#555555");y+=44;
+  par(o.titre,17,true,"#2B3A8C",2);
+  T("Référence : "+o.ref,M,y,10,true,"#E8561A");y+=18;L(M,y,M+CW,y,"#E8561A",1);y+=8;
+  const half=CW/2;for(let i=0;i<o.meta.length;i+=2){const a=o.meta[i],b2=o.meta[i+1],la=wrap(a[0]+" : "+a[1],half-8,9.5,false),lb=b2?wrap(b2[0]+" : "+b2[1],half-8,9.5,false):[],n=Math.max(la.length,lb.length);need(n*13+4);la.forEach((l,j)=>T(l,M,y+j*13,9.5,false));lb.forEach((l,j)=>T(l,M+half,y+j*13,9.5,false));y+=n*13+3}
+  y+=6;par("Total : "+o.items.length+" document(s) — "+o.recapType,10.5,true,"#111111",4);
+  // regroupement année / type
+  const yk=a=>a?String(a):"Sans année",ys=[...new Set(o.items.map(i=>yk(i.annee)))].sort((p,q)=>p==="Sans année"?1:q==="Sans année"?-1:p.localeCompare(q,"fr",{numeric:true}));
+  const tk=t=>t||"Autre",tyOrder=t=>{const i=o.types.indexOf(t);return i<0?99:i};
+  const recap=[];ys.forEach(yr=>{const its=o.items.filter(i=>yk(i.annee)===yr),ts=[...new Set(its.map(i=>tk(i.type)))].sort((p,q)=>tyOrder(p)-tyOrder(q)||p.localeCompare(q,"fr"));ts.forEach(t=>recap.push([yr,t,String(its.filter(i=>tk(i.type)===t).length)]))});
+  par("Récapitulatif par année et par type",11,true,"#2B3A8C",2);
+  table([{w:CW*0.3},{w:CW*0.45},{w:CW*0.25,al:"r"}],["Année","Type","Nombre"],recap);y+=12;
+  need(60);par("Détail des documents",11,true,"#2B3A8C",2);
+  const same=o.items.every(i=>i.loc===o.items[0].loc);if(same&&o.items[0].loc)par("Provenance : "+o.items[0].loc,9.5,false,"#111111",4);
+  const rows=[];let n=0;ys.forEach(yr=>{const its=o.items.filter(i=>yk(i.annee)===yr),ts=[...new Set(its.map(i=>tk(i.type)))].sort((p,q)=>tyOrder(p)-tyOrder(q)||p.localeCompare(q,"fr"));ts.forEach(t=>{const g=its.filter(i=>tk(i.type)===t).sort((p,q)=>cmp(p.titre||"",q.titre||""));rows.push({band:"Année "+yr+" · "+t+" — "+g.length+" document(s)"});g.forEach(i=>{n++;rows.push(same?[String(n),i.titre,i.cote||"–",i.etat||""]:[String(n),i.titre,i.cote||"–",i.loc,i.etat||""])})})});
+  table(same?[{w:28,al:"r"},{w:300},{w:80},{w:107.28}]:[{w:24,al:"r"},{w:190},{w:60},{w:181},{w:60}],same?["N°","Intitulé","Cote","État"]:["N°","Intitulé","Cote","Direction > Service","État"],rows);y+=10;
+  if(o.obs){need(30);par("Observations : "+o.obs,9.5,false,"#111111",6)}
+  if(o.note){par(o.note,9.5,false,"#444444",8)}
+  need(90);y+=30;const sw=CW/o.sign.length;o.sign.forEach((s2,i)=>{L(M+i*sw+8,y,M+(i+1)*sw-8,y,"#333333",0.7);wrap(s2,sw-16,9,false).forEach((l,j)=>T(l,M+i*sw,y+4+j*11,9,false,"#111111","c",sw))});
+  const N=pages.length;pages.forEach((pg,i)=>{cur=pg;T("NITA SA – Service Archivage · "+o.ref+" · Page "+(i+1)+" / "+N,M,H-M+8,8,false,"#777777","c",CW)});
+  // assemblage
+  const out=[],off=[];let len=0;const push=t=>{out.push(t);len+=t.length};const obj=(i,t)=>{off[i]=len;push(i+" 0 obj\n"+t+"\nendobj\n")};
+  push("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");const hasImg=!!o.logo,base=hasImg?7:6,kids=pages.map((_,i)=>(base+2*i)+" 0 R").join(" ");
+  obj(1,"<< /Type /Catalog /Pages 2 0 R >>");obj(2,`<< /Type /Pages /Kids [${kids}] /Count ${N} >>`);
+  obj(3,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");obj(4,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");obj(5,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique /Encoding /WinAnsiEncoding >>");
+  if(hasImg)obj(6,`<< /Type /XObject /Subtype /Image /Width ${o.logo.w} /Height ${o.logo.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${o.logo.data.length} >>\nstream\n${o.logo.data}\nendstream`);
+  pages.forEach((pg,i)=>{const c=pg.join("\n");obj(base+2*i,`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >>${hasImg?" /XObject << /Im1 6 0 R >>":""} >> /Contents ${base+2*i+1} 0 R >>`);obj(base+2*i+1,`<< /Length ${c.length} >>\nstream\n${c}\nendstream`)});
+  const tot=base+2*N,xr=len;push(`xref\n0 ${tot}\n0000000000 65535 f \n`);for(let i=1;i<tot;i++)push(String(off[i]).padStart(10,"0")+" 00000 n \n");push(`trailer\n<< /Size ${tot} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`);
+  const s3=out.join(""),u=new Uint8Array(s3.length);for(let i=0;i<s3.length;i++)u[i]=s3.charCodeAt(i)&255;return new Blob([u],{type:"application/pdf"});
 }
-async function bonSortie(k){
-  const L=grpOf(k);if(!L.length)return;let dl=null;try{dl=await PF.use("downloads")}catch(e){}
-  if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
-  const p0=L[0],logo=(document.querySelector(".hd img")||{}).src||"",c={};
-  L.forEach(p=>{const t=p.type||"Autre";c[t]=(c[t]||0)+1});
-  const rows=[...L].sort((x,y)=>cmp(x.titre||x.docLabel,y.titre||y.docLabel)).map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.titre||p.docLabel)}</td><td>${esc(p.type||"")}</td><td>${esc(p.annee||"")}</td><td>${esc(p.cote||"")}</td><td>${esc((p.direction||"")+(p.dservice?" › "+p.dservice:""))}</td><td>${p.statut==="rendu"?"Rendu "+fmt(p.retour):"Sorti"}</td></tr>`).join("");
-  const nom=P.name||"",ref=p0.ref||("BS-"+p0.id.slice(0,6));
-  const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Bon de sortie ${esc(ref)}</title><style>body{font:13px Arial,sans-serif;color:#111;max-width:860px;margin:20px auto;padding:0 14px}img{height:46px}h1{font-size:21px;color:#2B3A8C;margin:8px 0 2px;text-align:center}h3{font-size:14px;color:#2B3A8C;margin:16px 0 4px;border-bottom:1px solid #E8561A;padding-bottom:2px}table{border-collapse:collapse;width:100%;margin:6px 0}th,td{border:1px solid #999;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eef}.m td{border:0;padding:2px 6px}.s{display:flex;gap:16px;margin-top:40px}.s div{flex:1;border-top:1px solid #333;padding-top:4px;text-align:center}.n{margin-top:12px;font-style:italic}@media print{button{display:none}tr{page-break-inside:avoid}}</style><body><button onclick="print()">Imprimer / Enregistrer en PDF</button> ${logo?`<img src="${logo}">`:""}<h1>BON DE SORTIE DE DOCUMENTS</h1><div style="text-align:center;color:#555">Réf. <b>${esc(ref)}</b> · NITA SA – Service Archivage</div>
-<table class="m"><tr><td>Emprunteur</td><td><b>${esc(p0.demandeur)}</b></td><td>Service</td><td><b>${esc(p0.service)}</b></td></tr><tr><td>Modalité</td><td>${esc(p0.mode)}</td><td>Demande validée par</td><td>${esc(p0.valide||"–")}</td></tr><tr><td>Date de sortie</td><td><b>${fmt(p0.sortie)}</b></td><td>Retour prévu</td><td><b>${p0.prevu?fmt(p0.prevu):"Non précisé"}</b></td></tr></table>
-<h3>Total : ${L.length} document(s) — ${Object.entries(c).map(([k,n])=>n+" "+esc(k)).join(", ")}</h3>
-<table><tr><th>N°</th><th>Intitulé</th><th>Support</th><th>Année</th><th>Cote</th><th>Direction › Service</th><th>État</th></tr>${rows}</table>
-<p class="n">L’emprunteur s’engage à restituer l’intégralité des documents ci-dessus au Service Archivage en bon état${p0.prevu?"":", à une date à convenir avec le Service Archivage"}.</p>
-<p class="m">Établi le ${fmt(today())}${nom?" par "+esc(nom):""}.</p>
-<div class="s"><div>L’emprunteur<br>${esc(p0.demandeur)}</div><div>Validation<br>${esc(p0.valide||"Chef de service")}</div><div>Archiviste</div><div>Chef du Service Archivage</div></div></body></html>`;
-  try{await dl.save({filename:"bon-de-sortie-"+ref.replace(/[^\w-]+/g,"_")+".html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+(e&&e.message||e))}
+function pdfLogo(){
+  try{const im=document.querySelector(".hd img");if(!im||!im.complete||!im.naturalWidth)return null;const w=im.naturalWidth,h=im.naturalHeight,c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,w,h);x.drawImage(im,0,0);const d=atob(c.toDataURL("image/jpeg",0.92).split(",")[1]);return {w,h,data:d}}catch(e){return null}
 }
+let BON=null;
+function pdfDialog(titre,fn,blob,subject,body){
+  BON={blob,fn,subject,body};let em="";try{em=localStorage.getItem("bonMail")||""}catch(e){}
+  $("#dlg").innerHTML=`<h2>${esc(titre)}</h2><p>Le PDF est prêt : <b>${esc(fn)}</b> (${Math.max(1,Math.round(blob.size/1024))} Ko).</p>
+  <div class="acts"><button class="pri" data-a="pdfdl">Télécharger le PDF</button></div>
+  <label for="f_mail">Envoyer par e-mail (adresse du destinataire)</label><input id="f_mail" type="email" placeholder="nom@exemple.com" value="${esc(em)}">
+  <div class="acts"><button class="w" data-a="pdfmail">Envoyer par e-mail</button><button data-a="close">Fermer</button></div>
+  <p class="mu" style="font-size:12px">Sur téléphone, un menu de partage s’ouvre (Gmail, WhatsApp…) avec le PDF en pièce jointe. Sur ordinateur, le PDF est téléchargé puis votre messagerie s’ouvre : joignez le fichier téléchargé.</p>`;
+  const L2=$("#dlg");if(!L2.open)L2.showModal();
+}
+function pdfSave(){if(!BON)return;const u=URL.createObjectURL(BON.blob),a=document.createElement("a");a.href=u;a.download=BON.fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+async function pdfMail(){
+  if(!BON)return;const to=($("#f_mail").value||"").trim();try{localStorage.setItem("bonMail",to)}catch(e){}
+  const f=new File([BON.blob],BON.fn,{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:BON.subject,text:BON.body});return}catch(e){if(e&&e.name==="AbortError")return}}
+  pdfSave();toast("PDF téléchargé : joignez-le au message qui s’ouvre.");
+  setTimeout(()=>{location.href="mailto:"+encodeURIComponent(to).replace(/%40/g,"@")+"?subject="+encodeURIComponent(BON.subject)+"&body="+encodeURIComponent(BON.body+"\n\n(Le PDF est joint à ce message.)")},600);
+}
+const bonItems=(L,etat)=>L.map(p=>({titre:p.titre||p.docLabel,type:p.type||"",annee:p.annee||"",cote:p.cote||"",loc:(p.direction||"")+(p.dservice?" > "+p.dservice:""),etat:etat||(p.statut==="rendu"?"Rendu "+fmtR(p.retour):"Sorti")}));
+const recapT=its=>{const c={};its.forEach(i=>{const t=i.type||"Autre";c[t]=(c[t]||0)+1});return Object.entries(c).sort((a,b)=>{const i=TYPES.indexOf(a[0]),j=TYPES.indexOf(b[0]);return (i<0?99:i)-(j<0?99:j)}).map(([k,n])=>n+" "+k).join(", ")};
+function bonSortie(k){
+  const L=grpOf(k);if(!L.length)return;const p0=L[0],ref=p0.ref||("BS-"+p0.id.slice(0,6)),items=bonItems(L);
+  const blob=pdfBuild({titre:"BON DE SORTIE DE DOCUMENTS",ref,logo:pdfLogo(),types:TYPES,items,recapType:recapT(items),
+    meta:[["Emprunteur",p0.demandeur],["Service",p0.service],["Modalité",p0.mode],["Validée par",p0.valide||"–"],["Date de sortie",fmtR(p0.sortie)],["Retour prévu",p0.prevu?fmtR(p0.prevu):"Non précisé"],["Établi par",P.name||"–"]],
+    note:"L’emprunteur s’engage à restituer l’intégralité des documents ci-dessus au Service Archivage en bon état"+(p0.prevu?".":", à une date à convenir avec le Service Archivage."),
+    sign:["L’emprunteur\n"+p0.demandeur,"Validation\n"+(p0.valide||"Chef de service"),"Archiviste","Chef du Service Archivage"]});
+  pdfDialog("Bon de sortie "+ref,"bon-de-sortie-"+ref.replace(/[^\w-]+/g,"_")+".pdf",blob,"Bon de sortie "+ref+" – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver le bon de sortie ${ref} : ${items.length} document(s) (${recapT(items)}) remis à ${p0.demandeur} (${p0.service}) le ${fmtR(p0.sortie)}.\nRetour prévu : ${p0.prevu?fmtR(p0.prevu):"non précisé"}.\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
+function bonEntree(ref,list){
+  const L=list||prets.filter(p=>p.refEntree===ref);if(!L.length)return;const p0=L[0],items=bonItems(L,"Rentré"),d=p0.retour||today();
+  const blob=pdfBuild({titre:"BON D’ENTRÉE DE DOCUMENTS",ref,logo:pdfLogo(),types:TYPES,items,recapType:recapT(items),
+    meta:[["Rendu par",p0.entreeRendu||p0.demandeur],["Service",p0.service],["Date d’entrée",fmtR(d)],["Reçu par",p0.entreeRecu||P.name||"–"],["Sortie d’origine",p0.ref||"–"],["Date de sortie",fmtR(p0.sortie)]],
+    obs:p0.entreeObs||"",note:"Le Service Archivage atteste avoir reçu les documents ci-dessus et les a replacés en rayonnage.",
+    sign:["Le déposant\n"+(p0.entreeRendu||p0.demandeur),"Archiviste (réception)\n"+(p0.entreeRecu||""),"Chef du Service Archivage"]});
+  pdfDialog("Bon d’entrée "+ref,"bon-d-entree-"+ref.replace(/[^\w-]+/g,"_")+".pdf",blob,"Bon d’entrée "+ref+" – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver le bon d’entrée ${ref} : ${items.length} document(s) (${recapT(items)}) restitués par ${p0.entreeRendu||p0.demandeur} (${p0.service}) le ${fmtR(d)}.\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
+function enCount(){const n=document.querySelectorAll(".enc:checked").length,t=document.querySelectorAll(".enc").length;$("#en_cnt").innerHTML=`<b>${n}</b> / ${t} document(s) à faire entrer`}
+function openEntree(k){
+  const o=grpOf(k).filter(p=>p.statut==="en_cours");if(!o.length)return toast("Aucun document en sortie dans ce lot.");const p0=o[0];
+  o.sort((x,y)=>cmp(x.titre||x.docLabel,y.titre||y.docLabel));
+  $("#dlg").innerHTML=`<h2>Entrée de documents</h2><p class="mu">${esc(p0.ref||"")} · sortis par ${esc(p0.demandeur)} (${esc(p0.service)})</p>
+  <label>Documents rendus (décochez ceux qui ne sont pas encore revenus)</label>
+  <div class="acts" style="margin:4px 0"><button class="sm" data-a="enall">Tout cocher</button><button class="sm" data-a="ennone">Tout décocher</button></div>
+  <div id="en_lst" style="max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:8px;background:var(--cd);padding:4px">${o.map(p=>`<label class="lsr"><input type="checkbox" class="enc" value="${p.id}" checked><span><b>${esc(p.titre||p.docLabel)}</b> <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span></label>`).join("")}</div>
+  <div id="en_cnt" style="margin:6px 0"></div>
+  ${inp("erp","Rendu par",p0.demandeur)}${inp("erc","Reçu par (archiviste)",P.name||"")}${inp("ed","Date d’entrée",today(),'type="date"')}
+  <label for="f_eobs">Observations (état des documents, manquants…)</label><textarea id="f_eobs" rows="2"></textarea>
+  <div class="acts"><button class="pri" data-a="saveentree" data-v="${esc(k)}">Enregistrer l’entrée</button><button data-a="close">Annuler</button></div>`;
+  $("#en_lst").addEventListener("change",enCount);enCount();$("#dlg").showModal();
+}
+async function saveEntree(k){
+  const ids=[...document.querySelectorAll(".enc:checked")].map(c=>c.value),sel=grpOf(k).filter(p=>ids.includes(p.id)&&p.statut==="en_cours");
+  if(!sel.length)return toast("Cochez au moins un document rentré.");
+  const g=x=>$("#f_"+x).value.trim(),d=g("ed")||today(),pre="BE-"+new Date().getFullYear()+"-";let m=0;prets.forEach(p=>{if(p.refEntree&&p.refEntree.startsWith(pre))m=Math.max(m,parseInt(p.refEntree.slice(pre.length),10)||0)});
+  const ref=pre+String(m+1).padStart(3,"0"),btn=$("#dlg .pri");if(btn)btn.disabled=true;
+  const extra={retour:d,statut:"rendu",retourPar:P.id||"",refEntree:ref,entreeRendu:g("erp"),entreeRecu:g("erc"),entreeObs:g("eobs")};
+  try{
+    for(let i=0;i<sel.length;i+=20)await Promise.all(sel.slice(i,i+20).map(async p=>{await db.doc("prets/"+p.id).update(extra);await db.doc("docs/"+p.docId).update({statut:"disponible"})}));
+    jr("Entrée de documents",ref+" · "+sel.length+" document(s) · sortie "+(sel[0].ref||""));
+    const rest=grpOf(k).filter(p=>p.statut==="en_cours"&&!ids.includes(p.id)).length;
+    $("#dlg").innerHTML=`<h2>Entrée enregistrée</h2><p><b>${esc(ref)}</b> : ${sel.length} document(s) remis en rayonnage et de nouveau disponibles.${rest?` Il reste <b>${rest}</b> document(s) non rendus.`:""}</p><div class="acts"><button class="pri" data-a="bone" data-v="${esc(ref)}" data-k="${esc(k)}">Bon d’entrée (PDF)</button><button data-a="close">Fermer</button></div>`;
+    ENT={ref,list:sel.map(p=>({...p,...extra}))};
+  }catch(e){if(btn)btn.disabled=false;fail(e)}
+}
+let ENT=null;
 async function back(id){
   const p=prets.find(x=>x.id===id);if(!p)return;
   try{await db.doc("prets/"+id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"})}catch(e){fail(e)}
@@ -1929,7 +2031,7 @@ document.addEventListener("click",async e=>{
   else if(a==="lend")openLend(v);
   else if(a==="close")$("#dlg").close();
   else if(a==="savedoc")saveDoc(v);
-  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="backall")backAll(v);else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
+  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
   else if(a==="back")back(v);
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
