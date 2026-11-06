@@ -38,6 +38,7 @@ dialog{width:min(520px,94vw);max-height:92vh;overflow:auto;background:var(--bg);
 dialog::backdrop{background:rgba(0,0,0,.45)}
 @media(max-width:599px){input,select,textarea{font-size:16px}}
 dialog.ask{width:min(420px,92vw)}
+label.lsr{display:flex;gap:8px;align-items:flex-start;color:var(--tx);margin:0;padding:5px 4px;border-bottom:1px solid var(--bd);cursor:pointer;font-size:13px}label.lsr input{width:auto;min-height:0;margin-top:3px}
 .hd{display:flex;align-items:center;gap:14px;background:#fff;border-radius:12px;padding:10px 14px;border-bottom:4px solid #E8561A;color:#1b1f33}.hd img{height:46px;width:auto}.hd .mu{color:#5f6580}
 nav button.on{box-shadow:inset 0 -3px 0 var(--or)}
 @media(max-width:599px){.hd{padding:6px 10px;gap:10px}.hd img{height:30px}.hd h1{font-size:16px;margin:0}.hd .mu{display:none}nav{flex-wrap:nowrap;overflow-x:auto;margin:8px 0 10px;padding:4px 0;scrollbar-width:none;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg)}nav::-webkit-scrollbar{display:none}nav button{flex:0 0 auto}.tools{flex-wrap:nowrap}.tools button{flex:1;min-width:0;padding:6px 4px;font-size:13px}.row select{min-width:0;flex:1 1 30%}}
@@ -558,13 +559,28 @@ function pretCard(p){
   <div class="mu">Sortie ${fmt(p.sortie)} · retour prévu ${fmt(p.prevu)}${p.retour?" · rendu le "+fmt(p.retour):""}${p.valide?" · validé par "+esc(p.valide):""}${p.valideUid?` · validé par <span data-uid="${p.valideUid}"></span>`:""}${p.par?` · saisi par <span data-uid="${p.par}"></span>`:""}</div>
   ${op?`<div class="acts"><button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button></div>`:""}</div>`;
 }
+function grpCard(k,L){
+  const o=L.filter(p=>p.statut==="en_cours"),p0=L[0],lt=o.some(late),c={};
+  L.forEach(p=>{const t=p.type||"Autre";c[t]=(c[t]||0)+1});
+  const bd=o.length?(lt?'<span class="b er">En retard</span>':'<span class="b wa">En cours</span>'):'<span class="b ok">Rendu</span>';
+  return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(p0.ref||"Sortie")} · ${L.length} documents</b>${bd}</div>
+  <div class="mu">${esc(p0.demandeur)} (${esc(p0.service)}) · ${esc(p0.mode)} · ${Object.entries(c).map(([t,n])=>n+" "+esc(t)).join(", ")}</div>
+  <div class="mu">Sortie ${fmt(p0.sortie)} · retour prévu ${p0.prevu?fmt(p0.prevu):"non précisé"}${p0.valide?" · validé par "+esc(p0.valide):""}${p0.par?` · saisi par <span data-uid="${p0.par}"></span>`:""}${o.length&&o.length<L.length?` · ${L.length-o.length} déjà rendu(s)`:""}</div>
+  <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${p.id}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)}</span>`}</div>`).join("")}</details>
+  <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="backall" data-v="${esc(k)}">Retour de tous (${o.length})</button>`:""}</div></div>`;
+}
+function cards(arr,full){
+  const seen=new Set(),out=[];
+  arr.forEach(p=>{const k=p.grp||p.id;if(seen.has(k))return;seen.add(k);const L=p.grp?grpOf(k):[p];out.push(p.grp&&L.length>1?grpCard(k,L):pretCard(p))});
+  return out.join("");
+}
 let pq="",pv="";
-const pmatch=p=>!pq||norm([p.docLabel,p.demandeur,p.service,p.mode].join(" ")).includes(norm(pq));
+const pmatch=p=>!pq||norm([p.docLabel,p.demandeur,p.service,p.mode,p.ref].join(" ")).includes(norm(pq));
 function pbody(){
-  const a=[...prets].filter(pmatch).sort((x,y)=>(y.sortie||"").localeCompare(x.sortie||"")),o=a.filter(p=>p.statut==="en_cours"),h=a.filter(p=>p.statut!=="en_cours");
+  const a=[...prets].filter(pmatch).sort((x,y)=>(y.sortie||"").localeCompare(x.sortie||"")),o=a.filter(p=>p.statut==="en_cours"),og=new Set(o.map(p=>p.grp).filter(Boolean)),h=a.filter(p=>p.statut!=="en_cours"&&!(p.grp&&og.has(p.grp)));
   if(pv==="cours")return pretTable(o);
-  return `<h2>En cours (${o.length})</h2>${o.map(pretCard).join("")||'<p class="mu">Aucune sortie en cours.</p>'}
-  <h2 style="margin-top:16px">Registre (${h.length})</h2>${h.map(pretCard).join("")||'<p class="mu">Registre vide.</p>'}${copiesHTML()}`;
+  return `<h2>En cours (${o.length})</h2>${cards(o)||'<p class="mu">Aucune sortie en cours.</p>'}
+  <h2 style="margin-top:16px">Registre (${h.length})</h2>${cards(h)||'<p class="mu">Registre vide.</p>'}${copiesHTML()}`;
 }
 function pret(){
   return `<div class="row"><button class="pri rq" data-a="dem">Demander une consultation</button><button class="w" data-a="lend">Sortie directe</button></div>${demSec()}
@@ -617,29 +633,84 @@ async function saveDoc(id){
     $("#dlg").close();
   }catch(e){fail(e)}
 }
+const LS=new Set();let lsT=0;
+function lsRef(){const y=String(new Date().getFullYear()),pre="BS-"+y+"-";let m=0;prets.forEach(p=>{if(p.ref&&p.ref.startsWith(pre))m=Math.max(m,parseInt(p.ref.slice(pre.length),10)||0)});return pre+String(m+1).padStart(3,"0")}
+function lsAv(){return docs.filter(d=>d.statut==="disponible"&&d.ctl!=="absent")}
+function lsList(){
+  const q=norm(($("#ls_q")||{}).value||""),t=($("#ls_t")||{}).value||"",w=q.split(" ").filter(Boolean);
+  const a=lsAv().filter(d=>(!t||d.type===t)&&(!w.length||w.every(x=>norm([d.intitule,d.cote,d.direction,d.service,d.annee,d.type,d.empl,d.mots].join(" ")).includes(x))));
+  a.sort((x,y)=>cmp((x.direction||"")+(x.service||"")+(x.intitule||""),(y.direction||"")+(y.service||"")+(y.intitule||"")));
+  const sh=a.slice(0,150);
+  $("#ls_lst").innerHTML=sh.map(d=>`<label class="lsr"><input type="checkbox" class="lsc" value="${d.id}" ${LS.has(d.id)?"checked":""}><span><b>${esc(d.intitule)}</b> <span class="mu">${esc(d.type||"")} · ${esc(d.annee||"")} · ${esc(d.direction||"")} › ${esc(d.service||"")}${d.cote?" · "+esc(d.cote):""}</span></span></label>`).join("")||'<p class="mu">Aucun document disponible pour ce filtre.</p>';
+  $("#ls_more").textContent=a.length>150?`${a.length} résultats : affinez la recherche (150 affichés).`:`${a.length} résultat(s).`;
+  $("#ls_all").dataset.ids=sh.map(d=>d.id).join(",");
+}
+function lsCount(){
+  const c={};LS.forEach(id=>{const d=docs.find(x=>x.id===id);if(d){const k=d.type||"Autre";c[k]=(c[k]||0)+1}});
+  $("#ls_cnt").innerHTML=LS.size?`<b>${LS.size}</b> document(s) sélectionné(s) : ${Object.entries(c).map(([k,n])=>n+" "+esc(k)).join(", ")}`:'<span class="mu">Aucun document sélectionné.</span>';
+}
 function openLend(docId){
-  const av=docs.filter(d=>d.statut==="disponible"&&d.ctl!=="absent").sort((x,y)=>cmp(x.direction+x.service+x.intitule,y.direction+y.service+y.intitule));
-  if(!av.length)return toast("Aucun document disponible.");
-  const in7=plus(7);
+  if(!lsAv().length)return toast("Aucun document disponible.");
+  LS.clear();if(docId)LS.add(docId);
   $("#dlg").innerHTML=`<h2>Sortie / consultation</h2>
-  <label for="f_doc">Document</label><select id="f_doc">${av.map(d=>`<option value="${d.id}" ${d.id===docId?"selected":""}>${esc(d.direction)} › ${esc(d.service)} › ${d.annee} › ${esc(d.intitule)}</option>`).join("")}</select>
+  <label>Documents à sortir (cochez un ou plusieurs)</label>
+  <div class="row"><input id="ls_q" placeholder="Rechercher un document…" style="flex:2"><select id="ls_t" style="flex:1"><option value="">Tous types</option>${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></div>
+  <div class="acts" style="margin:4px 0"><button class="sm" id="ls_all" data-a="lsall">Tout cocher (affichés)</button><button class="sm" data-a="lsnone">Tout décocher</button></div>
+  <div id="ls_lst" style="max-height:200px;overflow:auto;border:1px solid var(--bd);border-radius:8px;background:var(--cd);padding:4px"></div>
+  <div class="mu" id="ls_more" style="font-size:12px"></div><div id="ls_cnt" style="margin:6px 0"></div>
   ${inp("dem","Demandeur")}${inp("srv","Service du demandeur",'','list="dl_srv"')}
   <label for="f_mode">Modalité</label><select id="f_mode">${MODES.map(m=>`<option>${m}</option>`).join("")}</select>
   ${inp("val","Demande validée par (chef de service / directeur)")}
-  ${inp("sortie","Date de sortie",today(),'type="date"')}${inp("prevu","Retour prévu",in7,'type="date"')}
-  <div class="acts"><button class="pri" data-a="savelend">Enregistrer</button><button data-a="close">Annuler</button></div>`;
-  $("#dlg").showModal();
+  ${inp("sortie","Date de sortie",today(),'type="date"')}${inp("prevu","Retour prévu",plus(7),'type="date"')}
+  <label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input type="checkbox" id="f_nodate" style="width:auto;min-height:0"> Date de retour non précisée</label>
+  <div class="acts"><button class="pri" data-a="savelend">Enregistrer la sortie</button><button data-a="close">Annuler</button></div>`;
+  const L=$("#dlg");
+  $("#ls_q").addEventListener("input",()=>{clearTimeout(lsT);lsT=setTimeout(lsList,150)});
+  $("#ls_t").addEventListener("change",lsList);
+  $("#ls_lst").addEventListener("change",e=>{const c=e.target;if(c.classList.contains("lsc")){c.checked?LS.add(c.value):LS.delete(c.value);lsCount()}});
+  $("#f_nodate").addEventListener("change",e=>{$("#f_prevu").disabled=e.target.checked;if(e.target.checked)$("#f_prevu").value="";else $("#f_prevu").value=plus(7)});
+  lsList();lsCount();L.showModal();
 }
 async function saveLend(){
-  const g=k=>$("#f_"+k).value.trim(),d=docs.find(x=>x.id===g("doc"));
-  if(!d||!g("dem")||!g("srv"))return toast("Document, demandeur et service sont obligatoires.");
+  const g=k=>$("#f_"+k).value.trim(),sel=[...LS].map(id=>docs.find(x=>x.id===id)).filter(d=>d&&d.statut==="disponible");
+  if(!sel.length)return toast("Cochez au moins un document.");
+  if(!g("dem")||!g("srv"))return toast("Demandeur et service sont obligatoires.");
   if(g("mode")==="Prêt interne"&&!g("val"))return toast("Un prêt interne doit être validé par le chef de service ou le directeur.");
-  if(g("prevu")&&g("sortie")&&g("prevu")<g("sortie"))return toast("Le retour prévu ne peut pas précéder la date de sortie.");
+  const nod=$("#f_nodate").checked,prevu=nod?"":g("prevu");
+  if(prevu&&g("sortie")&&prevu<g("sortie"))return toast("Le retour prévu ne peut pas précéder la date de sortie.");
+  const ref=lsRef(),grp=ref,btn=$("#dlg .pri");if(btn)btn.disabled=true;
   try{
-    await db.collection("prets").doc().set({docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,demandeur:g("dem"),service:g("srv"),mode:g("mode"),valide:g("val"),sortie:g("sortie"),prevu:g("prevu"),retour:"",statut:"en_cours",par:P.id||""});
-    await db.doc("docs/"+d.id).update({statut:"en_pret"});
-    $("#dlg").close();
-  }catch(e){fail(e)}
+    for(let i=0;i<sel.length;i+=20){
+      await Promise.all(sel.slice(i,i+20).map(async d=>{
+        await db.collection("prets").doc().set({docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,titre:d.intitule||"",type:d.type||"",cote:d.cote||"",annee:d.annee||"",direction:d.direction||"",dservice:d.service||"",ref,grp,demandeur:g("dem"),service:g("srv"),mode:g("mode"),valide:g("val"),sortie:g("sortie"),prevu,retour:"",statut:"en_cours",par:P.id||""});
+        await db.doc("docs/"+d.id).update({statut:"en_pret"});
+      }));
+    }
+    jr("Sortie groupée",ref+" · "+sel.length+" document(s) · "+g("dem"));
+    $("#dlg").innerHTML=`<h2>Sortie enregistrée</h2><p><b>${esc(ref)}</b> : ${sel.length} document(s) remis à ${esc(g("dem"))} (${esc(g("srv"))}).</p><p class="mu">Retour prévu : ${prevu?fmt(prevu):"non précisé"}.</p><div class="acts"><button class="pri" data-a="bon" data-v="${esc(grp)}">Bon de sortie (PDF)</button><button data-a="close">Fermer</button></div>`;
+  }catch(e){if(btn)btn.disabled=false;fail(e)}
+}
+const grpOf=k=>prets.filter(p=>(p.grp||p.id)===k);
+async function backAll(k){
+  const o=grpOf(k).filter(p=>p.statut==="en_cours");if(!o.length)return;
+  if(!await ask(`Enregistrer le retour des ${o.length} document(s) restants de cette sortie ?`,"Confirmer"))return;
+  try{for(let i=0;i<o.length;i+=20)await Promise.all(o.slice(i,i+20).map(async p=>{await db.doc("prets/"+p.id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"})}));jr("Retour groupé",(o[0].ref||k)+" · "+o.length+" document(s)")}catch(e){fail(e)}
+}
+async function bonSortie(k){
+  const L=grpOf(k);if(!L.length)return;let dl=null;try{dl=await PF.use("downloads")}catch(e){}
+  if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
+  const p0=L[0],logo=(document.querySelector(".hd img")||{}).src||"",c={};
+  L.forEach(p=>{const t=p.type||"Autre";c[t]=(c[t]||0)+1});
+  const rows=[...L].sort((x,y)=>cmp(x.titre||x.docLabel,y.titre||y.docLabel)).map((p,i)=>`<tr><td>${i+1}</td><td>${esc(p.titre||p.docLabel)}</td><td>${esc(p.type||"")}</td><td>${esc(p.annee||"")}</td><td>${esc(p.cote||"")}</td><td>${esc((p.direction||"")+(p.dservice?" › "+p.dservice:""))}</td><td>${p.statut==="rendu"?"Rendu "+fmt(p.retour):"Sorti"}</td></tr>`).join("");
+  const nom=P.name||"",ref=p0.ref||("BS-"+p0.id.slice(0,6));
+  const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Bon de sortie ${esc(ref)}</title><style>body{font:13px Arial,sans-serif;color:#111;max-width:860px;margin:20px auto;padding:0 14px}img{height:46px}h1{font-size:21px;color:#2B3A8C;margin:8px 0 2px;text-align:center}h3{font-size:14px;color:#2B3A8C;margin:16px 0 4px;border-bottom:1px solid #E8561A;padding-bottom:2px}table{border-collapse:collapse;width:100%;margin:6px 0}th,td{border:1px solid #999;padding:4px 6px;text-align:left;vertical-align:top}th{background:#eef}.m td{border:0;padding:2px 6px}.s{display:flex;gap:16px;margin-top:40px}.s div{flex:1;border-top:1px solid #333;padding-top:4px;text-align:center}.n{margin-top:12px;font-style:italic}@media print{button{display:none}tr{page-break-inside:avoid}}</style><body><button onclick="print()">Imprimer / Enregistrer en PDF</button> ${logo?`<img src="${logo}">`:""}<h1>BON DE SORTIE DE DOCUMENTS</h1><div style="text-align:center;color:#555">Réf. <b>${esc(ref)}</b> · NITA SA – Service Archivage</div>
+<table class="m"><tr><td>Emprunteur</td><td><b>${esc(p0.demandeur)}</b></td><td>Service</td><td><b>${esc(p0.service)}</b></td></tr><tr><td>Modalité</td><td>${esc(p0.mode)}</td><td>Demande validée par</td><td>${esc(p0.valide||"–")}</td></tr><tr><td>Date de sortie</td><td><b>${fmt(p0.sortie)}</b></td><td>Retour prévu</td><td><b>${p0.prevu?fmt(p0.prevu):"Non précisé"}</b></td></tr></table>
+<h3>Total : ${L.length} document(s) — ${Object.entries(c).map(([k,n])=>n+" "+esc(k)).join(", ")}</h3>
+<table><tr><th>N°</th><th>Intitulé</th><th>Support</th><th>Année</th><th>Cote</th><th>Direction › Service</th><th>État</th></tr>${rows}</table>
+<p class="n">L’emprunteur s’engage à restituer l’intégralité des documents ci-dessus au Service Archivage en bon état${p0.prevu?"":", à une date à convenir avec le Service Archivage"}.</p>
+<p class="m">Établi le ${fmt(today())}${nom?" par "+esc(nom):""}.</p>
+<div class="s"><div>L’emprunteur<br>${esc(p0.demandeur)}</div><div>Validation<br>${esc(p0.valide||"Chef de service")}</div><div>Archiviste</div><div>Chef du Service Archivage</div></div></body></html>`;
+  try{await dl.save({filename:"bon-de-sortie-"+ref.replace(/[^\w-]+/g,"_")+".html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+(e&&e.message||e))}
 }
 async function back(id){
   const p=prets.find(x=>x.id===id);if(!p)return;
@@ -1858,7 +1929,7 @@ document.addEventListener("click",async e=>{
   else if(a==="lend")openLend(v);
   else if(a==="close")$("#dlg").close();
   else if(a==="savedoc")saveDoc(v);
-  else if(a==="savelend")saveLend();
+  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="backall")backAll(v);else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
   else if(a==="back")back(v);
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
