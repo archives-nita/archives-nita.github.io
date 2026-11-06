@@ -554,10 +554,10 @@ function inv(){
 
 function pretCard(p){
   const op=p.statut==="en_cours";
-  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${tab==="pret"?`<input type="checkbox" class="psel" value="${p.id}" ${PS.has(p.id)?"checked":""} style="width:auto;min-height:0;margin-right:6px;vertical-align:middle">`:""}${esc(p.docLabel)}</b><span class="b ${op?(late(p)?"er":"wa"):"ok"}">${op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
+  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${tab==="pret"?`<input type="checkbox" class="psel" value="${p.id}" ${PS.has(p.id)?"checked":""} style="width:auto;min-height:0;margin-right:6px;vertical-align:middle">`:""}${esc(p.docLabel)}</b><span class="b ${p.statut==="annule"?"er":op?(late(p)?"er":"wa"):"ok"}">${p.statut==="annule"?"Annulée":op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
   <div class="mu">${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>
   <div class="mu">Sortie ${fmt(p.sortie)} · retour prévu ${fmt(p.prevu)}${p.retour?" · rendu le "+fmt(p.retour):""}${p.valide?" · validé par "+esc(p.valide):""}${p.valideUid?` · validé par <span data-uid="${p.valideUid}"></span>`:""}${p.par?` · saisi par <span data-uid="${p.par}"></span>`:""}</div>
-  ${op?`<div class="acts"><button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button></div>`:`<div class="acts"><button class="sm" data-a="undo" data-v="${p.id}">Annuler le retour</button></div>`}</div>`;
+  <div class="acts">${op?`<button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button><button class="sm" data-a="canpret" data-v="${p.id}">Annuler la sortie</button>`:p.statut==="annule"?"":`<button class="sm" data-a="undo" data-v="${p.id}">Annuler le retour</button>`}${(dm=>dm?`<button class="sm" data-a="ddet" data-v="${dm.id}">Voir la demande</button>`:"")(demOf(p))}</div></div>`;
 }
 function grpCard(k,L){
   const o=L.filter(p=>p.statut==="en_cours"),p0=L[0],lt=o.some(late),c={};
@@ -630,7 +630,7 @@ async function saveDoc(id){
   if(!o.cote){const pre=`${ini(o.direction)}-${ini(o.service)}-${o.annee}-`,mx=Math.max(0,...docs.filter(d=>d.id!==id&&(d.cote||"").startsWith(pre)).map(d=>+(d.cote.slice(pre.length))||0));o.cote=pre+String(mx+1).padStart(3,"0")}
   try{
     if(id)await db.doc("docs/"+id).update(o);else await db.collection("docs").doc().set({...o,statut:"disponible"});
-    $("#dlg").close();
+    jr(id?"Entrée modifiée":"Entrée créée",`${o.intitule} (${o.annee}, ${o.service})`);$("#dlg").close();
   }catch(e){fail(e)}
 }
 const LS=new Set();let lsT=0;
@@ -686,7 +686,7 @@ async function saveLend(){
         await db.doc("docs/"+d.id).update({statut:"en_pret"});
       }));
     }
-    jr("Sortie groupée",ref+" · "+sel.length+" document(s) · "+g("dem"));
+    jr(sel.length>1?"Sortie groupée":"Sortie enregistrée",ref+" · "+sel.length+" document(s) · "+g("dem"));
     $("#dlg").innerHTML=`<h2>Sortie enregistrée</h2><p><b>${esc(ref)}</b> : ${sel.length} document(s) remis à ${esc(g("dem"))} (${esc(g("srv"))}).</p><p class="mu">Retour prévu : ${prevu?fmt(prevu):"non précisé"}.</p><div class="acts"><button class="pri" data-a="bon" data-v="${esc(grp)}">Bon de sortie (PDF)</button><button data-a="close">Fermer</button></div>`;
   }catch(e){if(btn)btn.disabled=false;fail(e)}
 }
@@ -721,17 +721,17 @@ function pdfBuild(o){
   par(o.titre,17,true,"#2B3A8C",2);
   T("Référence : "+o.ref,M,y,10,true,"#E8561A");y+=18;L(M,y,M+CW,y,"#E8561A",1);y+=8;
   const half=CW/2;for(let i=0;i<o.meta.length;i+=2){const a=o.meta[i],b2=o.meta[i+1],la=wrap(a[0]+" : "+a[1],half-8,9.5,false),lb=b2?wrap(b2[0]+" : "+b2[1],half-8,9.5,false):[],n=Math.max(la.length,lb.length);need(n*13+4);la.forEach((l,j)=>T(l,M,y+j*13,9.5,false));lb.forEach((l,j)=>T(l,M+half,y+j*13,9.5,false));y+=n*13+3}
-  y+=6;par("Total : "+o.items.length+" document(s) — "+o.recapType,10.5,true,"#111111",4);
+  y+=6;if(!o.sections){if(!o.simple)par("Total : "+o.items.length+" document(s) — "+o.recapType,10.5,true,"#111111",4);
   // regroupement année / type
   const yk=a=>a?String(a):"Sans année",ys=[...new Set(o.items.map(i=>yk(i.annee)))].sort((p,q)=>p==="Sans année"?1:q==="Sans année"?-1:p.localeCompare(q,"fr",{numeric:true}));
   const tk=t=>t||"Autre",tyOrder=t=>{const i=o.types.indexOf(t);return i<0?99:i};
   const recap=[];ys.forEach(yr=>{const its=o.items.filter(i=>yk(i.annee)===yr),ts=[...new Set(its.map(i=>tk(i.type)))].sort((p,q)=>tyOrder(p)-tyOrder(q)||p.localeCompare(q,"fr"));ts.forEach(t=>recap.push([yr,t,String(its.filter(i=>tk(i.type)===t).length)]))});
-  par("Récapitulatif par année et par type",11,true,"#2B3A8C",2);
-  table([{w:CW*0.3},{w:CW*0.45},{w:CW*0.25,al:"r"}],["Année","Type","Nombre"],recap);y+=12;
-  need(60);par("Détail des documents",11,true,"#2B3A8C",2);
+  if(!o.simple){par("Récapitulatif par année et par type",11,true,"#2B3A8C",2);
+  table([{w:CW*0.3},{w:CW*0.45},{w:CW*0.25,al:"r"}],["Année","Type","Nombre"],recap);y+=12}
+  need(60);par(o.simple?"Document demandé":"Détail des documents",11,true,"#2B3A8C",2);
   const same=o.items.every(i=>i.loc===o.items[0].loc);if(same&&o.items[0].loc)par("Provenance : "+o.items[0].loc,9.5,false,"#111111",4);
   const rows=[];let n=0;ys.forEach(yr=>{const its=o.items.filter(i=>yk(i.annee)===yr),ts=[...new Set(its.map(i=>tk(i.type)))].sort((p,q)=>tyOrder(p)-tyOrder(q)||p.localeCompare(q,"fr"));ts.forEach(t=>{const g=its.filter(i=>tk(i.type)===t).sort((p,q)=>cmp(p.titre||"",q.titre||""));rows.push({band:"Année "+yr+" · "+t+" — "+g.length+" document(s)"});g.forEach(i=>{n++;rows.push(same?[String(n),i.titre,i.cote||"–",i.etat||""]:[String(n),i.titre,i.cote||"–",i.loc,i.etat||""])})})});
-  table(same?[{w:28,al:"r"},{w:300},{w:80},{w:107.28}]:[{w:24,al:"r"},{w:190},{w:60},{w:181},{w:60}],same?["N°","Intitulé","Cote","État"]:["N°","Intitulé","Cote","Direction > Service","État"],rows);y+=10;
+  table(same?[{w:28,al:"r"},{w:300},{w:80},{w:107.28}]:[{w:24,al:"r"},{w:190},{w:60},{w:181},{w:60}],same?["N°","Intitulé","Cote","État"]:["N°","Intitulé","Cote","Direction > Service","État"],rows);y+=10;}else{o.sections.forEach(sc=>{need(50);par(sc.titre,11,true,"#2B3A8C",2);if(sc.rows.length)table(sc.cols,sc.head,sc.rows);else par("Aucune donnée.",9.5,false,"#555555",4);y+=10})}
   if(o.obs){need(30);par("Observations : "+o.obs,9.5,false,"#111111",6)}
   if(o.note){par(o.note,9.5,false,"#444444",8)}
   need(90);y+=30;const sw=CW/o.sign.length;o.sign.forEach((s2,i)=>{L(M+i*sw+8,y,M+(i+1)*sw-8,y,"#333333",0.7);wrap(s2,sw-16,9,false).forEach((l,j)=>T(l,M+i*sw,y+4+j*11,9,false,"#111111","c",sw))});
@@ -855,7 +855,7 @@ async function undoEntree(ref){
 }
 async function back(id){
   const p=prets.find(x=>x.id===id);if(!p)return;
-  try{await db.doc("prets/"+id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"})}catch(e){fail(e)}
+  try{await db.doc("prets/"+id).update({retour:today(),statut:"rendu",retourPar:P.id||""});await db.doc("docs/"+p.docId).update({statut:"disponible"});jr("Retour enregistré",(p.ref||"")+" · "+(p.titre||p.docLabel))}catch(e){fail(e)}
 }
 
 
@@ -881,19 +881,84 @@ function cb0(d){const c=cal(d.cat);if(d.statut==="detruit")return `<span class="
 function applyRole(){const m=membres.find(x=>x.uid===P.id);P.fn=m?m.fonction:"";P.arch=P.admin||P.owner||(P.write&&(!membres.length||["Archiviste","Administrateur"].includes(P.fn)));P.val=P.admin||P.owner||["Responsable de service","Administrateur"].includes(P.fn);document.body.classList.toggle("ro",!P.arch);document.body.classList.toggle("nw",!P.write)}
 const FER=new Set(["01-01","04-24","05-01","08-03","12-18","12-25"]);
 const addWork=(s,n)=>{const d=new Date(s+"T12:00:00");if(isNaN(d))return "";let g=0;while(n>0&&g++<60){d.setDate(d.getDate()+1);if(d.getDay()%6&&!FER.has(ymd(d).slice(5)))n--}return ymd(d)};
-const DST={a_valider:"À valider",validee:"Validée",refusee:"Refusée"};
+const DST={a_valider:"À valider",validee:"Validée",refusee:"Refusée",traitee:"Traitée (sortie enregistrée)",annulee:"Annulée"};
 
+const demCanCancel=x=>(x.statut==='a_valider'&&(P.val||P.arch||x.par===P.id))||(x.statut==='validee'&&(P.val||P.arch));
 function demCard(x){
   const lt=x.statut==="validee"&&(a=>!!a&&a<today())(addWork(x.valLe,1));
-  return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(x.docLabel)}</b><span class="b ${x.statut==="refusee"?"er":x.statut==="validee"?"ok":"wa"}">${DST[x.statut]}</span></div>
+  return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(x.docLabel)}</b><span class="b ${x.statut==="refusee"||x.statut==="annulee"?"er":x.statut==="validee"||x.statut==="traitee"?"ok":"wa"}">${DST[x.statut]||esc(x.statut)}</span></div>
   <div class="mu">${esc(x.mode)} · souhaitée le ${fmt(x.sou)} · ${esc(x.srv)} · par <span data-uid="${esc(x.par)}"></span></div><div class="mu">Objet : ${esc(x.objet)}</div>
   ${x.statut==="validee"?`<div class="mu">Validée le ${fmt(x.valLe)} · à traiter avant le ${fmt(addWork(x.valLe,1))} (24 h ouvrables)</div>`:""}${x.motif?`<div class="mu">Motif du refus : ${esc(x.motif)}</div>`:""}
-  <div class="acts">${x.statut==="a_valider"&&P.val?`<button class="sm pri" data-a="dval" data-v="${x.id}">Valider</button><button class="sm" data-a="dref" data-v="${x.id}">Refuser</button>`:""}${x.statut==="validee"?`<button class="sm pri w" data-a="dtr" data-v="${x.id}">Traiter : enregistrer la sortie</button>`:""}</div></div>`;
+  <div class="acts">${x.statut==="a_valider"&&P.val?`<button class="sm pri" data-a="dval" data-v="${x.id}">Valider</button><button class="sm" data-a="dref" data-v="${x.id}">Refuser</button>`:""}${x.statut==="validee"?`<button class="sm pri w" data-a="dtr" data-v="${x.id}">Traiter : enregistrer la sortie</button>`:""}<button class="sm" data-a="ddet" data-v="${x.id}">Détails / PDF</button>${demCanCancel(x)?`<button class="sm" data-a="dcan" data-v="${x.id}">Annuler la demande</button>`:""}</div></div>`;
+}
+const demOf=p=>demandes.find(x=>x.id===p.demId)||demandes.filter(x=>x.docId===p.docId&&x.statut==="traitee"&&(!p.sortie||(x.valLe||"")<=p.sortie)).sort((a,b)=>(b.valLe||"").localeCompare(a.valLe||""))[0];
+const prOf=x=>prets.find(p=>p.demId===x.id)||(x.statut==="traitee"?prets.filter(p=>p.docId===x.docId&&!p.demId&&(p.sortie||"")>=(x.valLe||"")).sort((a,b)=>(a.sortie||"").localeCompare(b.sortie||""))[0]:null);
+async function demNames(x){const ids=[x.par,x.valPar,x.annulePar].filter(Boolean),nm={};try{const ps=await user.profiles(ids);ids.forEach(i=>nm[i]=(ps[i]&&ps[i].name)||"")}catch(e){}return nm}
+async function demDetail(id){
+  const x=demandes.find(y=>y.id===id);if(!x)return;const d=docs.find(z=>z.id===x.docId)||{},nm=await demNames(x),pr=prOf(x);
+  const r=(k,v)=>v?`<tr><td class="mu" style="padding:3px 8px 3px 0;vertical-align:top;white-space:nowrap">${k}</td><td>${v}</td></tr>`:"";
+  $("#dlg").innerHTML=`<h2>Détails de la demande</h2><span class="b ${x.statut==="refusee"||x.statut==="annulee"?"er":x.statut==="validee"||x.statut==="traitee"?"ok":"wa"}">${esc(DST[x.statut]||x.statut)}</span>
+  <table style="margin-top:8px;width:100%">${r("Document",esc(d.intitule||x.docLabel))}${r("Cote / type",esc([d.cote,d.type,d.annee].filter(Boolean).join(" · ")))}${r("Provenance",esc([d.direction,d.service].filter(Boolean).join(" › ")))}${r("Emplacement",esc(d.empl||""))}
+  ${r("Demandeur",esc(nm[x.par]||"–"))}${r("Service",esc(x.srv))}${r("Modalité",esc(x.mode))}${r("Objet",esc(x.objet))}${r("Date souhaitée",fmt(x.sou))}${r("Demande créée le",fmt(x.creeLe))}
+  ${x.valLe?r("Validée",fmt(x.valLe)+(nm[x.valPar]?" par "+esc(nm[x.valPar]):"")):""}${x.motif?r("Motif du refus",esc(x.motif)):""}${x.statut==="annulee"?r("Annulée",fmt(x.annuleLe)+(nm[x.annulePar]?" par "+esc(nm[x.annulePar]):"")):""}
+  ${pr?r("Sortie",fmt(pr.sortie)+" · retour prévu "+(pr.prevu?fmt(pr.prevu):"non précisé")+" · "+(pr.statut==="rendu"?"rendu le "+fmt(pr.retour):pr.statut==="annule"?"annulée":"en cours")):""}</table>
+  <div class="acts"><button class="pri" data-a="dpdf" data-v="${x.id}">PDF / e-mail</button>${demCanCancel(x)?`<button data-a="dcan" data-v="${x.id}">Annuler la demande</button>`:""}${pr&&pr.statut==="en_cours"&&P.arch?`<button data-a="canpret" data-v="${pr.id}">Annuler la demande et la sortie</button>`:""}<button data-a="close">Fermer</button></div>`;
+  const L2=$("#dlg");if(!L2.open)L2.showModal();
+}
+async function demPdf(id){
+  const x=demandes.find(y=>y.id===id);if(!x)return;const d=docs.find(z=>z.id===x.docId)||{},nm=await demNames(x),pr=prOf(x),ref="DC-"+(x.creeLe||"").replace(/-/g,"")+"-"+String(x.id).slice(0,4).toUpperCase();
+  const items=[{titre:d.intitule||x.docLabel,type:d.type||"",annee:d.annee||"",cote:d.cote||"",loc:(d.direction||"")+(d.service?" > "+d.service:""),etat:DST[x.statut]||""}];
+  const meta=[["Demandeur",nm[x.par]||"–"],["Service",x.srv],["Modalité",x.mode],["Date souhaitée",fmtR(x.sou)],["Demande créée le",fmtR(x.creeLe)],["Statut",DST[x.statut]||x.statut]];
+  if(x.valLe)meta.push(["Validée le",fmtR(x.valLe)+(nm[x.valPar]?" par "+nm[x.valPar]:"")]);
+  if(pr)meta.push(["Sortie",fmtR(pr.sortie)+" · retour prévu "+(pr.prevu?fmtR(pr.prevu):"non précisé")+" · "+(pr.statut==="rendu"?"rendu le "+fmtR(pr.retour):pr.statut==="annule"?"annulée":"en cours")]);
+  if(x.statut==="annulee")meta.push(["Annulée le",fmtR(x.annuleLe)+(nm[x.annulePar]?" par "+nm[x.annulePar]:"")]);
+  const blob=pdfBuild({titre:"FICHE DE DEMANDE DE CONSULTATION",ref,logo:pdfLogo(),types:TYPES,items,simple:true,recapType:"",meta,obs:"Objet : "+(x.objet||"–")+(x.motif?" · Motif du refus : "+x.motif:""),sign:["Le demandeur\n"+(nm[x.par]||""),"Validation (chef de service / directeur)\n"+(nm[x.valPar]||""),"Archiviste"]});
+  pdfDialog("Demande "+ref,"demande-"+ref+".pdf",blob,"Fiche de demande "+ref+" – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver la fiche de la demande de consultation ${ref} (${items[0].titre}), demandeur : ${nm[x.par]||"–"} (${x.srv}).\nStatut : ${DST[x.statut]||x.statut}.\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
+async function demCancel(id){
+  const x=demandes.find(y=>y.id===id);if(!x||!demCanCancel(x))return;
+  if(!await ask("Annuler cette demande de consultation ?","Annuler la demande"))return;
+  try{await db.doc("demandes/"+id).update({statut:"annulee",annuleLe:today(),annulePar:P.id||""});jr("Demande annulée",x.docLabel);const L2=$("#dlg");if(L2.open)L2.close()}catch(e){fail(e)}
+}
+async function cancelPret(id){
+  const p=prets.find(x=>x.id===id);if(!p||p.statut!=="en_cours")return;const dm=demOf(p);
+  if(!await ask("Annuler cette sortie ? Le document redevient disponible"+(dm?" et la demande associée est annulée":"")+".","Annuler la sortie"))return;
+  try{
+    await db.doc("prets/"+id).update({statut:"annule",annuleLe:today(),annulePar:P.id||""});
+    await db.doc("docs/"+p.docId).update({statut:"disponible"});
+    if(dm&&dm.statut==="traitee")await db.doc("demandes/"+dm.id).update({statut:"annulee",annuleLe:today(),annulePar:P.id||""});
+    jr("Sortie annulée",(p.ref||"")+" · "+(p.titre||p.docLabel));const L2=$("#dlg");if(L2.open)L2.close()
+  }catch(e){fail(e)}
+}
+const MOISL=["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+function actRange(per,ref){
+  const d=new Date(ref+"T12:00:00");let a,b,lab,code;
+  if(per==="jour"){a=b=ref;lab="Jour : "+fmtR(ref);code="J-"+ref.replace(/-/g,"")}
+  else if(per==="semaine"){const w=(d.getDay()+6)%7,x=new Date(d);x.setDate(d.getDate()-w);const y2=new Date(x);y2.setDate(x.getDate()+6);a=ymd(x);b=ymd(y2);lab="Semaine du "+fmtR(a)+" au "+fmtR(b);code="S-"+a.replace(/-/g,"")}
+  else if(per==="mois"){a=ref.slice(0,8)+"01";const e=new Date(d.getFullYear(),d.getMonth()+1,0);b=ymd(e);lab="Mois de "+MOISL[d.getMonth()]+" "+d.getFullYear();code="M-"+ref.slice(0,7).replace("-","")}
+  else{a=d.getFullYear()+"-01-01";b=d.getFullYear()+"-12-31";lab="Année "+d.getFullYear();code="A-"+d.getFullYear()}
+  return {a,b,lab,code};
+}
+function actRapport(){
+  const per=$("#ra_per").value,ref=$("#ra_date").value||today(),r=actRange(per,ref);
+  const L=journal.filter(j=>{if(!j.t)return false;const d=ymd(new Date(j.t));return d>=r.a&&d<=r.b}).sort((x,y)=>(x.t||"").localeCompare(y.t||""));
+  const cnt=f=>{const c={};L.forEach(j=>{const k=f(j)||"?";c[k]=(c[k]||0)+1});return Object.entries(c).sort((x,y)=>y[1]-x[1]||x[0].localeCompare(y[0],"fr")).map(([k,n])=>[k,String(n)])};
+  const hm=t=>{const d=new Date(t);return fmtR(ymd(d))+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0")};
+  const ref2="RA-"+r.code;
+  const blob=pdfBuild({titre:"RAPPORT D’ACTIVITÉ ET DE MODIFICATIONS",ref:ref2,logo:pdfLogo(),types:TYPES,items:[],recapType:"",
+    meta:[["Période",r.lab],["Du / au",fmtR(r.a)+" au "+fmtR(r.b)],["Nombre d’actions",String(L.length)],["Établi par",P.name||"–"]],
+    sections:[
+      {titre:"Synthèse par utilisateur",cols:[{w:380},{w:135.28,al:"r"}],head:["Utilisateur","Actions"],rows:cnt(j=>j.nom)},
+      {titre:"Synthèse par type d’action",cols:[{w:380},{w:135.28,al:"r"}],head:["Action","Nombre"],rows:cnt(j=>j.act)},
+      {titre:"Détail chronologique",cols:[{w:78},{w:100},{w:120},{w:217.28}],head:["Date / heure","Utilisateur","Action","Détail"],rows:L.map(j=>[hm(j.t),j.nom||"?",j.act||"",j.label||""])}],
+    sign:["Chef du Service Archivage","Direction (visa)"]});
+  pdfDialog("Rapport d’activité ("+r.lab+")","rapport-activite-"+r.code+".pdf",blob,"Rapport d’activité – "+r.lab+" – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver le rapport d’activité et de modifications du Service Archivage : ${r.lab} (${L.length} action(s)).\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
 }
 function demSec(){
   const all=(P.arch||P.val)?demandes:demandes.filter(x=>x.par===P.id);
   const o=all.filter(x=>x.statut==="a_valider"||x.statut==="validee"||(x.statut==="refusee"&&x.par===P.id)).sort((a,b)=>a.creeLe<b.creeLe?1:-1);
-  return `<h2>Demandes de consultation (${o.length})</h2>${o.map(demCard).join("")||'<p class="mu">Aucune demande en attente.</p>'}`;
+  const oi=new Set(o.map(x=>x.id)),hi=all.filter(x=>!oi.has(x.id)&&["traitee","annulee","refusee"].includes(x.statut)).sort((a,b)=>(a.creeLe||"")<(b.creeLe||"")?1:-1);
+  return `<h2>Demandes de consultation (${o.length})</h2>${o.map(demCard).join("")||'<p class="mu">Aucune demande en attente.</p>'}${hi.length?`<details style="margin:8px 0"><summary class="mu" style="cursor:pointer">Historique des demandes (${hi.length})</summary>${hi.map(demCard).join("")}</details>`:""}`;
 }
 function fillDocs(q){const n=norm(q),r=docs.filter(d=>d.statut==="disponible"&&(!n||norm([d.direction,d.service,d.annee,d.intitule,d.cote].join(" ")).includes(n))).slice(0,30);$("#f_doc").innerHTML=r.map(d=>`<option value="${d.id}">${esc(d.direction)} › ${esc(d.service)} › ${d.annee} › ${esc(d.intitule)}</option>`).join("")}
 function openDem(){
@@ -907,7 +972,7 @@ function openDem(){
 async function saveDem(){
   const g=k=>$("#f_"+k).value.trim(),d=docs.find(x=>x.id===g("doc"));
   if(!d||!g("srv")||!g("objet"))return toast("Document, service et objet sont obligatoires.");
-  try{await db.collection("demandes").doc().set({docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,srv:g("srv"),mode:g("mode"),objet:g("objet"),sou:g("sou"),statut:"a_valider",par:P.id||"x",creeLe:today()});$("#dlg").close()}catch(e){fail(e)}
+  try{await db.collection("demandes").doc().set({docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,srv:g("srv"),mode:g("mode"),objet:g("objet"),sou:g("sou"),statut:"a_valider",par:P.id||"x",creeLe:today()});jr("Demande créée",d.intitule+" · "+g("srv"));$("#dlg").close()}catch(e){fail(e)}
 }
 async function treatDem(id){
   const x=demandes.find(y=>y.id===id),d=x&&docs.find(z=>z.id===x.docId);
@@ -915,8 +980,8 @@ async function treatDem(id){
   let nom="Demandeur";try{const ps=await user.profiles([x.par]);nom=(ps[x.par]&&ps[x.par].name)||nom}catch(e){}
   const sp=x.mode==="Consultation sur place",in7=plus(7);
   try{
-    await db.collection("prets").doc().set({docId:d.id,docLabel:x.docLabel,demandeur:nom,service:x.srv,mode:x.mode,valide:"",valideUid:x.valPar||"",sortie:today(),prevu:sp?today():in7,retour:"",statut:"en_cours",par:P.id||""});
-    await db.doc("docs/"+d.id).update({statut:"en_pret"});await db.doc("demandes/"+id).update({statut:"traitee"});
+    await db.collection("prets").doc().set({demId:id,docId:d.id,docLabel:x.docLabel,demandeur:nom,service:x.srv,mode:x.mode,valide:"",valideUid:x.valPar||"",sortie:today(),prevu:sp?today():in7,retour:"",statut:"en_cours",par:P.id||""});
+    await db.doc("docs/"+d.id).update({statut:"en_pret"});await db.doc("demandes/"+id).update({statut:"traitee"});jr("Demande traitée : sortie enregistrée",x.docLabel);
   }catch(e){fail(e)}
 }
 
@@ -1198,7 +1263,7 @@ function openFiche(id){
   <div class="mu">${esc(d.type)} · ${d.nb} unité(s)${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
   ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
   ${(d.moves&&d.moves.length)?`<h4>Historique des emplacements (${d.moves.length})</h4>`+[...d.moves].reverse().slice(0,10).map(m=>`<div class="mu">${fmt((m.t||"").slice(0,10))} · ${esc(m.de||"—")} → ${esc(m.vers)}${m.nom?" · "+esc(m.nom):""}</div>`).join(""):""}
-  ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
+  ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
   <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${d.id}">Marquer retrouvé / en bon état</button>`:""}<button class="w" data-a="mloc" data-v="${d.id}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${d.id}">Dupliquer</button><button class="w" data-a="copie" data-v="${d.id}">Envoyer une copie</button><button data-a="fprint" data-v="${d.id}">Imprimer la fiche</button>${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${d.id}">Prêter / consulter</button>`:""}<button class="w" data-a="fedit" data-v="${d.id}">Modifier</button><button data-a="lab1" data-v="${d.id}">Étiquette</button><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
 }
@@ -1215,7 +1280,7 @@ async function ficheDoc(id){
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
   const logo=(document.querySelector(".hd img")||{}).src||"",c=cal(d.cat),hist=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));
   const row=(k,v)=>`<tr><th>${k}</th><td>${v||"–"}</td></tr>`;
-  const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Fiche ${esc(d.cote||d.intitule)}</title><style>body{font:14px Arial,sans-serif;color:#111;max-width:760px;margin:24px auto;padding:0 16px}img{height:48px}h1{font-size:20px;margin:10px 0}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #999;padding:6px 8px;text-align:left;vertical-align:top}th{width:32%;background:#eef}.s{margin-top:44px;display:flex;gap:40px}.s div{flex:1;border-top:1px solid #333;padding-top:4px;font-size:12px}@media print{button{display:none}}</style><body><button onclick="print()">Imprimer</button> ${logo?`<img src="${logo}">`:""}<h1>Fiche d’entrée d’archives</h1><table>${row("Cote",esc(d.cote))}${row("Intitulé",esc(d.intitule))}${row("Direction › service",esc(d.direction)+" › "+esc(d.service))}${row("Année",d.annee+(d.mois?" · "+esc(d.mois):""))}${row("Support",esc(d.type)+" · "+d.nb+" unité(s)")}${row("Emplacement",esc(d.empl))}${row("Conservation",c?esc(c[1])+" · "+SORT[c[3]]+(fin(d)?" · jusqu’à fin "+fin(d):""):"Non classée")}${row("Statut",d.statut==="detruit"?"Détruit"+(d.pv?" · "+esc(d.pv):""):d.statut==="en_pret"?"En sortie":"Disponible")}${d.ctl?row("Dernier contrôle",d.ctl==="absent"?"Introuvable":"Dégradé"):""}${row("Mots-clés",esc(d.mots))}${row("Observations",esc(d.obs))}</table><h3>Historique des sorties (${hist.length})</h3>${hist.length?`<table><tr><th>Sortie</th><th>Retour</th><th>Demandeur</th><th>Service</th><th>Mode</th></tr>${hist.map(p=>`<tr><td>${fmt(p.sortie)}</td><td>${p.retour?fmt(p.retour):"en cours"}</td><td>${esc(p.demandeur)}</td><td>${esc(p.service)}</td><td>${esc(p.mode)}</td></tr>`).join("")}</table>`:"<p>Aucune sortie enregistrée.</p>"}<p>Édité le ${fmt(today())}.</p><div class="s"><div>Archiviste</div><div>Chef du Service Archivage</div></div></body></html>`;
+  const html=`<!doctype html><html lang="fr"><meta charset="utf-8"><title>Fiche ${esc(d.cote||d.intitule)}</title><style>body{font:14px Arial,sans-serif;color:#111;max-width:760px;margin:24px auto;padding:0 16px}img{height:48px}h1{font-size:20px;margin:10px 0}table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid #999;padding:6px 8px;text-align:left;vertical-align:top}th{width:32%;background:#eef}.s{margin-top:44px;display:flex;gap:40px}.s div{flex:1;border-top:1px solid #333;padding-top:4px;font-size:12px}@media print{button{display:none}}</style><body><button onclick="print()">Imprimer</button> ${logo?`<img src="${logo}">`:""}<h1>Fiche d’entrée d’archives</h1><table>${row("Cote",esc(d.cote))}${row("Intitulé",esc(d.intitule))}${row("Direction › service",esc(d.direction)+" › "+esc(d.service))}${row("Année",d.annee+(d.mois?" · "+esc(d.mois):""))}${row("Support",esc(d.type)+" · "+d.nb+" unité(s)")}${row("Emplacement",esc(d.empl))}${row("Conservation",c?esc(c[1])+" · "+SORT[c[3]]+(fin(d)?" · jusqu’à fin "+fin(d):""):"Non classée")}${row("Statut",d.statut==="detruit"?"Détruit"+(d.pv?" · "+esc(d.pv):""):d.statut==="en_pret"?"En sortie":"Disponible")}${d.ctl?row("Dernier contrôle",d.ctl==="absent"?"Introuvable":"Dégradé"):""}${row("Mots-clés",esc(d.mots))}${row("Observations",esc(d.obs))}</table><h3>Historique des sorties (${hist.length})</h3>${hist.length?`<table><tr><th>Sortie</th><th>Retour</th><th>Demandeur</th><th>Service</th><th>Mode</th></tr>${hist.map(p=>`<tr><td>${fmt(p.sortie)}</td><td>${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"}</td><td>${esc(p.demandeur)}</td><td>${esc(p.service)}</td><td>${esc(p.mode)}</td></tr>`).join("")}</table>`:"<p>Aucune sortie enregistrée.</p>"}<p>Édité le ${fmt(today())}.</p><div class="s"><div>Archiviste</div><div>Chef du Service Archivage</div></div></body></html>`;
   try{await dl.save({filename:"fiche-"+String(d.cote||d.id).replace(/[^\w-]+/g,"_")+".html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Enregistrement impossible : "+(e&&e.message||e))}
 }
 document.addEventListener('change',e=>{const c=e.target;if(c&&c.classList&&c.classList.contains('psel')){c.checked?PS.add(c.value):PS.delete(c.value);psBar()}});
@@ -1849,7 +1914,7 @@ async function saveVers(){
   const lignes=g("lignes").split("\n").map(l=>l.split(/;|\t/).map(s=>s.trim())).filter(p=>p[0]).map(p=>[p[0],Math.max(1,parseInt(p[1])||1),p[2]||""]);
   if(!g("direction")||!g("service")||!g("annee")||!lignes.length)return toast("Direction, service, année et liste des dossiers sont obligatoires.");
   let num;try{num=await freeNum("versements","VERS",versements)}catch(e){return fail(e)}
-  try{await db.doc("versements/"+hid(num)).set({num,statut:"a_controler",direction:g("direction"),service:g("service"),type:g("type"),annee:+g("annee"),periode:g("periode")||g("annee"),date:g("date"),empl:g("empl"),cat:g("cat"),lignes,obs:g("obs"),par:P.id||"x",creeLe:today()});$("#dlg").close()}catch(e){fail(e)}
+  try{await db.doc("versements/"+hid(num)).set({num,statut:"a_controler",direction:g("direction"),service:g("service"),type:g("type"),annee:+g("annee"),periode:g("periode")||g("annee"),date:g("date"),empl:g("empl"),cat:g("cat"),lignes,obs:g("obs"),par:P.id||"x",creeLe:today()});jr("Versement enregistré",num+" · "+g("direction")+" › "+g("service"));$("#dlg").close()}catch(e){fail(e)}
 }
 function vdet(id){
   const v=versements.find(x=>x.id===id);if(!v)return;
@@ -1948,6 +2013,9 @@ function team(){loadAnnu();
   <h2 style="margin-top:16px">Sauvegardes automatiques sur cet appareil</h2><p class="mu">Un instantané est enregistré dans l’appareil 30 secondes après chaque modification (un par jour, 14 jours conservés). Ces copies restent sur cet appareil : téléchargez-en une régulièrement et gardez-la ailleurs. Elles ne sont pas chiffrées : verrouillez l’appareil et ne laissez pas les fichiers téléchargés en libre accès.</p><div id="bklist"></div>
   ${orgHTML()}${locHTML()}
   <div class="adm"><h2 style="margin-top:16px">Maintenance des données</h2><p class="mu">${docs.filter(d=>!d.cote).length} entrée(s) sans cote · ${docs.filter(d=>!d.service||norm(d.service)==="non precise").length} sans service précisé · ${docs.filter(d=>!d.empl).length} sans emplacement.</p><div class="row"><button data-a="cotes">Attribuer les cotes manquantes</button><button data-a="comp">Compléter en masse…</button></div><div id="mmsg" class="mu"></div></div>
+  <div class="adm"><h2 style="margin-top:16px">Rapport d’activité (PDF)</h2><p class="mu">Toutes les modifications enregistrées dans le journal sur la période choisie, avec synthèse par utilisateur et par action.</p>
+  <div class="row"><select id="ra_per" style="flex:1"><option value="jour">Par jour</option><option value="semaine">Par semaine</option><option value="mois" selected>Par mois</option><option value="annee">Par année</option></select><input id="ra_date" type="date" value="${today()}" style="flex:1"></div>
+  <div class="acts"><button class="pri" data-a="actrap">Générer le rapport (PDF)</button></div></div>
   <div class="adm"><h2 style="margin-top:16px">Journal des modifications</h2><p class="mu">Actions sensibles : suppression, destruction, liste de destruction, versement accepté, import, clôture de contrôle.</p>${[...journal].sort((a,b)=>cmp(b.t||"",a.t||"")).slice(0,40).map(j=>`<div class="mu">${esc((j.t||"").slice(0,16).replace("T"," "))} · ${esc(j.nom||"?")} · <b>${esc(j.act)}</b> · ${esc(j.label||"")}</div>`).join("")||'<p class="mu">Aucune action enregistrée.</p>'}</div><div class="adm"><h2 style="margin-top:16px">Ajouter un membre</h2>
   <label for="pf">Fonction</label><select id="pf">${FONCTIONS.map(x=>`<option>${x}</option>`).join("")}</select>
   <label for="ps">${window.PLATFORM_SB?"Rechercher un compte par e-mail ou nom":"Rechercher une personne par nom"}</label><input id="ps" placeholder="${window.PLATFORM_SB?"E-mail…":"Nom…"}" autocomplete="off"><div id="pres"></div>
@@ -2071,7 +2139,7 @@ document.addEventListener("click",async e=>{
   else if(a==="lend")openLend(v);
   else if(a==="close")$("#dlg").close();
   else if(a==="savedoc")saveDoc(v);
-  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="undo")undoBack(v);else if(a==="undoent")undoEntree(v);else if(a==="psrep")psRapport();else if(a==="psgrp")psRegrouper();else if(a==="psnone"){PS.clear();document.querySelectorAll(".psel").forEach(c=>c.checked=false);psBar()}else if(a==="psall"){prets.filter(p=>p.statut==="en_cours"&&!p.grp).forEach(p=>PS.add(p.id));document.querySelectorAll(".psel").forEach(c=>c.checked=PS.has(c.value));psBar()}else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
+  else if(a==="savelend")saveLend();else if(a==="bon")bonSortie(v);else if(a==="actrap")actRapport();else if(a==="ddet")demDetail(v);else if(a==="dpdf")demPdf(v);else if(a==="dcan")demCancel(v);else if(a==="canpret")cancelPret(v);else if(a==="undo")undoBack(v);else if(a==="undoent")undoEntree(v);else if(a==="psrep")psRapport();else if(a==="psgrp")psRegrouper();else if(a==="psnone"){PS.clear();document.querySelectorAll(".psel").forEach(c=>c.checked=false);psBar()}else if(a==="psall"){prets.filter(p=>p.statut==="en_cours"&&!p.grp).forEach(p=>PS.add(p.id));document.querySelectorAll(".psel").forEach(c=>c.checked=PS.has(c.value));psBar()}else if(a==="entree")openEntree(v);else if(a==="saveentree")saveEntree(v);else if(a==="bone"){if(ENT&&ENT.ref===v)bonEntree(v,ENT.list);else bonEntree(v)}else if(a==="pdfdl")pdfSave();else if(a==="pdfmail")pdfMail();else if(a==="enall"){document.querySelectorAll(".enc").forEach(c=>c.checked=true);enCount()}else if(a==="ennone"){document.querySelectorAll(".enc").forEach(c=>c.checked=false);enCount()}else if(a==="lsall"){(b.dataset.ids||"").split(",").filter(Boolean).forEach(i=>LS.add(i));lsList();lsCount()}else if(a==="lsnone"){LS.clear();lsList();lsCount()}
   else if(a==="back")back(v);
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
@@ -2091,8 +2159,8 @@ document.addEventListener("click",async e=>{
   else if(a==="found"){const d=docs.find(x=>x.id===v);if(d&&await ask("Marquer cette entrée comme retrouvée ou en bon état ?"))db.doc("docs/"+v).update({ctl:"",ctlLe:today()}).then(()=>{jr("Entrée marquée retrouvée",d.intitule+" ("+(d.cote||"sans cote")+")");$("#dlg").close()}).catch(fail)}
   else if(a==="aide")openAide();else if(a==="bkdl")bkDl(v);else if(a==="bkrs")bkRestore(v);
   else if(a==="dem")openDem();else if(a==="savedem")saveDem();else if(a==="dtr")treatDem(v);
-  else if(a==="dval")db.doc("demandes/"+v).update({statut:"validee",valPar:P.id||"x",valLe:today()}).catch(fail);
-  else if(a==="dref"){const m=await askText("Motif du refus ?");if(m)db.doc("demandes/"+v).update({statut:"refusee",motif:m}).catch(fail)}
+  else if(a==="dval"){const x=demandes.find(y=>y.id===v);db.doc("demandes/"+v).update({statut:"validee",valPar:P.id||"x",valLe:today()}).then(()=>jr("Demande validée",x&&x.docLabel)).catch(fail)}
+  else if(a==="dref"){const m=await askText("Motif du refus ?");if(m){const x=demandes.find(y=>y.id===v);db.doc("demandes/"+v).update({statut:"refusee",motif:m}).then(()=>jr("Demande refusée",(x&&x.docLabel)+" · "+m)).catch(fail)}}
   else if(a==="newlist")newList();else if(a==="cxl")cancelList(v);else if(a==="apv")approve(v,b.dataset.k);else if(a==="sens")toggleSens(v);else if(a==="exec")openExec(v);else if(a==="doexec")doExec(v);
   else if(a==="addm")addMember(v);
   else if(a==="delm"&&await ask("Retirer cette personne de l’équipe ?"))db.doc("membres/"+v).delete().catch(fail);
