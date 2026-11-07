@@ -1916,13 +1916,14 @@ async function saveVers(){
   let num;try{num=await freeNum("versements","VERS",versements)}catch(e){return fail(e)}
   try{await db.doc("versements/"+hid(num)).set({num,statut:"a_controler",direction:g("direction"),service:g("service"),type:g("type"),annee:+g("annee"),periode:g("periode")||g("annee"),date:g("date"),empl:g("empl"),cat:g("cat"),lignes,obs:g("obs"),par:P.id||"x",creeLe:today()});jr("Versement enregistré",num+" · "+g("direction")+" › "+g("service"));$("#dlg").close()}catch(e){fail(e)}
 }
+const NCOL=new Intl.Collator('fr',{numeric:true,sensitivity:'base'}),lignesAZ=v=>{const sp=lineSup(v),r=t=>{const i=TYPES.indexOf(t);return i<0?99:i};return [...v.lignes].sort((a,b)=>r(sp(a))-r(sp(b))||NCOL.compare(String(a[0]),String(b[0])))};
 const lineSup=v=>{const m=new Map();docs.forEach(d=>{if(d.service===v.service&&d.direction===v.direction&&!m.has(d.intitule))m.set(d.intitule,d.type)});const pure=TYPES.includes(v.type)?v.type:"";return l=>l[3]||m.get(l[0])||pure||""};
 function versPdf(id){
   const v=versements.find(x=>x.id===id);if(!v)return;const an=v.lignes.filter(l=>l[2]),n=v.lignes.reduce((t,l)=>t+(+l[1]||1),0);
   const st=v.statut==="a_controler"?"À contrôler":"Accepté"+(v.accepteLe?" le "+fmtR(v.accepteLe):"");
   const sec=[];
   if(an.length)sec.push({titre:"Anomalies signalées ("+an.length+")",cols:[{w:240},{w:275.28}],head:["Dossier","Anomalie"],rows:an.map(l=>[l[0],l[2]])});
-  const sup=lineSup(v);sec.push({titre:"Liste des dossiers ("+v.lignes.length+")",cols:[{w:30,al:"r"},{w:345},{w:85},{w:55.28,al:"r"}],head:["N°","Intitulé","Support","Nb"],rows:[...v.lignes].map((l,i)=>[String(i+1),l[0],sup(l),String(l[1]||1)])});
+  const sup=lineSup(v);sec.push({titre:"Liste des dossiers ("+v.lignes.length+")",cols:[{w:30,al:"r"},{w:345},{w:85},{w:55.28,al:"r"}],head:["N°","Intitulé","Support","Nb"],rows:(()=>{const out=[],A=lignesAZ(v),ts=[...new Set(A.map(sup))];let n=0;ts.forEach(t=>{const g=A.filter(l=>sup(l)===t);if(ts.length>1)out.push({band:(t||"Autre").toUpperCase()+" — "+g.length+" dossier(s)"});g.forEach(l=>{n++;out.push([String(n),l[0],sup(l),String(l[1]||1)])})});return out})()});
   const blob=pdfBuild({titre:"RAPPORT DE VERSEMENT",ref:v.num,logo:pdfLogo(),types:TYPES,items:[],recapType:"",
     meta:[["Direction",v.direction],["Service",v.service],["Type",v.type],["Période",v.periode||String(v.annee)],["Prise en charge",v.date?fmtR(v.date):"Non renseignée (régularisation historique)"],["Emplacement",v.empl||"–"],["Statut",st],["Dossiers",v.lignes.length+(n!==v.lignes.length?" ("+n+" unités)":"")],["Anomalies",String(an.length)],["Établi par",P.name||"–"]],
     obs:v.obs||"",sections:sec,sign:["Service versant","Archiviste","Chef du Service Archivage"]});
@@ -1934,7 +1935,7 @@ function vdet(id){
   $("#dlg").innerHTML=`<h2>${esc(v.num)}</h2><div class="mu">${esc(v.direction)} › ${esc(v.service)} · ${esc(v.type)} · ${esc(v.periode)}<br>${v.date?"Pris en charge le "+fmt(v.date):"Date de prise en charge non renseignée (régularisation historique)"} · ${v.lignes.length} dossiers${v.empl?" · "+esc(v.empl):""}</div>
   ${an.length?`<h2 style="margin-top:12px">Anomalies (${an.length})</h2>${an.map(l=>`<div class="mu">• ${esc(l[0])} : ${esc(l[2])}</div>`).join("")}`:'<p class="mu">Aucune anomalie signalée dans la liste.</p>'}
   ${v.obs?`<h2 style="margin-top:12px">Observations et recommandations</h2><div class="mu">${esc(v.obs)}</div>`:""}
-  <details style="margin-top:8px"><summary class="mu">Liste des dossiers (${v.lignes.length})</summary>${(sp=>v.lignes.map(l=>`<div class="mu">• ${esc(l[0])}${sp(l)?" · "+esc(sp(l)):""}${l[1]>1?" ("+l[1]+")":""}</div>`).join(""))(lineSup(v))}</details>
+  <details style="margin-top:8px"><summary class="mu">Liste des dossiers (${v.lignes.length})</summary>${(sp=>lignesAZ(v).map(l=>`<div class="mu">• ${esc(l[0])}${sp(l)?" · "+esc(sp(l)):""}${l[1]>1?" ("+l[1]+")":""}</div>`).join(""))(lineSup(v))}</details>
   <div class="acts">${v.statut==="a_controler"?`<button class="pri w" data-a="vacc" data-v="${id}">Accepter et créer les entrées</button>`:""}<button class="pri" data-a="vpdf" data-v="${id}">Rapport PDF / e-mail</button><button data-a="vexp" data-v="${id}">Exporter le bordereau (Excel)</button><button data-a="close">Fermer</button></div>`;
   $("#dlg").showModal();
 }
@@ -1953,7 +1954,7 @@ async function expVers(id){
   let dl=null;try{dl=await PF.use("downloads")}catch(e){}
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
   const head=[["NITA SA – Service Archivage"],["Bordereau de versement "+v.num],["Service versant",v.direction+" › "+v.service],["Service récepteur","Service Archivage"],["Date de prise en charge",fmt(v.date)],["Type de document",v.type],["Période couverte",v.periode],["Nombre total de dossiers",v.lignes.length],["Observations",v.obs||""],[],["N°","Dossier","Support","Quantité"]];
-  const ws=XLSX.utils.aoa_to_sheet([...head,...v.lignes.map((l,i)=>[i+1,l[0],lineSup(v)(l),l[1]]),[],["Le Chef du Service Archivage","","Le service versant"]]),wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet([...head,...lignesAZ(v).map((l,i)=>[i+1,l[0],lineSup(v)(l),l[1]]),[],["Le Chef du Service Archivage","","Le service versant"]]),wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,ws,"Bordereau");
   try{await dl.save({filename:v.num+".xlsx",data:XLSX.write(wb,{bookType:"xlsx",type:"array"})})}
   catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+(e&&e.message||e))}
