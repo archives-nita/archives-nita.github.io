@@ -459,7 +459,7 @@ const plus=n=>{const d=new Date();d.setDate(d.getDate()+n);return ymd(d)};
 const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y+"-(\\d+)$");return p+"-"+y+"-"+String(Math.max(0,...a.map(x=>{const m=re.exec(x.num||"");return m?+m[1]:0}))+1).padStart(3,"0")};
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
-const TYPES=["Chrono","Carton","Chemise"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
+const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:""};
 let lim=100,ready=false;
 
