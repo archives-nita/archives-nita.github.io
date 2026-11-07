@@ -162,7 +162,7 @@ html{scroll-behavior:smooth}
   const ROLE_FN={admin:"Administrateur",archiviste:"Archiviste",responsable:"Responsable de service",demandeur:"Demandeur",lecteur:"Lecteur"};
   const FN_ROLE=Object.fromEntries(Object.entries(ROLE_FN).map(([k,v])=>[v,k]));
   const WRITERS=["admin","archiviste","responsable","demandeur"];
-  const IDLE_MS=30*60*1000,WARN_MS=30*1000;
+  const IDLE_MS=30*60*1000,WARN_MS=30*1000,IDLE_KEY="nitaLastActivity";
   let sb=null,ME=null,DB=null,readyRes,readyP=new Promise(r=>readyRes=r);
   const $$=s=>document.querySelector(s);
   const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -407,12 +407,15 @@ html{scroll-behavior:smooth}
     b.onclick=async()=>{await sb.auth.signOut();location.reload()};h.appendChild(b);
   }
   function idleGuard(){
-    let last=Date.now(),bar=null,dead=false;
-    const act=()=>{last=Date.now();if(bar){bar.remove();bar=null}};
-    ["click","keydown","touchstart","scroll","wheel","mousemove"].forEach(ev=>document.addEventListener(ev,act,{passive:true,capture:true}));
-    const out=async()=>{if(dead)return;dead=true;try{await sb.auth.signOut({scope:"local"})}catch(e){}location.reload()};
+    let last=Date.now(),bar=null,dead=false,wr=0;
+    const stored=()=>{try{return +localStorage.getItem(IDLE_KEY)||0}catch(e){return 0}};
+    const save=()=>{try{localStorage.setItem(IDLE_KEY,String(last))}catch(e){}};
+    const act=()=>{last=Date.now();if(bar){bar.remove();bar=null}if(last-wr>5000){wr=last;save()}};
+    save();
+    ["click","keydown","touchstart","touchmove","touchend","pointerdown","scroll","wheel","mousemove"].forEach(ev=>document.addEventListener(ev,act,{passive:true,capture:true}));
+    const out=async()=>{if(dead)return;dead=true;try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem(IDLE_KEY)}catch(e){}location.reload()};
     const tick=()=>{
-      const idle=Date.now()-last;
+      const idle=Date.now()-Math.max(last,stored());
       if(idle>=IDLE_MS)return out();
       if(idle>=IDLE_MS-WARN_MS){
         const s=Math.ceil((IDLE_MS-idle)/1000);
@@ -420,7 +423,7 @@ html{scroll-behavior:smooth}
         bar.textContent="Inactivité : déconnexion dans "+s+" s. Bougez la souris ou touchez l’écran pour rester connecté.";
       }
     };
-    setInterval(tick,1000);document.addEventListener("visibilitychange",tick);
+    setInterval(tick,1000);["visibilitychange","focus","pageshow","resume"].forEach(ev=>(ev==="visibilitychange"?document:window).addEventListener(ev,tick));
   }
   async function boot(){
     if(!window.supabase||!CFG.url||!CFG.key){overlay('<p>Impossible de charger le service de connexion. Vérifiez votre accès internet puis actualisez la page.</p>');readyRes(null);return}
@@ -428,6 +431,8 @@ html{scroll-behavior:smooth}
     sb.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY")newPwdView();if(ev==="SIGNED_OUT"&&ME)location.reload()});
     let {data:{session}}=await sb.auth.getSession();
     if(location.hash.includes("type=recovery")){return}   // l'écran de nouveau mot de passe est géré par l'évènement ci-dessus
+    if(session){let t=0;try{t=+localStorage.getItem(IDLE_KEY)||0}catch(e){}
+      if(t&&Date.now()-t>=IDLE_MS){try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem(IDLE_KEY)}catch(e){}session=null}}
     if(!session){await loginView();({data:{session}}=await sb.auth.getSession())}
     try{
       if(!(await loadMe(session))){blockedView("Votre compte existe mais n'a pas encore de rôle ou a été désactivé. Contactez l'administrateur.");readyRes(null);return}
