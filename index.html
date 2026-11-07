@@ -522,20 +522,22 @@ const skey=d=>{let k=SK.get(d);if(k===undefined){k=" "+norm([d.intitule,d.cote,d
 const sword=w=>w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
 function filtered(){
   const ws=norm(f.q).split(" ").filter(Boolean).map(sword);
-  return docs.filter(d=>(!f.dir||d.direction===f.dir)&&(!f.an||String(d.annee)===f.an)&&(!f.typ||d.type===f.typ)&&(!ws.length||ws.every(w=>skey(d).includes(w))));
+  return docs.filter(d=>(!f.dir||d.direction===f.dir)&&(!f.srv||d.service===f.srv)&&(!f.an||String(d.annee)===f.an)&&(!f.typ||d.type===f.typ)&&(!ws.length||ws.every(w=>skey(d).includes(w))));
 }
 function listHTML(){
   const SORTS={cote:(x,y)=>cmp(x.cote||"",y.cote||""),recent:(x,y)=>y.annee-x.annee||cmp(x.intitule,y.intitule),titre:(x,y)=>cmp(x.intitule,y.intitule)},flat=!!SORTS[f.s];
   const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
   if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
-  let h=(f.q||f.dir||f.an||f.typ)?`<div class="mu" style="margin:2px 0 4px"><b>${a.length}</b> entrée(s) trouvée(s)</div>`:"",k1="",k2="",k3="";
+  const actPret={};prets.forEach(p=>{if(p.statut==="en_cours"&&p.docId)actPret[p.docId]=p});
+  let h=(f.q||f.dir||f.srv||f.an||f.typ)?`<div class="mu" style="margin:2px 0 4px"><b>${a.length}</b> entrée(s) trouvée(s)</div>`:"",k1="",k2="",k3="";
   for(const d of a.slice(0,lim)){
     if(!flat&&d.direction!==k1){h+=`<h3>${esc(d.direction)}</h3>`;k1=d.direction;k2="";k3=""}
     if(!flat&&d.service!==k2){h+=`<h4>${esc(d.service)}</h4>`;k2=d.service;k3=""}
     if(!flat&&d.annee!==k3){h+=`<h5>${d.annee}</h5>`;k3=d.annee}
-    const out=d.statut==="en_pret";
+    const out=d.statut==="en_pret",pr=out?actPret[d.id]:null;
     h+=`<div class="card"><div class="top"><b>${esc(d.intitule)}</b><span class="b ${d.statut==="detruit"?"er":out?"wa":"ok"}">${d.statut==="detruit"?"Détruit":out?"En sortie":"Disponible"}</span></div>
     <div class="mu">${flat?`<span class="b">${esc(d.direction)} › ${esc(d.service)} · ${d.annee}</span> `:""}<span class="b">${esc(d.type)}</span>${d.mois?esc(d.mois)+" · ":""}${d.nb} unité(s) ${cb(d)}${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
+    ${pr?`<div class="mu" style="color:var(--wa)"><b>Emprunté par ${esc(pr.demandeur||"–")}</b>${pr.service?" ("+esc(pr.service)+")":""}${pr.ref?" · "+esc(pr.ref):""}${pr.sortie?" · sorti le "+fmt(pr.sortie):""}</div>`:""}
     ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
     <div class="acts">${d.statut!=="disponible"?"":`<button class="sm pri w" data-a="lend" data-v="${d.id}">Prêter / consulter</button>`}<button class="sm" data-a="fiche" data-v="${d.id}">Fiche</button><button class="sm w" data-a="mloc" data-v="${d.id}">Emplacement</button><button class="sm w" data-a="edit" data-v="${d.id}">Modifier</button></div></div>`;
   }
@@ -544,11 +546,11 @@ function listHTML(){
 }
 function inv(){
   const opt=(arr,v,all)=>`<option value="">${all}</option>`+arr.map(x=>`<option ${String(x)===v?"selected":""}>${esc(x)}</option>`).join("");
-  const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp),ans=[...new Set(docs.map(d=>String(d.annee)))].sort();
+  const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp),srvs=[...new Set(docs.filter(d=>!f.dir||d.direction===f.dir).map(d=>d.service).filter(Boolean))].sort(ocmp),ans=[...new Set(docs.map(d=>String(d.annee)))].sort();
   return `<div class="row"><input id="q" placeholder="Rechercher (intitulé, cote, mot-clé…)" value="${esc(f.q)}">
   <button class="pri w" data-a="new">+ Ajouter</button></div>
-  <div class="row tools"><button class="adm" data-a="imp">Importer</button><button class="adm" data-a="exp">Exporter</button><button class="w" data-a="labs">Étiquettes</button></div>
-  <div class="row"><select id="fd">${opt(dirs,f.dir,"Directions")}</select><select id="fa">${opt(ans,f.an,"Années")}</select><select id="ft">${opt(TYPES,f.typ,"Supports")}</select><select id="fs"><option value="">Tri : groupé</option><option value="cote" ${f.s==="cote"?"selected":""}>Tri : cote</option><option value="recent" ${f.s==="recent"?"selected":""}>Tri : récent</option><option value="titre" ${f.s==="titre"?"selected":""}>Tri : intitulé</option></select></div>
+  <div class="row tools"><button class="adm" data-a="imp">Importer</button><button class="adm" data-a="exp">Exporter</button><button class="w" data-a="labs">Étiquettes</button><button data-a="invpdf">Liste PDF</button></div>
+  <div class="row"><select id="fd">${opt(dirs,f.dir,"Directions")}</select><select id="fv">${opt(srvs,f.srv||"","Services")}</select><select id="fa">${opt(ans,f.an,"Années")}</select><select id="ft">${opt(TYPES,f.typ,"Supports")}</select><select id="fs"><option value="">Tri : groupé</option><option value="cote" ${f.s==="cote"?"selected":""}>Tri : cote</option><option value="recent" ${f.s==="recent"?"selected":""}>Tri : récent</option><option value="titre" ${f.s==="titre"?"selected":""}>Tri : intitulé</option></select></div>
   <div id="lst">${listHTML()}</div>`;
 }
 
@@ -759,7 +761,11 @@ function pdfDialog(titre,fn,blob,subject,body){
   <p class="mu" style="font-size:12px">Sur téléphone, un menu de partage s’ouvre (Gmail, WhatsApp…) avec le PDF en pièce jointe. Sur ordinateur, le PDF est téléchargé puis votre messagerie s’ouvre : joignez le fichier téléchargé.</p>`;
   const L2=$("#dlg");if(!L2.open)L2.showModal();
 }
-function pdfSave(){if(!BON)return;const u=URL.createObjectURL(BON.blob),a=document.createElement("a");a.href=u;a.download=BON.fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+async function pdfSave(){if(!BON)return;
+  const tel=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
+  if(tel&&navigator.canShare){const f=new File([BON.blob],BON.fn,{type:"application/pdf"});
+    if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:BON.fn});toast("Choisissez « Enregistrer dans Fichiers » / « Enregistrer sur l’appareil ».");return}catch(e){if(e&&e.name==="AbortError")return}}}
+  const u=URL.createObjectURL(BON.blob),a=document.createElement("a");a.href=u;a.download=BON.fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
 async function pdfMail(){
   if(!BON)return;const to=($("#f_mail").value||"").trim();try{localStorage.setItem("bonMail",to)}catch(e){}
   const f=new File([BON.blob],BON.fn,{type:"application/pdf"});
@@ -1918,6 +1924,23 @@ async function saveVers(){
 }
 const NCOL=new Intl.Collator('fr',{numeric:true,sensitivity:'base'}),lignesAZ=v=>{const sp=lineSup(v),r=t=>{const i=TYPES.indexOf(t);return i<0?99:i};return [...v.lignes].sort((a,b)=>r(sp(a))-r(sp(b))||NCOL.compare(String(a[0]),String(b[0])))};
 const lineSup=v=>{const m=new Map();docs.forEach(d=>{if(d.service===v.service&&d.direction===v.direction&&!m.has(d.intitule))m.set(d.intitule,d.type)});const pure=TYPES.includes(v.type)?v.type:"";return l=>l[3]||m.get(l[0])||pure||""};
+function invPdf(){
+  const a=filtered().sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  if(!a.length)return toast("Aucun document à exporter avec ces filtres.");
+  const act={};prets.forEach(p=>{if(p.statut==="en_cours"&&p.docId)act[p.docId]=p});
+  const etat=d=>{if(d.statut==="detruit")return "Détruit";if(d.statut!=="en_pret")return "Disponible";const p=act[d.id];return p?"Sorti — emprunté par "+(p.demandeur||"–")+(p.service?" ("+p.service+")":"")+(p.sortie?", le "+fmtR(p.sortie):"")+(p.ref?" · "+p.ref:""):"Sorti"};
+  const rows=[];let k1="",k2="",n=0,u=0,dispo=0,sorti=0;
+  a.forEach(d=>{if(d.direction!==k1||d.service!==k2){rows.push({band:(d.direction||"–")+"  ›  "+(d.service||"–")});k1=d.direction;k2=d.service}
+    n++;u+=+d.nb||1;if(d.statut==="en_pret")sorti++;else if(d.statut!=="detruit")dispo++;
+    rows.push([String(n),d.intitule+(d.mois?" ("+d.mois+")":""),String(d.annee||""),d.type||"",String(d.nb||1),etat(d)])});
+  const dirs=[...new Set(a.map(d=>d.direction))],srvs=[...new Set(a.map(d=>d.service))];
+  const blob=pdfBuild({titre:"LISTE DES DOCUMENTS ARCHIVÉS",ref:"Inventaire du "+fmtR(new Date().toISOString().slice(0,10)),logo:pdfLogo(),types:TYPES,items:[],recapType:"",
+    meta:[["Direction",f.dir||(dirs.length===1?dirs[0]:"Toutes ("+dirs.length+")")],["Service",f.srv||(srvs.length===1?srvs[0]:"Tous ("+srvs.length+")")],["Année",f.an||"Toutes"],["Support",f.typ||"Tous"],["Recherche",f.q||"–"],["Documents",a.length+" ("+u+" unité(s))"],["Disponibles",String(dispo)],["En sortie",String(sorti)],["Établi par",P.name||"–"]],
+    sections:[{titre:"Liste des documents ("+a.length+")",cols:[{w:24,al:"r"},{w:170},{w:40},{w:54},{w:24,al:"r"},{w:203.28}],head:["N°","Document","Année","Support","Nb","État"],rows}],
+    sign:["Archiviste","Chef du Service Archivage"]});
+  const nom=[f.dir,f.srv].filter(Boolean).join("-")||"inventaire";
+  pdfDialog("Liste des documents","liste-documents-"+nom.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w]+/g,"_").slice(0,50)+".pdf",blob,"Liste des documents – NITA SA Archivage",`Bonjour,\n\nVeuillez trouver la liste des documents (${a.length} entrée(s), ${sorti} en sortie).\n\nCordialement,\n${P.name||"Service Archivage"}\nNITA SA – Service Archivage`);
+}
 function versPdf(id){
   const v=versements.find(x=>x.id===id);if(!v)return;const an=v.lignes.filter(l=>l[2]),n=v.lignes.reduce((t,l)=>t+(+l[1]||1),0);
   const st=v.statut==="a_controler"?"À contrôler":"Accepté"+(v.accepteLe?" le "+fmtR(v.accepteLe):"");
@@ -2160,7 +2183,7 @@ document.addEventListener("click",async e=>{
   else if(a==="nvers")openVers();else if(a==="savevers")saveVers();else if(a==="vdet")vdet(v);else if(a==="vacc")accVers(v);else if(a==="vexp")expVers(v);else if(a==="bulkcat")openBulk();else if(a==="dobulk")doBulk();else if(a==="rgen"){rp.rep=RMAKE[rp.t]();render()}else if(a==="rexp")expRep();
   else if(a==="nctl")openCtl();else if(a==="savectl")saveCtl();else if(a==="octl"){ctlId=v;ctlFilt="todo";render()}else if(a==="bctl"){ctlId=null;render()}else if(a==="cset")setCtl(v,b.dataset.k,b.dataset.s);else if(a==="cctl")closeCtl(v);else if(a==="xctl")expCtl(v);
   else if(a==="fiche")openFiche(v);else if(a==="flend"){$("#dlg").close();openLend(v)}else if(a==="fedit"){$("#dlg").close();openDoc(v)}else if(a==="lab1"){const d=docs.find(x=>x.id===v);if(d)genLabels([d])}else if(a==="labs")openLabs();else if(a==="dolabs")genLabels(labSel());else if(a==="xpv")expPV(v);else if(a==="xall")expAll();else if(a==="rall")openRest();else if(a==="dorest")doRest();
-  else if(a==="exp")exportXls();else if(a==="saveagain"){const vals=Object.fromEntries(["direction","service","annee","mois","type","cat","empl","mots"].map(k=>[k,($("#f_"+k)||{}).value]));await saveDoc("");if(!$("#dlg").open){openDoc();for(const k in vals){const e=$("#f_"+k);if(e&&vals[k]!==undefined)e.value=vals[k]}toast("Enregistré. Saisissez l’entrée suivante.")}}
+  else if(a==="invpdf")invPdf();else if(a==="exp")exportXls();else if(a==="saveagain"){const vals=Object.fromEntries(["direction","service","annee","mois","type","cat","empl","mots"].map(k=>[k,($("#f_"+k)||{}).value]));await saveDoc("");if(!$("#dlg").open){openDoc();for(const k in vals){const e=$("#f_"+k);if(e&&vals[k]!==undefined)e.value=vals[k]}toast("Enregistré. Saisissez l’entrée suivante.")}}
   else if(a==="dup"){const d=docs.find(x=>x.id===v);if(d){openDoc();for(const k of["direction","service","annee","mois","type","cat","empl","mots"]){const e=$("#f_"+k);if(e&&d[k]!==undefined&&d[k]!==null)e.value=d[k]}toast("Entrée copiée : modifiez l’intitulé puis enregistrez.")}}
   else if(a==="fopen"){fcur=v||"";fq="";render()}else if(a==="fnew")ficNewFolder();else if(a==="fren")ficRename(v,b.dataset.k);else if(a==="fdeld")ficDelFolder(v);else if(a==="fdelf")ficDelFile(v);else if(a==="fdl")ficDl(v);else if(a==="fmove")ficMove(v);else if(a==="fmovedo")ficMoveDo(v);
   else if(a==="rexph")expRepHtml();else if(a==="odir")orgAddDir();else if(a==="osrv")orgAddSrv(v);else if(a==="pvgo"){tab="pret";pv="cours";render()}else if(a==="oloclist")expRepHtml(repEmpl(v));else if(a==="mloc")openMoveLoc(v);else if(a==="mlocsave")moveLocSave(v);else if(a==="oloc")openCompLoc(v);
@@ -2184,6 +2207,6 @@ document.addEventListener("input",e=>{if(e.target.id==="iq")iaDraft=e.target.val
 document.addEventListener("change",e=>{if(e.target.id==="ffile"&&e.target.files&&e.target.files.length)ficUpload([...e.target.files]);if(/^f_(cs|cy|cx|ce2|cl)$/.test(e.target.id))compPrev();if(e.target.id==="f_cdoc")copiePrev()});
 document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="qs"){f={q:e.target.value,dir:"",an:"",typ:"",s:""};lim=100;tab="inv";render()}});
 document.addEventListener("input",e=>{if(e.target.id==="f_direction")srvList(e.target.value);if(e.target.id==="fq"){fq=e.target.value;$("#flist").innerHTML=ficList();return}if(/^f_(cs|cy|cx|ce2|cl)$/.test(e.target.id))return compPrev();if(e.target.id==="f_cq")return fillCopieDocs(e.target.value);if(e.target.id==="f_dq")return fillDocs(e.target.value);if(e.target.id==="ps")return searchPeople(e.target.value);if(e.target.id==="pq"){pq=e.target.value;$("#plst").innerHTML=pbody();fillNames();return}if(e.target.id==="q"){f.q=e.target.value;lim=100;clearTimeout(qT);qT=setTimeout(()=>{const l=$("#lst");if(l)l.innerHTML=listHTML()},140)}});
-document.addEventListener("change",e=>{if(e.target.id==="xf")return readXls(e.target.files[0]);if(e.target.id==="rf")return readRest(e.target.files[0]);if(rptChange(e))return;const m={fs:"s",fd:"dir",fa:"an",ft:"typ"}[e.target.id];if(m){f[m]=e.target.value;lim=100;$("#lst").innerHTML=listHTML()}});
+document.addEventListener("change",e=>{if(e.target.id==="xf")return readXls(e.target.files[0]);if(e.target.id==="rf")return readRest(e.target.files[0]);if(rptChange(e))return;const m={fs:"s",fd:"dir",fv:"srv",fa:"an",ft:"typ"}[e.target.id];if(m){f[m]=e.target.value;lim=100;if(m==="dir"){f.srv="";render()}else $("#lst").innerHTML=listHTML()}});
 init();
 </script></body></html>
