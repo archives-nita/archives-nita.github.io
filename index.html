@@ -410,9 +410,9 @@ html{scroll-behavior:smooth}
     let last=Date.now(),bar=null,dead=false,wr=0;
     const stored=()=>{try{return +localStorage.getItem(IDLE_KEY)||0}catch(e){return 0}};
     const save=()=>{try{localStorage.setItem(IDLE_KEY,String(last))}catch(e){}};
-    const act=()=>{last=Date.now();if(bar){bar.remove();bar=null}if(last-wr>5000){wr=last;save()}};
+    const act=()=>{if(Date.now()-Math.max(last,stored())>=IDLE_MS)return out();last=Date.now();if(bar){bar.remove();bar=null}if(last-wr>5000){wr=last;save()}};
     save();
-    ["click","keydown","touchstart","touchmove","touchend","pointerdown","scroll","wheel","mousemove"].forEach(ev=>document.addEventListener(ev,act,{passive:true,capture:true}));
+    ["click","keydown","touchstart","touchmove","touchend","pointerdown","mousedown","scroll","wheel","mousemove"].forEach(ev=>document.addEventListener(ev,act,{passive:true,capture:true}));
     const out=async()=>{if(dead)return;dead=true;try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem(IDLE_KEY)}catch(e){}location.reload()};
     const tick=()=>{
       const idle=Date.now()-Math.max(last,stored());
@@ -432,7 +432,7 @@ html{scroll-behavior:smooth}
     let {data:{session}}=await sb.auth.getSession();
     if(location.hash.includes("type=recovery")){return}   // l'écran de nouveau mot de passe est géré par l'évènement ci-dessus
     if(session){let t=0;try{t=+localStorage.getItem(IDLE_KEY)||0}catch(e){}
-      if(t&&Date.now()-t>=IDLE_MS){try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem(IDLE_KEY)}catch(e){}session=null}}
+      if(!t||Date.now()-t>=IDLE_MS){try{await sb.auth.signOut({scope:"local"})}catch(e){}try{localStorage.removeItem(IDLE_KEY)}catch(e){}session=null}}
     if(!session){await loginView();({data:{session}}=await sb.auth.getSession())}
     try{
       if(!(await loadMe(session))){blockedView("Votre compte existe mais n'a pas encore de rôle ou a été désactivé. Contactez l'administrateur.");readyRes(null);return}
