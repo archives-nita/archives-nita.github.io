@@ -478,7 +478,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="8 nov. 2026 – 6";
+const APP_VER="8 nov. 2026 – 7";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -578,7 +578,7 @@ function inv(){
   const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp),srvs=[...new Set(docs.filter(d=>!f.dir||d.direction===f.dir).map(d=>d.service).filter(Boolean))].sort(ocmp),ans=[...new Set(docs.map(d=>String(d.annee)))].sort();
   return `<div class="row"><input id="q" placeholder="Rechercher (intitulé, cote, mot-clé…)" value="${esc(f.q)}">
   <button class="pri w" data-a="new">+ Ajouter</button></div>
-  <div class="row tools"><button class="adm" data-a="imp">Importer</button><button class="adm" data-a="exp">Exporter</button><button class="w" data-a="labs">Étiquettes</button><button data-a="invpdf">Liste PDF</button></div>
+  <div class="row tools"><button class="adm" data-a="imp">Importer</button><button class="adm" data-a="exp">Exporter</button><button class="w" data-a="labs">Étiquettes</button><button data-a="invpdf">Liste PDF</button><button class="adm" data-a="backup">Sauvegarde Excel</button></div>
   <div class="row"><select id="fd">${opt(dirs,f.dir,"Directions")}</select><select id="fv">${opt(srvs,f.srv||"","Services")}</select><select id="fa">${opt(ans,f.an,"Années")}</select><select id="ft">${opt(TYPES,f.typ,"Supports")}</select><select id="fe"><option value="">Statut : tous</option><option value="dispo" ${f.st==="dispo"?"selected":""}>Disponibles</option><option value="sortie" ${f.st==="sortie"?"selected":""}>En sortie</option><option value="detruit" ${f.st==="detruit"?"selected":""}>Détruits</option></select><select id="fs"><option value="">Tri : groupé</option><option value="cote" ${f.s==="cote"?"selected":""}>Tri : cote</option><option value="recent" ${f.s==="recent"?"selected":""}>Tri : récent</option><option value="titre" ${f.s==="titre"?"selected":""}>Tri : intitulé</option></select></div>
   <div id="lst">${listHTML()}</div>`;
 }
@@ -2107,6 +2107,47 @@ async function exportCsv(){
   try{await dl.save({filename:"inventaire-archives-"+today()+".csv",data:csv});toast("Bibliothèque Excel indisponible : export CSV enregistré (s’ouvre dans Excel).")}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+((e&&e.message)||e))}
 }
 let pe=null;
+
+const FEATS=[
+["Tableau de bord","Salutation, indicateurs clés, documents actuellement en sortie (qui détient quoi), retours en retard, à faire."],
+["Inventaire","Liste des documents par direction › service › année › intitulé › support ; recherche, filtres (direction, service, année, support, statut), ajout/modification/suppression (admin), import et export Excel, étiquettes avec code QR, liste PDF."],
+["Fiche et emplacement","Fiche détaillée d’un document, emplacement physique, catégorie du calendrier de conservation, destruction suspendue."],
+["Versements","Enregistrement d’un versement (bordereau), contrôle et acceptation, ajout automatique à l’inventaire, rapport PDF/Excel/e-mail, versements historiques."],
+["Sorties / prêts","Sortie d’un ou plusieurs documents (consultation sur place, prêt interne, remise au service), bon de sortie PDF classé par année et type, envoi par e-mail, retour des documents, annulation d’un retour ou d’une sortie."],
+["Bon d’entrée","Retour de documents avec bon d’entrée PDF, retour partiel, annulation d’entrée."],
+["Rapports de sorties","Sélection de plusieurs sorties, rapport groupé PDF, regroupement en une seule sortie."],
+["Demandes","Demande de prêt par un demandeur, validation par le responsable, détail et PDF d’une demande, annulation, historique."],
+["Conservation","Calendrier de conservation, contrôles périodiques, listes et procès-verbaux de destruction."],
+["Rapports","Rapports et statistiques de l’activité."],
+["Équipe et accès","Comptes, rôles (admin, archiviste, responsable, demandeur, lecteur), journal des modifications, rapport d’activité PDF (jour, semaine, mois, année)."],
+["Mes fichiers","Dossier de fichiers numérisés (admin)."],
+["Sécurité","Connexion par mot de passe, déconnexion automatique après 30 minutes d’inactivité, droits contrôlés côté serveur, journal des actions."],
+["Autres","Salutation Bonjour/Bonsoir, installation sur téléphone et ordinateur, export PDF et e-mail partout, saisie rapide."]];
+async function backupXls(){
+  if(!P.admin)return toast("Réservé à l’administrateur.");
+  if(!await libX())return toast("La bibliothèque Excel n’a pas pu se charger. Réessayez.");
+  let dl=null;try{dl=await PF.use("downloads")}catch(e){}
+  if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
+  toast("Préparation de la sauvegarde…");
+  const get=async c=>{try{return (await db.collection(c).get()).docs.map(d=>({id:d.id,...d.data()}))}catch(e){return []}};
+  const [dirs,srvs,jrn,ctrl,dem,lot,cop]=await Promise.all(["directions","services","journal","controles","demandes","lots","copies"].map(get));
+  const val=v=>v==null?"":typeof v==="object"?JSON.stringify(v):v;
+  const gen=(rows,first=[])=>{const keys=[...first];rows.forEach(r=>Object.keys(r).forEach(k=>{if(!keys.includes(k))keys.push(k)}));return rows.map(r=>{const o={};keys.forEach(k=>o[k]=val(r[k]));return o})};
+  const emp=d=>{const p=d.statut==="en_pret"&&prets.find(x=>x.docId===d.id&&x.statut==="en_cours");return p?p.demandeur+(p.service?" ("+p.service+")":""):""};
+  const inv=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Intitulé":d.intitule,"Support":d.type,"Nombre":d.nb,"Catégorie":d.cat||"","Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Statut":d.statut==="en_pret"?"En sortie":d.statut==="detruit"?"Détruit":"Disponible","Emprunteur":emp(d),"Destruction suspendue":d.gel?"Oui":"","Observations":d.obs||"","ID":d.id}));
+  const ver=[];[...versements].sort((a,b)=>String(a.num).localeCompare(String(b.num))).forEach(v=>{const L=v.lignes&&v.lignes.length?v.lignes:[["","",""]];L.forEach((l,i)=>ver.push({"N° versement":v.num,"Statut":v.statut==="accepte"?"Accepté":"À contrôler","Direction":v.direction,"Service":v.service,"Support":v.type,"Année":v.annee,"Période":v.periode||"","Date":v.date||"","Emplacement":v.empl||"","Observations":v.obs||"","Ligne":i+1,"Document":l[0],"Nombre":l[1],"Anomalie":l[2]||""}))});
+  const sor=gen([...prets].sort((a,b)=>String(b.sortie).localeCompare(String(a.sortie))),["ref","docLabel","demandeur","service","mode","valide","sortie","prevu","retour","statut"]);
+  const eq=membres.map(m=>({"Nom":m.nom,"Prénom":m.prenom,"Fonction":m.fonction,"Actif":m.actif===false?"Non":"Oui"}));
+  const jr2=gen(jrn.sort((a,b)=>String(b.t).localeCompare(String(a.t))),["t","nom","act","label"]);
+  const wb=XLSX.utils.book_new(),add=(rows,name)=>{const ws=XLSX.utils.json_to_sheet(rows.length?rows:[{"(vide)":""}]);const k=Object.keys(rows[0]||{"(vide)":""});ws["!cols"]=k.map(h=>({wch:Math.min(60,Math.max(12,h.length+2))}));XLSX.utils.book_append_sheet(wb,ws,name)};
+  const info=[["SAUVEGARDE – Archives, inventaire et suivi – NITA SA"],[""],["Date de la sauvegarde",new Date().toLocaleString("fr-FR")],["Établie par",(P.name||"")+(P.email?" ("+P.email+")":"")],[""],["Contenu","Lignes"],["Inventaire (documents)",inv.length],["Sorties / prêts",sor.length],["Versements (lignes)",ver.length],["Demandes",dem.length],["Destructions (listes)",destr.length],["Contrôles",ctrl.length],["Directions",dirs.length],["Services",srvs.length],["Journal",jrn.length],[""],["Remarque","Cette sauvegarde est une copie à la date indiquée : elle ne se met pas à jour toute seule. L’application reste la référence. Refaire une sauvegarde régulièrement (bouton « Sauvegarde Excel » dans l’Inventaire)."]];
+  const w0=XLSX.utils.aoa_to_sheet(info);w0["!cols"]=[{wch:34},{wch:90}];XLSX.utils.book_append_sheet(wb,w0,"Lisez-moi");
+  const w1=XLSX.utils.aoa_to_sheet([["Fonctionnalité","Description"],...FEATS]);w1["!cols"]=[{wch:24},{wch:120}];XLSX.utils.book_append_sheet(wb,w1,"Fonctionnalités");
+  add(inv,"Inventaire");add(sor,"Sorties");add(ver,"Versements");add(gen(dem),"Demandes");add(gen(destr),"Destructions");add(gen(ctrl),"Contrôles");
+  add(gen(dirs.map(d=>({Direction:d.nom,ID:d.id}))).concat(gen(srvs.map(x=>({Direction:x.direction,Service:x.nom,ID:x.id})))),"Directions-Services");add(eq,"Équipe");add(jr2,"Journal");
+  try{await dl.save({filename:`Sauvegarde_Archives_NITA_${today()}.xlsx`,data:XLSX.write(wb,{bookType:"xlsx",type:"array"})});jr("Sauvegarde Excel","Sauvegarde complète exportée ("+inv.length+" documents)")}
+  catch(e){if(!e||e.code!=="declined")toast("Sauvegarde impossible : "+(e&&e.message||e))}
+}
 async function exportXls(){
   if(!await libX())return exportCsv();
   let dl=null;try{dl=await PF.use("downloads")}catch(e){}
@@ -2213,7 +2254,7 @@ document.addEventListener("click",async e=>{
   else if(a==="nvers")openVers();else if(a==="savevers")saveVers();else if(a==="vdet")vdet(v);else if(a==="vacc")accVers(v);else if(a==="vexp")expVers(v);else if(a==="bulkcat")openBulk();else if(a==="dobulk")doBulk();else if(a==="rgen"){rp.rep=RMAKE[rp.t]();render()}else if(a==="rexp")expRep();
   else if(a==="nctl")openCtl();else if(a==="savectl")saveCtl();else if(a==="octl"){ctlId=v;ctlFilt="todo";render()}else if(a==="bctl"){ctlId=null;render()}else if(a==="cset")setCtl(v,b.dataset.k,b.dataset.s);else if(a==="cctl")closeCtl(v);else if(a==="xctl")expCtl(v);
   else if(a==="fiche")openFiche(v);else if(a==="flend"){$("#dlg").close();openLend(v)}else if(a==="fedit"){$("#dlg").close();openDoc(v)}else if(a==="lab1"){const d=docs.find(x=>x.id===v);if(d)genLabels([d])}else if(a==="labs")openLabs();else if(a==="dolabs")genLabels(labSel());else if(a==="xpv")expPV(v);else if(a==="xall")expAll();else if(a==="rall")openRest();else if(a==="dorest")doRest();
-  else if(a==="invpdf")invPdf();else if(a==="exp")exportXls();else if(a==="saveagain"){const vals=Object.fromEntries(["direction","service","annee","mois","type","cat","empl","mots"].map(k=>[k,($("#f_"+k)||{}).value]));await saveDoc("");if(!$("#dlg").open){openDoc();for(const k in vals){const e=$("#f_"+k);if(e&&vals[k]!==undefined)e.value=vals[k]}toast("Enregistré. Saisissez l’entrée suivante.")}}
+  else if(a==="invpdf")invPdf();else if(a==="backup")backupXls();else if(a==="exp")exportXls();else if(a==="saveagain"){const vals=Object.fromEntries(["direction","service","annee","mois","type","cat","empl","mots"].map(k=>[k,($("#f_"+k)||{}).value]));await saveDoc("");if(!$("#dlg").open){openDoc();for(const k in vals){const e=$("#f_"+k);if(e&&vals[k]!==undefined)e.value=vals[k]}toast("Enregistré. Saisissez l’entrée suivante.")}}
   else if(a==="dup"){const d=docs.find(x=>x.id===v);if(d){openDoc();for(const k of["direction","service","annee","mois","type","cat","empl","mots"]){const e=$("#f_"+k);if(e&&d[k]!==undefined&&d[k]!==null)e.value=d[k]}toast("Entrée copiée : modifiez l’intitulé puis enregistrez.")}}
   else if(a==="fopen"){fcur=v||"";fq="";render()}else if(a==="fnew")ficNewFolder();else if(a==="fren")ficRename(v,b.dataset.k);else if(a==="fdeld")ficDelFolder(v);else if(a==="fdelf")ficDelFile(v);else if(a==="fdl")ficDl(v);else if(a==="fmove")ficMove(v);else if(a==="fmovedo")ficMoveDo(v);
   else if(a==="rexph")expRepHtml();else if(a==="odir")orgAddDir();else if(a==="osrv")orgAddSrv(v);else if(a==="pvgo"){tab="pret";pv="cours";render()}else if(a==="oloclist")expRepHtml(repEmpl(v));else if(a==="mloc")openMoveLoc(v);else if(a==="mlocsave")moveLocSave(v);else if(a==="oloc")openCompLoc(v);
