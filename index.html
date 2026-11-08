@@ -624,7 +624,7 @@ function openDoc(id){
   <label for="f_type">Support (niveau 5)</label><select id="f_type">${TYPES.map(t=>`<option ${t===d.type?"selected":""}>${t}</option>`).join("")}</select>
   ${inp("nb","Nombre d’unités",d.nb||1,'type="number" min="1"')}${inp("cote","Cote du plan de classement (auto si vide)",d.cote)}
   ${inp("empl","Emplacement (armoire, étagère…)",d.empl,'list="dl_emp"')}${inp("mots","Mots-clés (documents stratégiques)",d.mots)}${inp("obs","Observations",d.obs)}
-  <div class="acts"><button class="pri" data-a="savedoc" data-v="${id||""}">Enregistrer</button>${id?"":`<button data-a="saveagain">Enregistrer + suivante</button>`}<button data-a="close">Annuler</button></div>`;
+  <div class="acts"><button class="pri" data-a="savedoc" data-v="${id||""}">Enregistrer</button>${id?"":`<button data-a="saveagain">Enregistrer + suivante</button>`}${id&&(P.admin||P.owner)?`<button style="color:var(--er)" data-a="deldoc" data-v="${id}">Supprimer cette entrée</button>`:""}<button data-a="close">Annuler</button></div>`;
   $("#dlg").showModal();
 }
 const ini=s=>s.split(/\s+/).filter(w=>w.length>2).map(w=>w[0]).join("").toUpperCase()||s.slice(0,2).toUpperCase();
@@ -2205,7 +2205,7 @@ document.addEventListener("click",async e=>{
   else if(a==="newlist")newList();else if(a==="cxl")cancelList(v);else if(a==="apv")approve(v,b.dataset.k);else if(a==="sens")toggleSens(v);else if(a==="exec")openExec(v);else if(a==="doexec")doExec(v);
   else if(a==="addm")addMember(v);
   else if(a==="delm"&&await ask("Retirer cette personne de l’équipe ?"))db.doc("membres/"+v).delete().catch(fail);
-  else if(a==="deldoc"&&await ask("Supprimer définitivement cette entrée ?")){try{const d0=docs.find(x=>x.id===v);if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");await db.doc("docs/"+v).delete();jr("Suppression d’une entrée",d0?d0.intitule+" ("+(d0.cote||"sans cote")+")":v);$("#dlg").close()}catch(x){fail(x)}}
+  else if(a==="deldoc"){if(!(P.admin||P.owner))return toast("Seul l’administrateur peut supprimer une entrée.");const d0=docs.find(x=>x.id===v);if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");if(!await ask("Supprimer définitivement « "+(d0?d0.intitule:"cette entrée")+" » ? Cette action est irréversible."))return;try{if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");await db.doc("docs/"+v).delete();jr("Suppression d’une entrée",d0?d0.intitule+" ("+(d0.cote||"sans cote")+")":v);$("#dlg").close()}catch(x){fail(x)}}
 });
 document.addEventListener("click",e=>{const b=e.target.closest("button[data-a]");if(!b)return;const n=Date.now();if(b.dataset.t&&n-b.dataset.t<800){e.stopImmediatePropagation();e.preventDefault();return}b.dataset.t=n},true);
 document.addEventListener("input",e=>{if(e.target.id==="iq")iaDraft=e.target.value});
