@@ -544,7 +544,7 @@ function listHTML(){
     <div class="mu">${flat?`<span class="b">${esc(d.direction)} › ${esc(d.service)} · ${d.annee}</span> `:""}<span class="b">${esc(d.type)}</span>${d.mois?esc(d.mois)+" · ":""}${d.nb} unité(s) ${cb(d)}${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
     ${pr?`<div class="mu" style="color:var(--wa)"><b>Emprunté par ${esc(pr.demandeur||"–")}</b>${pr.service?" ("+esc(pr.service)+")":""}${pr.ref?" · "+esc(pr.ref):""}${pr.sortie?" · sorti le "+fmt(pr.sortie):""}</div>`:""}
     ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
-    <div class="acts">${d.statut!=="disponible"?"":`<button class="sm pri w" data-a="lend" data-v="${d.id}">Prêter / consulter</button>`}<button class="sm" data-a="fiche" data-v="${d.id}">Fiche</button><button class="sm w" data-a="mloc" data-v="${d.id}">Emplacement</button><button class="sm w" data-a="edit" data-v="${d.id}">Modifier</button></div></div>`;
+    <div class="acts">${d.statut!=="disponible"?"":`<button class="sm pri w" data-a="lend" data-v="${esc(d.id)}">Prêter / consulter</button>`}<button class="sm" data-a="fiche" data-v="${esc(d.id)}">Fiche</button><button class="sm w" data-a="mloc" data-v="${esc(d.id)}">Emplacement</button><button class="sm w" data-a="edit" data-v="${esc(d.id)}">Modifier</button></div></div>`;
   }
   if(a.length>lim)h+=`<div class="row"><button data-a="more">Afficher plus (${a.length-lim} restantes)</button></div>`;
   return h;
@@ -561,10 +561,10 @@ function inv(){
 
 function pretCard(p){
   const op=p.statut==="en_cours";
-  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${tab==="pret"?`<input type="checkbox" class="psel" value="${p.id}" ${PS.has(p.id)?"checked":""} style="width:auto;min-height:0;margin-right:6px;vertical-align:middle">`:""}${esc(p.docLabel)}</b><span class="b ${p.statut==="annule"?"er":op?(late(p)?"er":"wa"):"ok"}">${p.statut==="annule"?"Annulée":op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
+  return `<div class="card ${late(p)?"late":""}"><div class="top"><b>${tab==="pret"?`<input type="checkbox" class="psel" value="${esc(p.id)}" ${PS.has(p.id)?"checked":""} style="width:auto;min-height:0;margin-right:6px;vertical-align:middle">`:""}${esc(p.docLabel)}</b><span class="b ${p.statut==="annule"?"er":op?(late(p)?"er":"wa"):"ok"}">${p.statut==="annule"?"Annulée":op?(late(p)?"En retard":"En cours"):"Rendu"}</span></div>
   <div class="mu">${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>
-  <div class="mu">Sortie ${fmt(p.sortie)} · retour prévu ${fmt(p.prevu)}${p.retour?" · rendu le "+fmt(p.retour):""}${p.valide?" · validé par "+esc(p.valide):""}${p.valideUid?` · validé par <span data-uid="${p.valideUid}"></span>`:""}${p.par?` · saisi par <span data-uid="${p.par}"></span>`:""}</div>
-  <div class="acts">${op?`<button class="sm pri w" data-a="back" data-v="${p.id}">Enregistrer le retour</button><button class="sm" data-a="canpret" data-v="${p.id}">Annuler la sortie</button>`:p.statut==="annule"?"":`<button class="sm" data-a="undo" data-v="${p.id}">Annuler le retour</button>`}${(dm=>dm?`<button class="sm" data-a="ddet" data-v="${dm.id}">Voir la demande</button>`:"")(demOf(p))}</div></div>`;
+  <div class="mu">Sortie ${fmt(p.sortie)} · retour prévu ${fmt(p.prevu)}${p.retour?" · rendu le "+fmt(p.retour):""}${p.valide?" · validé par "+esc(p.valide):""}${p.valideUid?` · validé par <span data-uid="${esc(p.valideUid)}"></span>`:""}${p.par?` · saisi par <span data-uid="${esc(p.par)}"></span>`:""}</div>
+  <div class="acts">${op?`<button class="sm pri w" data-a="back" data-v="${esc(p.id)}">Enregistrer le retour</button><button class="sm" data-a="canpret" data-v="${esc(p.id)}">Annuler la sortie</button>`:p.statut==="annule"?"":`<button class="sm" data-a="undo" data-v="${esc(p.id)}">Annuler le retour</button>`}${(dm=>dm?`<button class="sm" data-a="ddet" data-v="${esc(dm.id)}">Voir la demande</button>`:"")(demOf(p))}</div></div>`;
 }
 function grpCard(k,L){
   const o=L.filter(p=>p.statut==="en_cours"),p0=L[0],lt=o.some(late),c={};
@@ -572,8 +572,8 @@ function grpCard(k,L){
   const bd=o.length?(lt?'<span class="b er">En retard</span>':'<span class="b wa">En cours</span>'):'<span class="b ok">Rendu</span>';
   return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(p0.ref||"Sortie")} · ${L.length} documents</b>${bd}</div>
   <div class="mu">${esc(p0.demandeur)} (${esc(p0.service)}) · ${esc(p0.mode)} · ${Object.entries(c).map(([t,n])=>n+" "+esc(t)).join(", ")}</div>
-  <div class="mu">Sortie ${fmt(p0.sortie)} · retour prévu ${p0.prevu?fmt(p0.prevu):"non précisé"}${p0.valide?" · validé par "+esc(p0.valide):""}${p0.par?` · saisi par <span data-uid="${p0.par}"></span>`:""}${o.length&&o.length<L.length?` · ${L.length-o.length} déjà rendu(s)`:""}</div>
-  <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${p.id}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)} <button class="sm" data-a="undo" data-v="${p.id}">Annuler</button></span>`}</div>`).join("")}</details>
+  <div class="mu">Sortie ${fmt(p0.sortie)} · retour prévu ${p0.prevu?fmt(p0.prevu):"non précisé"}${p0.valide?" · validé par "+esc(p0.valide):""}${p0.par?` · saisi par <span data-uid="${esc(p0.par)}"></span>`:""}${o.length&&o.length<L.length?` · ${L.length-o.length} déjà rendu(s)`:""}</div>
+  <details style="margin-top:6px"><summary class="mu" style="cursor:pointer">Voir les ${L.length} documents</summary>${L.map(p=>`<div class="row" style="justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px solid var(--bd)"><span>${esc(p.titre||p.docLabel)} <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span>${p.statut==="en_cours"?`<button class="sm w" data-a="back" data-v="${esc(p.id)}">Rendre</button>`:`<span class="mu">rendu ${fmt(p.retour)} <button class="sm" data-a="undo" data-v="${esc(p.id)}">Annuler</button></span>`}</div>`).join("")}</details>
   <div class="acts"><button class="sm pri" data-a="bon" data-v="${esc(k)}">Bon de sortie (PDF)</button>${o.length?`<button class="sm w" data-a="entree" data-v="${esc(k)}">Entrée / retour (${o.length})</button>`:""}${[...new Set(L.map(p=>p.refEntree).filter(Boolean))].map(r=>`<button class="sm" data-a="bone" data-v="${esc(r)}">Bon d’entrée ${esc(r)}</button><button class="sm" data-a="undoent" data-v="${esc(r)}">Annuler l’entrée ${esc(r)}</button>`).join("")}</div></div>`;
 }
 function cards(arr,full){
@@ -619,12 +619,12 @@ function openDoc(id){
   $("#dlg").innerHTML=`<h2>${id?"Modifier le document":"Nouveau document"}</h2>
   ${inp("direction","Direction (niveau 1)",d.direction,'list="dl_dir"')}${inp("service","Service (niveau 2)",d.service,'list="dl_srv"')}<div class="row adm"><button type="button" class="sm" data-a="qdir">+ Nouvelle direction</button><button type="button" class="sm" data-a="qsrv">+ Nouveau service</button></div>
   ${inp("annee","Année (niveau 3)",d.annee||new Date().getFullYear(),'type="number"')}${inp("mois","Mois (facultatif)",d.mois)}
-  <label for="f_cat">Catégorie (calendrier de conservation)</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${c[0]}" ${c[0]===d.cat?"selected":""}>${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select><div class="mu">L’année saisie est celle du déclencheur : production, clôture de l’exercice, échéance du contrat…</div>
+  <label for="f_cat">Catégorie (calendrier de conservation)</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${esc(c[0])}" ${c[0]===d.cat?"selected":""}>${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select><div class="mu">L’année saisie est celle du déclencheur : production, clôture de l’exercice, échéance du contrat…</div>
   <label for="f_gel">Destruction suspendue (litige, audit)</label><select id="f_gel"><option value="">Non</option><option value="1" ${d.gel?"selected":""}>Oui</option></select>${inp("intitule","Intitulé du document (niveau 4, ordre alphabétique)",d.intitule)}
   <label for="f_type">Support (niveau 5)</label><select id="f_type">${TYPES.map(t=>`<option ${t===d.type?"selected":""}>${t}</option>`).join("")}</select>
   ${inp("nb","Nombre d’unités",d.nb||1,'type="number" min="1"')}${inp("cote","Cote du plan de classement (auto si vide)",d.cote)}
   ${inp("empl","Emplacement (armoire, étagère…)",d.empl,'list="dl_emp"')}${inp("mots","Mots-clés (documents stratégiques)",d.mots)}${inp("obs","Observations",d.obs)}
-  <div class="acts"><button class="pri" data-a="savedoc" data-v="${id||""}">Enregistrer</button>${id?"":`<button data-a="saveagain">Enregistrer + suivante</button>`}${id&&(P.admin||P.owner)?`<button style="color:var(--er)" data-a="deldoc" data-v="${id}">Supprimer cette entrée</button>`:""}<button data-a="close">Annuler</button></div>`;
+  <div class="acts"><button class="pri" data-a="savedoc" data-v="${esc(id||"")}">Enregistrer</button>${id?"":`<button data-a="saveagain">Enregistrer + suivante</button>`}${id&&(P.admin||P.owner)?`<button style="color:var(--er)" data-a="deldoc" data-v="${esc(id)}">Supprimer cette entrée</button>`:""}<button data-a="close">Annuler</button></div>`;
   $("#dlg").showModal();
 }
 const ini=s=>s.split(/\s+/).filter(w=>w.length>2).map(w=>w[0]).join("").toUpperCase()||s.slice(0,2).toUpperCase();
@@ -648,7 +648,7 @@ function lsList(){
   const a=lsAv().filter(d=>(!t||d.type===t)&&(!w.length||w.every(x=>norm([d.intitule,d.cote,d.direction,d.service,d.annee,d.type,d.empl,d.mots].join(" ")).includes(x))));
   a.sort((x,y)=>cmp((x.direction||"")+(x.service||"")+(x.intitule||""),(y.direction||"")+(y.service||"")+(y.intitule||"")));
   const sh=a.slice(0,150);
-  $("#ls_lst").innerHTML=sh.map(d=>`<label class="lsr"><input type="checkbox" class="lsc" value="${d.id}" ${LS.has(d.id)?"checked":""}><span><b>${esc(d.intitule)}</b> <span class="mu">${esc(d.type||"")} · ${esc(d.annee||"")} · ${esc(d.direction||"")} › ${esc(d.service||"")}${d.cote?" · "+esc(d.cote):""}</span></span></label>`).join("")||'<p class="mu">Aucun document disponible pour ce filtre.</p>';
+  $("#ls_lst").innerHTML=sh.map(d=>`<label class="lsr"><input type="checkbox" class="lsc" value="${esc(d.id)}" ${LS.has(d.id)?"checked":""}><span><b>${esc(d.intitule)}</b> <span class="mu">${esc(d.type||"")} · ${esc(d.annee||"")} · ${esc(d.direction||"")} › ${esc(d.service||"")}${d.cote?" · "+esc(d.cote):""}</span></span></label>`).join("")||'<p class="mu">Aucun document disponible pour ce filtre.</p>';
   $("#ls_more").textContent=a.length>150?`${a.length} résultats : affinez la recherche (150 affichés).`:`${a.length} résultat(s).`;
   $("#ls_all").dataset.ids=sh.map(d=>d.id).join(",");
 }
@@ -803,7 +803,7 @@ function openEntree(k){
   $("#dlg").innerHTML=`<h2>Entrée de documents</h2><p class="mu">${esc(p0.ref||"")} · sortis par ${esc(p0.demandeur)} (${esc(p0.service)})</p>
   <label>Documents rendus (décochez ceux qui ne sont pas encore revenus)</label>
   <div class="acts" style="margin:4px 0"><button class="sm" data-a="enall">Tout cocher</button><button class="sm" data-a="ennone">Tout décocher</button></div>
-  <div id="en_lst" style="max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:8px;background:var(--cd);padding:4px">${o.map(p=>`<label class="lsr"><input type="checkbox" class="enc" value="${p.id}" checked><span><b>${esc(p.titre||p.docLabel)}</b> <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span></label>`).join("")}</div>
+  <div id="en_lst" style="max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:8px;background:var(--cd);padding:4px">${o.map(p=>`<label class="lsr"><input type="checkbox" class="enc" value="${esc(p.id)}" checked><span><b>${esc(p.titre||p.docLabel)}</b> <span class="mu">${esc(p.type||"")}${p.annee?" · "+esc(p.annee):""}</span></span></label>`).join("")}</div>
   <div id="en_cnt" style="margin:6px 0"></div>
   ${inp("erp","Rendu par",p0.demandeur)}${inp("erc","Reçu par (archiviste)",P.name||"")}${inp("ed","Date d’entrée",today(),'type="date"')}
   <label for="f_eobs">Observations (état des documents, manquants…)</label><textarea id="f_eobs" rows="2"></textarea>
@@ -900,7 +900,7 @@ function demCard(x){
   return `<div class="card ${lt?"late":""}"><div class="top"><b>${esc(x.docLabel)}</b><span class="b ${x.statut==="refusee"||x.statut==="annulee"?"er":x.statut==="validee"||x.statut==="traitee"?"ok":"wa"}">${DST[x.statut]||esc(x.statut)}</span></div>
   <div class="mu">${esc(x.mode)} · souhaitée le ${fmt(x.sou)} · ${esc(x.srv)} · par <span data-uid="${esc(x.par)}"></span></div><div class="mu">Objet : ${esc(x.objet)}</div>
   ${x.statut==="validee"?`<div class="mu">Validée le ${fmt(x.valLe)} · à traiter avant le ${fmt(addWork(x.valLe,1))} (24 h ouvrables)</div>`:""}${x.motif?`<div class="mu">Motif du refus : ${esc(x.motif)}</div>`:""}
-  <div class="acts">${x.statut==="a_valider"&&P.val?`<button class="sm pri" data-a="dval" data-v="${x.id}">Valider</button><button class="sm" data-a="dref" data-v="${x.id}">Refuser</button>`:""}${x.statut==="validee"?`<button class="sm pri w" data-a="dtr" data-v="${x.id}">Traiter : enregistrer la sortie</button>`:""}<button class="sm" data-a="ddet" data-v="${x.id}">Détails / PDF</button>${demCanCancel(x)?`<button class="sm" data-a="dcan" data-v="${x.id}">Annuler la demande</button>`:""}</div></div>`;
+  <div class="acts">${x.statut==="a_valider"&&P.val?`<button class="sm pri" data-a="dval" data-v="${esc(x.id)}">Valider</button><button class="sm" data-a="dref" data-v="${esc(x.id)}">Refuser</button>`:""}${x.statut==="validee"?`<button class="sm pri w" data-a="dtr" data-v="${esc(x.id)}">Traiter : enregistrer la sortie</button>`:""}<button class="sm" data-a="ddet" data-v="${esc(x.id)}">Détails / PDF</button>${demCanCancel(x)?`<button class="sm" data-a="dcan" data-v="${esc(x.id)}">Annuler la demande</button>`:""}</div></div>`;
 }
 const demOf=p=>demandes.find(x=>x.id===p.demId)||demandes.filter(x=>x.docId===p.docId&&x.statut==="traitee"&&(!p.sortie||(x.valLe||"")<=p.sortie)).sort((a,b)=>(b.valLe||"").localeCompare(a.valLe||""))[0];
 const prOf=x=>prets.find(p=>p.demId===x.id)||(x.statut==="traitee"?prets.filter(p=>p.docId===x.docId&&!p.demId&&(p.sortie||"")>=(x.valLe||"")).sort((a,b)=>(a.sortie||"").localeCompare(b.sortie||""))[0]:null);
@@ -913,7 +913,7 @@ async function demDetail(id){
   ${r("Demandeur",esc(nm[x.par]||"–"))}${r("Service",esc(x.srv))}${r("Modalité",esc(x.mode))}${r("Objet",esc(x.objet))}${r("Date souhaitée",fmt(x.sou))}${r("Demande créée le",fmt(x.creeLe))}
   ${x.valLe?r("Validée",fmt(x.valLe)+(nm[x.valPar]?" par "+esc(nm[x.valPar]):"")):""}${x.motif?r("Motif du refus",esc(x.motif)):""}${x.statut==="annulee"?r("Annulée",fmt(x.annuleLe)+(nm[x.annulePar]?" par "+esc(nm[x.annulePar]):"")):""}
   ${pr?r("Sortie",fmt(pr.sortie)+" · retour prévu "+(pr.prevu?fmt(pr.prevu):"non précisé")+" · "+(pr.statut==="rendu"?"rendu le "+fmt(pr.retour):pr.statut==="annule"?"annulée":"en cours")):""}</table>
-  <div class="acts"><button class="pri" data-a="dpdf" data-v="${x.id}">PDF / e-mail</button>${demCanCancel(x)?`<button data-a="dcan" data-v="${x.id}">Annuler la demande</button>`:""}${pr&&pr.statut==="en_cours"&&P.arch?`<button data-a="canpret" data-v="${pr.id}">Annuler la demande et la sortie</button>`:""}<button data-a="close">Fermer</button></div>`;
+  <div class="acts"><button class="pri" data-a="dpdf" data-v="${esc(x.id)}">PDF / e-mail</button>${demCanCancel(x)?`<button data-a="dcan" data-v="${esc(x.id)}">Annuler la demande</button>`:""}${pr&&pr.statut==="en_cours"&&P.arch?`<button data-a="canpret" data-v="${esc(pr.id)}">Annuler la demande et la sortie</button>`:""}<button data-a="close">Fermer</button></div>`;
   const L2=$("#dlg");if(!L2.open)L2.showModal();
 }
 async function demPdf(id){
@@ -971,7 +971,7 @@ function demSec(){
   const oi=new Set(o.map(x=>x.id)),hi=all.filter(x=>!oi.has(x.id)&&["traitee","annulee","refusee"].includes(x.statut)).sort((a,b)=>(a.creeLe||"")<(b.creeLe||"")?1:-1);
   return `<h2>Demandes de consultation (${o.length})</h2>${o.map(demCard).join("")||'<p class="mu">Aucune demande en attente.</p>'}${hi.length?`<details style="margin:8px 0"><summary class="mu" style="cursor:pointer">Historique des demandes (${hi.length})</summary>${hi.map(demCard).join("")}</details>`:""}`;
 }
-function fillDocs(q){const n=norm(q),r=docs.filter(d=>d.statut==="disponible"&&(!n||norm([d.direction,d.service,d.annee,d.intitule,d.cote].join(" ")).includes(n))).slice(0,30);$("#f_doc").innerHTML=r.map(d=>`<option value="${d.id}">${esc(d.direction)} › ${esc(d.service)} › ${d.annee} › ${esc(d.intitule)}</option>`).join("")}
+function fillDocs(q){const n=norm(q),r=docs.filter(d=>d.statut==="disponible"&&(!n||norm([d.direction,d.service,d.annee,d.intitule,d.cote].join(" ")).includes(n))).slice(0,30);$("#f_doc").innerHTML=r.map(d=>`<option value="${esc(d.id)}">${esc(d.direction)} › ${esc(d.service)} › ${d.annee} › ${esc(d.intitule)}</option>`).join("")}
 function openDem(){
   $("#dlg").innerHTML=`<h2>Demande de consultation</h2><label for="f_dq">Rechercher le document</label><input id="f_dq" placeholder="Intitulé, direction, service, année, cote…" autocomplete="off"><select id="f_doc" size="5"></select>
   ${inp("srv","Votre service","",'list="dl_srv"')}<label for="f_mode">Modalité souhaitée</label><select id="f_mode">${MODES.map(m=>`<option>${m}</option>`).join("")}</select>
@@ -1001,8 +1001,8 @@ function destCard(x){
   return `<div class="card"><div class="top"><b>${esc(x.num)}</b><span class="b ${done?"ok":"wa"}">${done?"Détruit le "+fmt(x.date):"En préparation"}</span></div>
   <div class="mu">${(x.items||[]).length} entrées · ${n} unités · ${esc((x.srv||[]).join(", "))}</div>
   ${done?`<div class="mu">${esc(x.methode)} · en présence de ${esc(x.obs)} · motif : ${esc(x.motif)}</div>`:`<details><summary class="mu">Documents concernés</summary>${x.items.map(i=>`<div class="mu">• ${esc(i.label)} (fin ${i.fin})</div>`).join("")}</details>
-  ${AP.map((a,i)=>i<4||x.sensible?`<div class="top"><span>${ap[i]?"✔":"○"} ${a}${ap[i]?` · <span data-uid="${ap[i]}"></span>`:""}</span>${!ap[i]&&P.val?`<button class="sm" data-a="apv" data-v="${x.id}" data-k="${i}">Valider</button>`:""}</div>`:"").join("")}
-  <div class="acts"><button class="sm" data-a="sens" data-v="${x.id}" ${P.val?"":"disabled"}>Document sensible : ${x.sensible?"oui":"non"}</button>${ok?`<button class="sm pri w" data-a="exec" data-v="${x.id}">Enregistrer la destruction</button>`:""}<button class="sm w" data-a="cxl" data-v="${x.id}">Annuler la liste</button><button class="sm" data-a="xpv" data-v="${x.id}">Exporter la liste</button></div>`}${done?`<div class="acts"><button class="sm" data-a="xpv" data-v="${x.id}">Exporter le PV</button></div>`:""}</div>`;
+  ${AP.map((a,i)=>i<4||x.sensible?`<div class="top"><span>${ap[i]?"✔":"○"} ${a}${ap[i]?` · <span data-uid="${esc(ap[i])}"></span>`:""}</span>${!ap[i]&&P.val?`<button class="sm" data-a="apv" data-v="${esc(x.id)}" data-k="${esc(i)}">Valider</button>`:""}</div>`:"").join("")}
+  <div class="acts"><button class="sm" data-a="sens" data-v="${esc(x.id)}" ${P.val?"":"disabled"}>Document sensible : ${x.sensible?"oui":"non"}</button>${ok?`<button class="sm pri w" data-a="exec" data-v="${esc(x.id)}">Enregistrer la destruction</button>`:""}<button class="sm w" data-a="cxl" data-v="${esc(x.id)}">Annuler la liste</button><button class="sm" data-a="xpv" data-v="${esc(x.id)}">Exporter la liste</button></div>`}${done?`<div class="acts"><button class="sm" data-a="xpv" data-v="${esc(x.id)}">Exporter le PV</button></div>`:""}</div>`;
 }
 function cons(){
   if(ctlId)return ctlView();
@@ -1040,7 +1040,7 @@ function openExec(id){
   $("#dlg").innerHTML=`<h2>Enregistrer la destruction</h2><label for="f_met">Méthode</label><select id="f_met"><option>Broyage industriel</option><option>Incinération contrôlée</option><option>Prestataire agréé</option></select>
   ${inp("obs","Personne ou prestataire ayant assisté à la destruction")}${inp("dt","Date de destruction",today(),'type="date"')}
   <div class="mu">Action définitive : les documents passent au statut « Détruit » et le PV est conservé de façon permanente. Avant de détruire : exportez la liste, faites-la signer sur papier par le chef de service et le directeur, puis classez l’original.</div>
-  <div class="acts"><button class="pri" data-a="doexec" data-v="${id}">Confirmer</button><button data-a="close">Annuler</button></div>`;
+  <div class="acts"><button class="pri" data-a="doexec" data-v="${esc(id)}">Confirmer</button><button data-a="close">Annuler</button></div>`;
   $("#dlg").showModal();
 }
 async function doExec(id){
@@ -1074,7 +1074,7 @@ function openBulk(){
   <label for="f_bm">Recherche</label><select id="f_bm"><option value="contient">Contient</option><option value="debut">Commence par</option></select>
   <label for="f_bd">Direction</label><select id="f_bd"><option value="">Toutes</option>${dirs.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
   ${inp("ban","Année (facultatif)","",'type="number"')}
-  <label for="f_bc">Catégorie de conservation à appliquer</label><select id="f_bc"><option value="">Choisir…</option>${CAL.map(c=>`<option value="${c[0]}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
+  <label for="f_bc">Catégorie de conservation à appliquer</label><select id="f_bc"><option value="">Choisir…</option>${CAL.map(c=>`<option value="${esc(c[0])}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
   <label><input type="checkbox" id="f_bo" checked style="width:auto"> Seulement les entrées sans catégorie</label>
   <p id="bcount" class="mu"></p>
   <div class="acts"><button class="pri" id="go2" data-a="dobulk" disabled>Appliquer</button><button data-a="close">Fermer</button></div>`;
@@ -1203,7 +1203,7 @@ function ctlList(){
     const r=Object.values(c.res||{}),ab=r.filter(v=>v==="a").length,dg=r.filter(v=>v==="d").length;
     return `<div class="card"><div class="top"><b>${esc(c.num)}</b><span class="b ${c.statut==="clos"?"ok":"wa"}">${c.statut==="clos"?"Clos":"En cours"}</span></div>
     <div class="mu">${esc(c.portee)} · ${fmt(c.date)} · ${r.length}/${c.items.length} contrôlés${ab?` · <span style="color:var(--er)">${ab} absent(s)</span>`:""}${dg?` · ${dg} dégradé(s)`:""}</div>
-    <div class="acts"><button class="sm" data-a="octl" data-v="${c.id}">Ouvrir</button></div></div>`}).join("")||'<p class="mu">Aucun contrôle enregistré.</p>');
+    <div class="acts"><button class="sm" data-a="octl" data-v="${esc(c.id)}">Ouvrir</button></div></div>`}).join("")||'<p class="mu">Aucun contrôle enregistré.</p>');
 }
 function ctlView(){
   const c=controles.find(x=>x.id===ctlId);if(!c){ctlId=null;return cons()}
@@ -1211,8 +1211,8 @@ function ctlView(){
   const f=ctlFilt==="todo"?c.items.filter(i=>!r[i[0]]):ctlFilt==="pb"?c.items.filter(i=>r[i[0]]==="a"||r[i[0]]==="d"):c.items;
   return `<div class="row"><button data-a="bctl">← Retour</button></div><h2>${esc(c.num)} · ${esc(c.portee)}</h2>
   <div class="mu">${k} / ${c.items.length} contrôlés · ${fmt(c.date)}${clos?" · clos le "+fmt(c.clos):""}</div>
-  <div class="row"><select id="cf"><option value="todo" ${ctlFilt==="todo"?"selected":""}>À contrôler</option><option value="pb" ${ctlFilt==="pb"?"selected":""}>Absents et dégradés</option><option value="all" ${ctlFilt==="all"?"selected":""}>Tous</option></select><button data-a="xctl" data-v="${c.id}">Exporter Excel</button>${clos?"":`<button class="pri w" data-a="cctl" data-v="${c.id}">Clôturer</button>`}</div>
-  ${f.slice(0,150).map(i=>{const s=r[i[0]];return `<div class="card"><b>${esc(i[1])}</b><div class="mu">${esc(i[2]||"sans emplacement")}${s?` · <span class="b ${CS[s][1]}">${CS[s][0]}</span>`:""}</div>${clos?"":`<div class="acts">${Object.keys(CS).map(x=>`<button class="sm w ${s===x?"pri":""}" data-a="cset" data-v="${c.id}" data-k="${i[0]}" data-s="${x}">${CS[x][0]}</button>`).join("")}</div>`}</div>`}).join("")||'<p class="mu">Rien à afficher.</p>'}${f.length>150?`<p class="mu">… et ${f.length-150} autres : la liste se renouvelle au fur et à mesure.</p>`:""}`;
+  <div class="row"><select id="cf"><option value="todo" ${ctlFilt==="todo"?"selected":""}>À contrôler</option><option value="pb" ${ctlFilt==="pb"?"selected":""}>Absents et dégradés</option><option value="all" ${ctlFilt==="all"?"selected":""}>Tous</option></select><button data-a="xctl" data-v="${esc(c.id)}">Exporter Excel</button>${clos?"":`<button class="pri w" data-a="cctl" data-v="${esc(c.id)}">Clôturer</button>`}</div>
+  ${f.slice(0,150).map(i=>{const s=r[i[0]];return `<div class="card"><b>${esc(i[1])}</b><div class="mu">${esc(i[2]||"sans emplacement")}${s?` · <span class="b ${CS[s][1]}">${CS[s][0]}</span>`:""}</div>${clos?"":`<div class="acts">${Object.keys(CS).map(x=>`<button class="sm w ${s===x?"pri":""}" data-a="cset" data-v="${esc(c.id)}" data-k="${esc(i[0])}" data-s="${esc(x)}">${CS[x][0]}</button>`).join("")}</div>`}</div>`}).join("")||'<p class="mu">Rien à afficher.</p>'}${f.length>150?`<p class="mu">… et ${f.length-150} autres : la liste se renouvelle au fur et à mesure.</p>`:""}`;
 }
 function openCtl(){
   const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
@@ -1275,7 +1275,7 @@ function openFiche(id){
   ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
   ${(d.moves&&d.moves.length)?`<h4>Historique des emplacements (${d.moves.length})</h4>`+[...d.moves].reverse().slice(0,10).map(m=>`<div class="mu">${fmt((m.t||"").slice(0,10))} · ${esc(m.de||"—")} → ${esc(m.vers)}${m.nom?" · "+esc(m.nom):""}</div>`).join(""):""}
   ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
-  <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${d.id}">Marquer retrouvé / en bon état</button>`:""}<button class="w" data-a="mloc" data-v="${d.id}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${d.id}">Dupliquer</button><button class="w" data-a="copie" data-v="${d.id}">Envoyer une copie</button><button data-a="fprint" data-v="${d.id}">Imprimer la fiche</button>${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${d.id}">Prêter / consulter</button>`:""}<button class="w" data-a="fedit" data-v="${d.id}">Modifier</button><button data-a="lab1" data-v="${d.id}">Étiquette</button><button data-a="close">Fermer</button></div>`;
+  <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${esc(d.id)}">Marquer retrouvé / en bon état</button>`:""}<button class="w" data-a="mloc" data-v="${esc(d.id)}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${esc(d.id)}">Dupliquer</button><button class="w" data-a="copie" data-v="${esc(d.id)}">Envoyer une copie</button><button data-a="fprint" data-v="${esc(d.id)}">Imprimer la fiche</button>${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${esc(d.id)}">Prêter / consulter</button>`:""}<button class="w" data-a="fedit" data-v="${esc(d.id)}">Modifier</button><button data-a="lab1" data-v="${esc(d.id)}">Étiquette</button><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
 }
 function topStats(){
@@ -1313,7 +1313,7 @@ function iaPaint(){
 function iaPaintSug(){
   const o=$("#isug");if(!o)return;
   const lab=c=>{const x=CAL.find(y=>y[0]===c);return x?x[1]:c};
-  o.innerHTML=(iaSugMsg?`<p class="mu">${esc(iaSugMsg)}</p>`:"")+iaSug.map((x,i)=>{const d=docs.find(y=>y.id===x.id);return d?`<label style="display:block;margin:6px 0"><input type="checkbox" class="isk" data-i="${i}" ${x.conf==="haute"?"checked":""}> ${esc(d.intitule)} (${d.annee}) → <b>${esc(x.cat)}</b> ${esc(lab(x.cat))} <span class="mu">· confiance ${esc(x.conf)}</span></label>`:""}).join("")+(iaSug.length?`<div class="row"><button class="pri w" data-a="iapply">Appliquer les suggestions cochées</button></div>`:"");
+  o.innerHTML=(iaSugMsg?`<p class="mu">${esc(iaSugMsg)}</p>`:"")+iaSug.map((x,i)=>{const d=docs.find(y=>y.id===x.id);return d?`<label style="display:block;margin:6px 0"><input type="checkbox" class="isk" data-i="${esc(i)}" ${x.conf==="haute"?"checked":""}> ${esc(d.intitule)} (${d.annee}) → <b>${esc(x.cat)}</b> ${esc(lab(x.cat))} <span class="mu">· confiance ${esc(x.conf)}</span></label>`:""}).join("")+(iaSug.length?`<div class="row"><button class="pri w" data-a="iapply">Appliquer les suggestions cochées</button></div>`:"");
 }
 function iaView(){
   return `<h2>Assistant IA</h2><p class="mu">Posez une question sur l’inventaire, les prêts ou les échéances. L’assistant consulte les données sans rien modifier. Chaque question utilise votre propre compte Claude.</p>
@@ -1802,7 +1802,7 @@ function todo(){
   if(P.arch&&cc)L.push([cc+" contrôle(s) en cours","cons"]);
   if(P.arch&&va)L.push([va+" versement(s) à contrôler","vers"]);
   if(P.arch&&sc)L.push([sc+" entrée(s) sans catégorie de conservation","cons"]);
-  return L.length?`<h2>À traiter</h2>`+L.map(l=>`<div class="card ${l[2]?"late":""}"><div class="top"><span>${esc(l[0])}</span><button class="sm" data-a="tab" data-v="${l[1]}">Voir</button></div></div>`).join(""):"";
+  return L.length?`<h2>À traiter</h2>`+L.map(l=>`<div class="card ${l[2]?"late":""}"><div class="top"><span>${esc(l[0])}</span><button class="sm" data-a="tab" data-v="${esc(l[1])}">Voir</button></div></div>`).join(""):"";
 }
 async function expPV(id){
   const x=destr.find(y=>y.id===id);if(!x)return;
@@ -1879,7 +1879,7 @@ async function bkRender(){
   const o=$("#bklist");if(!o)return;
   try{
     const a=(await bkAll()).sort((x,y)=>cmp(y.k,x.k));
-    o.innerHTML=a.length?a.map(x=>`<div class="card top"><div><b>${fmt(x.k)}</b><div class="mu">${(x.v.docs||[]).length} entrées · ${(x.v.prets||[]).length} prêts</div></div><div class="acts"><button class="sm" data-a="bkdl" data-v="${x.k}">Télécharger</button><button class="sm w" data-a="bkrs" data-v="${x.k}">Restaurer</button></div></div>`).join(""):'<p class="mu">Aucune sauvegarde automatique pour l’instant.</p>';
+    o.innerHTML=a.length?a.map(x=>`<div class="card top"><div><b>${fmt(x.k)}</b><div class="mu">${(x.v.docs||[]).length} entrées · ${(x.v.prets||[]).length} prêts</div></div><div class="acts"><button class="sm" data-a="bkdl" data-v="${esc(x.k)}">Télécharger</button><button class="sm w" data-a="bkrs" data-v="${esc(x.k)}">Restaurer</button></div></div>`).join(""):'<p class="mu">Aucune sauvegarde automatique pour l’instant.</p>';
   }catch(e){o.innerHTML='<p class="mu">Le stockage de l’appareil n’est pas disponible.</p>'}
 }
 async function bkDl(k){
@@ -1905,7 +1905,7 @@ function vers(){
   ${a.map(v=>`<div class="card"><div class="top"><b>${esc(v.num)}</b><span class="b ${v.statut==="accepte"?"ok":"wa"}">${VSTAT[v.statut]}</span></div>
   <div class="mu">${esc(v.direction)} › ${esc(v.service)} · ${esc(v.type)} · ${esc(v.periode)}</div>
   <div class="mu">${v.lignes.length} dossiers · ${v.date?"pris en charge le "+fmt(v.date):"régularisation historique"}${nAnom(v)?` · <span style="color:var(--er)">${nAnom(v)} anomalie(s)</span>`:""}</div>
-  <div class="acts"><button class="sm" data-a="vdet" data-v="${v.id}">Voir le bordereau</button></div></div>`).join("")||'<p class="mu">Aucun versement enregistré.</p>'}`;
+  <div class="acts"><button class="sm" data-a="vdet" data-v="${esc(v.id)}">Voir le bordereau</button></div></div>`).join("")||'<p class="mu">Aucun versement enregistré.</p>'}`;
 }
 function openVers(){
   $("#dlg").innerHTML=`<h2>Nouveau versement</h2>
@@ -1913,7 +1913,7 @@ function openVers(){
   <label for="f_type">Support</label><select id="f_type">${TYPES.map(t=>`<option>${t}</option>`).join("")}</select>
   ${inp("annee","Année (exercice)",new Date().getFullYear()-1,'type="number"')}${inp("periode","Période couverte")}
   ${inp("date","Date de prise en charge",today(),'type="date"')}${inp("empl","Emplacement de stockage","",'list="dl_emp"')}
-  <label for="f_cat">Catégorie de conservation</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${c[0]}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
+  <label for="f_cat">Catégorie de conservation</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${esc(c[0])}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
   <label for="f_lignes">Dossiers reçus : une ligne par dossier (intitulé ; nombre ; anomalie éventuelle)</label>
   <textarea id="f_lignes" rows="8" placeholder="N° 0001/01/2025 du 06/01/2025 ; 1&#10;N° 00010/03/2025 ; 1 ; journée non renseignée"></textarea>
   ${inp("obs","Observations et recommandations")}
@@ -1964,7 +1964,7 @@ function vdet(id){
   ${an.length?`<h2 style="margin-top:12px">Anomalies (${an.length})</h2>${an.map(l=>`<div class="mu">• ${esc(l[0])} : ${esc(l[2])}</div>`).join("")}`:'<p class="mu">Aucune anomalie signalée dans la liste.</p>'}
   ${v.obs?`<h2 style="margin-top:12px">Observations et recommandations</h2><div class="mu">${esc(v.obs)}</div>`:""}
   <details style="margin-top:8px"><summary class="mu">Liste des dossiers (${v.lignes.length})</summary>${(sp=>lignesAZ(v).map(l=>`<div class="mu">• ${esc(l[0])}${sp(l)?" · "+esc(sp(l)):""}${l[1]>1?" ("+l[1]+")":""}</div>`).join(""))(lineSup(v))}</details>
-  <div class="acts">${v.statut==="a_controler"?`<button class="pri w" data-a="vacc" data-v="${id}">Accepter et créer les entrées</button>`:""}<button class="pri" data-a="vpdf" data-v="${id}">Rapport PDF / e-mail</button><button data-a="vexp" data-v="${id}">Exporter le bordereau (Excel)</button><button data-a="close">Fermer</button></div>`;
+  <div class="acts">${v.statut==="a_controler"?`<button class="pri w" data-a="vacc" data-v="${esc(id)}">Accepter et créer les entrées</button>`:""}<button class="pri" data-a="vpdf" data-v="${esc(id)}">Rapport PDF / e-mail</button><button data-a="vexp" data-v="${esc(id)}">Exporter le bordereau (Excel)</button><button data-a="close">Fermer</button></div>`;
   $("#dlg").showModal();
 }
 async function accVers(id){
@@ -2049,7 +2049,7 @@ function team(){loadAnnu();
   ${window.PLATFORM_SB?`<div class="card"><b>Lecteur</b> : consulte l’inventaire et les versements.<br><b>Demandeur</b> : consulte l’inventaire et fait des demandes de communication.<br><b>Archiviste</b> : saisit et modifie l’inventaire, les prêts, versements et contrôles, gère les copies scannées.<br><b>Responsable de service</b> : valide les demandes et les listes de destruction.<br><b>Administrateur</b> : tous les droits, gère les comptes et les fichiers.</div><p class="mu">Ces droits sont appliqués par le serveur : même en modifiant la page, personne ne peut dépasser son niveau. Les comptes (e-mail + mot de passe) se créent dans le tableau de bord Supabase (Authentication > Users) ; ils apparaissent ensuite ici pour recevoir une fonction.</p>`:`<div class="card"><b>Lecteur</b> : consulte l’inventaire et le registre.<br><b>Archiviste</b> : saisit et modifie l’inventaire, enregistre les sorties et les retours.<br><b>Administrateur</b> : en plus, importe le classeur Excel, supprime des entrées et gère l’équipe.</div>
   <p class="mu">Seuls le propriétaire et les administrateurs (niveau éditeur) peuvent modifier l’application : toute autre personne est en consultation seule, même partagée en contributeur. Partagez en niveau lecteur.</p>`}
   <h2>Équipe du service (${mem.length})</h2>
-  ${mem.map(m=>{const an=(annu||[]).find(x=>x.user_id===m.uid)||{};return `<div class="card top"><div><b data-uid="${esc(m.uid)}"></b><div class="mu">${window.PLATFORM_SB?esc(an.email||"")+(an.derniere_connexion?" · dernière connexion "+esc(new Date(an.derniere_connexion).toLocaleDateString("fr-FR")):""):esc(m.fonction)}</div>${window.PLATFORM_SB?`<select class="adm" data-role="${esc(m.uid)}" aria-label="Fonction">${FONCTIONS.map(x=>`<option${x===m.fonction?" selected":""}>${x}</option>`).join("")}</select>`:""}</div><button class="sm adm" data-a="delm" data-v="${m.id}">Retirer</button></div>`}).join("")||'<p class="mu">Aucun membre enregistré.</p>'}
+  ${mem.map(m=>{const an=(annu||[]).find(x=>x.user_id===m.uid)||{};return `<div class="card top"><div><b data-uid="${esc(m.uid)}"></b><div class="mu">${window.PLATFORM_SB?esc(an.email||"")+(an.derniere_connexion?" · dernière connexion "+esc(new Date(an.derniere_connexion).toLocaleDateString("fr-FR")):""):esc(m.fonction)}</div>${window.PLATFORM_SB?`<select class="adm" data-role="${esc(m.uid)}" aria-label="Fonction">${FONCTIONS.map(x=>`<option${x===m.fonction?" selected":""}>${x}</option>`).join("")}</select>`:""}</div><button class="sm adm" data-a="delm" data-v="${esc(m.id)}">Retirer</button></div>`}).join("")||'<p class="mu">Aucun membre enregistré.</p>'}
   <h2 style="margin-top:16px">Sauvegarde</h2><div class="acts"><button data-a="xall">Sauvegarde complète (JSON)</button><button class="w" data-a="rall">Restaurer une sauvegarde</button></div><p class="mu">La sauvegarde contient l’inventaire, les versements, les prêts, les demandes, les destructions, les contrôles, l’équipe et les lots. À faire régulièrement, et avant tout changement de compte.</p>
   <h2 style="margin-top:16px">Sauvegardes automatiques sur cet appareil</h2><p class="mu">Un instantané est enregistré dans l’appareil 30 secondes après chaque modification (un par jour, 14 jours conservés). Ces copies restent sur cet appareil : téléchargez-en une régulièrement et gardez-la ailleurs. Elles ne sont pas chiffrées : verrouillez l’appareil et ne laissez pas les fichiers téléchargés en libre accès.</p><div id="bklist"></div>
   ${orgHTML()}${locHTML()}
@@ -2134,7 +2134,7 @@ function openImp(){
   pend=[];
   $("#dlg").innerHTML=`<h2>Importer le classeur Excel</h2>
   <p class="mu">Choisissez le fichier .xlsx. Colonnes reconnues : Direction, Service, Année (obligatoires), puis Mois, Type, Intitulé, Nombre, Cote, Emplacement, Mots-clés, Observations. Les entrées déjà présentes sont ignorées, vous pouvez donc réimporter sans doublons.</p>
-  ${lots.length?`<div class="mu">Lots préparés (annexes du rapport DFC) :</div><div class="acts">${[...lots].sort((a,b)=>cmp(a.id,b.id)).map(l=>`<button class="sm" data-a="lot" data-v="${l.id}">${esc(l.titre)} (${l.items.length})</button>`).join("")}</div><div class="mu" style="margin-top:8px">Ou un fichier Excel :</div>`:""}<input type="file" id="xf" accept=".xlsx,.xlsm,.xls"><p id="imsg" class="mu"></p>
+  ${lots.length?`<div class="mu">Lots préparés (annexes du rapport DFC) :</div><div class="acts">${[...lots].sort((a,b)=>cmp(a.id,b.id)).map(l=>`<button class="sm" data-a="lot" data-v="${esc(l.id)}">${esc(l.titre)} (${l.items.length})</button>`).join("")}</div><div class="mu" style="margin-top:8px">Ou un fichier Excel :</div>`:""}<input type="file" id="xf" accept=".xlsx,.xlsm,.xls"><p id="imsg" class="mu"></p>
   <div class="acts"><button class="pri" id="go" data-a="doimp" disabled>Importer</button><button data-a="close">Fermer</button></div>`;
   $("#dlg").showModal();
 }
