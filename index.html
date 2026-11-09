@@ -478,7 +478,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="9 nov. 2026 – 4";
+const APP_VER="9 nov. 2026 – 6";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -555,14 +555,14 @@ function filtered(){
 }
 function listHTML(){
   const SORTS={cote:(x,y)=>cmp(x.cote||"",y.cote||""),recent:(x,y)=>y.annee-x.annee||cmp(x.intitule,y.intitule),titre:(x,y)=>cmp(x.intitule,y.intitule)},flat=!!SORTS[f.s];
-  const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  const a=filtered().sort(flat?SORTS[f.s]:(x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y));
   if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
   const actPret={};prets.forEach(p=>{if(p.statut==="en_cours"&&p.docId)actPret[p.docId]=p});
   let h=(f.q||f.dir||f.srv||f.an||f.typ||f.st)?`<div class="mu" style="margin:2px 0 4px"><b>${a.length}</b> entrée(s) trouvée(s)</div>`:"",k1="",k2="",k3="";
   for(const d of a.slice(0,lim)){
     if(!flat&&d.direction!==k1){h+=`<h3>${esc(d.direction)}</h3>`;k1=d.direction;k2="";k3=""}
     if(!flat&&d.service!==k2){h+=`<h4>${esc(d.service)}</h4>`;k2=d.service;k3=""}
-    if(!flat&&d.annee!==k3){h+=`<h5>${d.annee}</h5>`;k3=d.annee}
+    const k4=d.annee+"|"+(MOISN.includes(String(d.mois||"").toLowerCase())?String(d.mois).toLowerCase():"");if(!flat&&k4!==k3){h+=`<h5>${d.annee}${k4.split("|")[1]?" · "+esc(k4.split("|")[1]):""}</h5>`;k3=k4}
     const out=d.statut==="en_pret",pr=out?actPret[d.id]:null;
     h+=`<div class="card"><div class="top"><b>${esc(d.intitule)}</b><span class="b ${d.statut==="detruit"?"er":out?"wa":"ok"}">${d.statut==="detruit"?"Détruit":out?"En sortie":"Disponible"}</span></div>
     <div class="mu">${flat?`<span class="b">${esc(d.direction)} › ${esc(d.service)} · ${d.annee}</span> `:""}<span class="b">${esc(d.type)}</span>${d.mois?esc(d.mois)+" · ":""}${d.nb} unité(s) ${cb(d)}${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
@@ -652,13 +652,18 @@ function openDoc(id){
   $("#dlg").showModal();
 }
 const ini=s=>s.split(/\s+/).filter(w=>w.length>2).map(w=>w[0]).join("").toUpperCase()||s.slice(0,2).toUpperCase();
+/* Cotes : sigles courts (direction-service-année-numéro), mots de liaison ignorés */
+const STOPW=new Set(["de","des","du","la","le","les","et","en","au","aux","a"]),sigW=s=>String(s||"").replace(/[\/,.;:()&]/g," ").split(/\s+/).map(w=>w.replace(/^[ldLD][’']/,"")).filter(w=>w&&!STOPW.has(w.toLowerCase()));
+const sigDir=s=>{const n=norm(s);if(n.includes("affaires juridiques"))return "DAJR";if(n.includes("clientele"))return "DCL";return sigW(s).map(w=>w[0]).join("").toUpperCase()||"X"};
+const sigSrv=s=>{const n=norm(s);if(/(^| )ong( |$)/.test(n))return "ONG";const w=sigW(s).filter((x,i)=>!(i===0&&/^service$/i.test(x)));if(!w.length)return "SRV";return w.length===1?norm(w[0]).replace(/ /g,"").slice(0,3).toUpperCase():w.map(x=>x[0]).join("").toUpperCase()};
+const cotePre=d=>`${sigDir(d.direction)}-${sigSrv(d.service)}-${d.annee}-`;
 async function saveDoc(id){
   const g=k=>$("#f_"+k).value.trim();
   const o={direction:g("direction"),service:g("service"),annee:+g("annee"),mois:g("mois"),cat:g("cat"),gel:g("gel")==="1",intitule:g("intitule"),type:g("type"),nb:Math.max(1,+g("nb")||1),cote:g("cote"),empl:g("empl"),mots:g("mots"),obs:g("obs")};
   if(!o.direction||!o.service||!o.intitule||!o.annee)return toast("Direction, service, année et intitulé sont obligatoires.");
   if(o.annee<1900||o.annee>new Date().getFullYear()+1)return toast("Année invalide : saisissez une année entre 1900 et "+(new Date().getFullYear()+1)+".");
   if(!id&&docs.some(d=>norm(d.direction)===norm(o.direction)&&norm(d.service)===norm(o.service)&&+d.annee===o.annee&&norm(d.intitule)===norm(o.intitule))&&!await ask("Une entrée identique existe déjà. L’ajouter quand même ?"))return;
-  if(!o.cote){const pre=`${ini(o.direction)}-${ini(o.service)}-${o.annee}-`,mx=Math.max(0,...docs.filter(d=>d.id!==id&&(d.cote||"").startsWith(pre)).map(d=>+(d.cote.slice(pre.length))||0));o.cote=pre+String(mx+1).padStart(3,"0")}
+  if(!o.cote){const pre=cotePre(o),mx=Math.max(0,...docs.filter(d=>d.id!==id&&(d.cote||"").startsWith(pre)).map(d=>+(d.cote.slice(pre.length))||0));o.cote=pre+String(mx+1).padStart(3,"0")}
   try{
     if(id)await db.doc("docs/"+id).update(o);else await db.collection("docs").doc().set({...o,statut:"disponible"});
     jr(id?"Entrée modifiée":"Entrée créée",`${o.intitule} (${o.annee}, ${o.service})`);$("#dlg").close();
@@ -1001,7 +1006,7 @@ function dsSel(){const n=DS.size;$("#f_dsel").innerHTML=n?`<b>${n} document(s) s
 function dsSrv(){const dr=$("#f_ddir").value,sv=[...new Set(docs.filter(d=>d.statut==="disponible"&&(!dr||d.direction===dr)).map(d=>d.service).filter(Boolean))].sort(ocmp);$("#f_dsrv").innerHTML='<option value="">Tous les services</option>'+sv.map(x=>`<option>${esc(x)}</option>`).join("")}
 function fillDocs(){
   const ws=norm($("#f_dq").value).split(" ").filter(Boolean),dr=$("#f_ddir").value,sv=$("#f_dsrv").value,an=$("#f_dan").value;
-  const all=docs.filter(d=>d.statut==="disponible"&&(!dr||d.direction===dr)&&(!sv||d.service===sv)&&(!an||String(d.annee)===an)&&(!ws.length||(t=>ws.every(w=>t.includes(w)))(norm(d.intitule)))).sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  const all=docs.filter(d=>d.statut==="disponible"&&(!dr||d.direction===dr)&&(!sv||d.service===sv)&&(!an||String(d.annee)===an)&&(!ws.length||(t=>ws.every(w=>t.includes(w)))(norm(d.intitule)))).sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y));
   const r=all.slice(0,60);
   $("#f_dl").innerHTML=r.map(d=>`<label style="display:flex;gap:8px;align-items:flex-start;padding:7px 6px;border-bottom:1px solid var(--bd);cursor:pointer"><input type="checkbox" data-dd="${esc(d.id)}" ${DS.has(d.id)?"checked":""} style="width:auto;margin-top:3px"><span><b>${esc(d.intitule)}</b><br><span class="mu">${esc(d.annee)} · ${esc(d.type)} · ${esc(d.service)}</span></span></label>`).join("")||'<p class="mu" style="padding:8px">Aucun document disponible ne correspond.</p>';
   $("#f_dn").textContent=all.length>60?`${all.length} résultats, 60 affichés : précisez l’intitulé ou filtrez par direction, service et année.`:`${all.length} document(s) disponible(s).`;
@@ -1053,12 +1058,21 @@ function destCard(x){
   ${AP.map((a,i)=>i<4||x.sensible?`<div class="top"><span>${ap[i]?"✔":"○"} ${a}${ap[i]?` · <span data-uid="${esc(ap[i])}"></span>`:""}</span>${!ap[i]&&P.val?`<button class="sm" data-a="apv" data-v="${esc(x.id)}" data-k="${esc(i)}">Valider</button>`:""}</div>`:"").join("")}
   <div class="acts"><button class="sm" data-a="sens" data-v="${esc(x.id)}" ${P.val?"":"disabled"}>Document sensible : ${x.sensible?"oui":"non"}</button>${ok?`<button class="sm pri w" data-a="exec" data-v="${esc(x.id)}">Enregistrer la destruction</button>`:""}<button class="sm w" data-a="cxl" data-v="${esc(x.id)}">Annuler la liste</button><button class="sm" data-a="xpv" data-v="${esc(x.id)}">Exporter la liste</button></div>`}${done?`<div class="acts"><button class="sm" data-a="xpv" data-v="${esc(x.id)}">Exporter le PV</button></div>`:""}</div>`;
 }
+function echeancier(){
+  const A=docs.filter(d=>d.statut!=="detruit"&&cal(d.cat)),by={},bc={};
+  A.forEach(d=>{const c=cal(d.cat),y=fin(d)?fin(d)+1:"Sans limite";(by[y]=by[y]||{D:0,V:0,n:0});by[y].n++;by[y][c[3]==="D"?"D":"V"]++;(bc[c[0]]=bc[c[0]]||{c,n:0}).n++});
+  const ys=Object.keys(by).sort(),mx=Math.max(1,...ys.map(y=>by[y].n));if(!ys.length)return "";
+  return `<details class="card" style="margin:8px 0"><summary style="cursor:pointer"><b>Échéancier de conservation</b> <span class="mu">(${A.length} entrées classées)</span></summary>
+  <div class="mu" style="margin:6px 0">Année à partir de laquelle la durée de conservation est écoulée, selon la catégorie et l’année du document.</div>
+  ${ys.map(y=>`<div>${esc(y)} <span class="mu">· ${by[y].n} entrée(s)${by[y].D?" · "+by[y].D+" à détruire":""}${by[y].V?" · "+by[y].V+" à conserver, verser ou trier":""}</span></div><div class="bar"><i style="width:${by[y].n/mx*100}%"></i></div>`).join("")}
+  <div style="margin-top:10px"><b>Par catégorie</b></div>${Object.values(bc).sort((a,b)=>cmp(a.c[0],b.c[0])).map(o=>`<div class="mu">${esc(o.c[0])} – ${esc(o.c[1])} · ${o.c[2]?o.c[2]+" ans":"sans limite"} · ${esc(SORT[o.c[3]]||"")} : <b>${o.n}</b></div>`).join("")}</details>`;
+}
 function cons(){
   if(ctlId)return ctlView();
   const el=docs.filter(echu),nc=docs.filter(d=>!d.cat&&d.statut!=="detruit").length,open=destr.filter(x=>x.statut!=="detruit"),done=destr.filter(x=>x.statut==="detruit").sort((a,b)=>cmp(b.num,a.num));
   return `<div class="kpis"><div class="kpi"><b>${el.length}</b><span class="mu">À éliminer</span></div><div class="kpi"><b>${nc}</b><span class="mu">Sans catégorie</span></div><div class="kpi"><b>${docs.filter(d=>d.gel).length}</b><span class="mu">Destruction suspendue</span></div><div class="kpi"><b>${done.length}</b><span class="mu">PV de destruction</span></div></div>
   <div class="row"><button class="w" data-a="bulkcat">Affecter une catégorie en masse</button></div>
-  <h2>Listes de destruction en cours</h2>${open.map(destCard).join("")||'<p class="mu">Aucune liste en cours.</p>'}
+  ${echeancier()}<h2>Listes de destruction en cours</h2>${open.map(destCard).join("")||'<p class="mu">Aucune liste en cours.</p>'}
   <h2 style="margin-top:16px">Arrivés à échéance</h2>
   <div class="row"><button class="pri w" data-a="newlist" ${el.length?"":"disabled"}>Créer la liste de destruction (${Math.min(el.length,150)} max)</button></div>
   ${el.slice(0,40).map(d=>`<div class="card"><b>${esc(d.intitule)}</b><div class="mu">${esc(d.direction)} › ${esc(d.service)} › ${d.annee} · ${esc(cal(d.cat)[1])} · fin ${fin(d)}</div></div>`).join("")}${el.length>40?`<p class="mu">… et ${el.length-40} autres.</p>`:""}
@@ -1478,10 +1492,10 @@ async function copieDl(fid){
   }catch(e){if(!e||e.code!=="declined")toast("Téléchargement impossible : "+((e&&e.message)||e))}
 }
 async function assignCotes(){
-  const todo=docs.filter(d=>!d.cote&&d.statut!=="detruit").sort((a,b)=>cmp(a.direction,b.direction)||cmp(a.service,b.service)||a.annee-b.annee||cmp(a.intitule,b.intitule)||cmp(a.id,b.id));
+  const todo=docs.filter(d=>!d.cote&&d.statut!=="detruit").sort((a,b)=>cmp(a.direction,b.direction)||cmp(a.service,b.service)||a.annee-b.annee||tcmp(a,b)||cmp(a.id,b.id));
   if(!todo.length)return toast("Toutes les entrées ont déjà une cote.");
-  if(!await ask("Attribuer une cote à "+todo.length+" entrée(s) ? Les cotes existantes ne changent pas."))return;
-  const pref=d=>`${ini(d.direction)}-${ini(d.service)}-${d.annee}-`,used=new Map();
+  if(!await ask("Attribuer une cote à "+todo.length+" entrée(s) ? Format : "+cotePre(todo[0])+"001, numérotation dans l’ordre chronologique. Les cotes existantes ne changent pas."))return;
+  const pref=cotePre,used=new Map();
   docs.forEach(d=>{if(d.cote){const p=pref(d);if(d.cote.startsWith(p))used.set(p,Math.max(used.get(p)||0,+d.cote.slice(p.length)||0))}});
   const ups=todo.map(d=>{const p=pref(d),n=(used.get(p)||0)+1;used.set(p,n);return[d.id,p+String(n).padStart(3,"0")]});
   try{
@@ -1729,7 +1743,7 @@ function locHTML(){
 }
 function openCompLoc(loc){openComp();const s=$("#f_cl");if(s){s.value=loc;compPrev();const n=$("#f_ne");if(n)n.focus()}}
 function repEmpl(loc){
-  const fd=d=>d?String(d).split("-").reverse().join("/"):"",a=docs.filter(d=>d.statut!=="detruit"&&(d.empl||"")===loc).sort((x,y)=>cmp(x.cote||"",y.cote||"")||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  const fd=d=>d?String(d).split("-").reverse().join("/"):"",a=docs.filter(d=>d.statut!=="detruit"&&(d.empl||"")===loc).sort((x,y)=>cmp(x.cote||"",y.cote||"")||x.annee-y.annee||tcmp(x,y));
   return{titre:"Liste de contrôle de l’emplacement : "+loc,ref:"EMPL-"+today(),meta:[["Emplacement",loc],["Entrées",a.length],["Unités",a.reduce((n,d)=>n+(+d.nb||0),0)],["Date d’édition",fd(today())],["Contrôle effectué par","………………"],["Date du contrôle","………………"]],sections:[{titre:"Entrées classées à cet emplacement",head:["Cote","Intitulé","Année","Unités","Présent","Observations"],rows:a.map(d=>[d.cote||"",d.intitule,d.annee,d.nb,"☐",""])}]};
 }
 function openMoveLoc(id){
@@ -1976,10 +1990,10 @@ async function saveVers(){
   let num;try{num=await freeNum("versements","VERS",versements)}catch(e){return fail(e)}
   try{await db.doc("versements/"+hid(num)).set({num,statut:"a_controler",direction:g("direction"),service:g("service"),type:g("type"),annee:+g("annee"),periode:g("periode")||g("annee"),date:g("date"),empl:g("empl"),cat:g("cat"),lignes,obs:g("obs"),par:P.id||"x",creeLe:today()});jr("Versement enregistré",num+" · "+g("direction")+" › "+g("service"));$("#dlg").close()}catch(e){fail(e)}
 }
-const NCOL=new Intl.Collator('fr',{numeric:true,sensitivity:'base'}),MOISN=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],dKey=t=>{const m=String(t).match(/(\d{1,2})\s+(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+(\d{4})/i);return m?+m[3]*10000+(MOISN.indexOf(m[2].toLowerCase())+1)*100+ +m[1]:0},lignesAZ=v=>{const sp=lineSup(v),r=t=>{const i=TYPES.indexOf(t);return i<0?99:i};return [...v.lignes].sort((a,b)=>{const ka=dKey(a[0]),kb=dKey(b[0]);return r(sp(a))-r(sp(b))||(ka&&kb&&ka!==kb?ka-kb:NCOL.compare(String(a[0]),String(b[0])))})};
+const NCOL=new Intl.Collator('fr',{numeric:true,sensitivity:'base'}),MOISN=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'],dKey=t=>{const m=String(t).match(/(?:(\d{1,2})(?:er)?\s+)?(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)\s+(\d{4})/i);return m?+m[3]*10000+(MOISN.indexOf(m[2].toLowerCase())+1)*100+(+m[1]||0):0},tcmp=(x,y)=>{const k=d=>dKey(d.intitule)||((+d.annee||0)*10000+(MOISN.indexOf(String(d.mois||'').toLowerCase())+1)*100),a=k(x),b=k(y);return (a!==b?a-b:0)||NCOL.compare(String(x.intitule),String(y.intitule))},lignesAZ=v=>{const sp=lineSup(v),r=t=>{const i=TYPES.indexOf(t);return i<0?99:i};return [...v.lignes].sort((a,b)=>{const ka=dKey(a[0]),kb=dKey(b[0]);return r(sp(a))-r(sp(b))||(ka&&kb&&ka!==kb?ka-kb:NCOL.compare(String(a[0]),String(b[0])))})};
 const lineSup=v=>{const m=new Map();docs.forEach(d=>{if(d.service===v.service&&d.direction===v.direction&&!m.has(d.intitule))m.set(d.intitule,d.type)});const pure=TYPES.includes(v.type)?v.type:"";return l=>l[3]||m.get(l[0])||pure||""};
 function invPdf(){
-  const a=filtered().sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule));
+  const a=filtered().sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y));
   if(!a.length)return toast("Aucun document à exporter avec ces filtres.");
   const act={};prets.forEach(p=>{if(p.statut==="en_cours"&&p.docId)act[p.docId]=p});
   const etat=d=>{if(d.statut==="detruit")return "Détruit";if(d.statut!=="en_pret")return "Disponible";const p=act[d.id];return p?"Sorti — emprunté par "+(p.demandeur||"–")+(p.service?" ("+p.service+")":"")+(p.sortie?", le "+fmtR(p.sortie):"")+(p.ref?" · "+p.ref:""):"Sorti"};
@@ -2127,7 +2141,7 @@ async function exportCsv(){
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
   const H=["Direction","Service","Année","Mois","Type","Intitulé","Nombre","Cote","Emplacement","Mots-clés","Observations","Statut"];
   const q=v=>{let s=String(v??"");if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};
-  const rows=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>[d.direction,d.service,d.annee,d.mois||"",d.type,d.intitule,d.nb,d.cote||"",d.empl||"",d.mots||"",d.obs||"",d.statut==="en_pret"?"En sortie":"Disponible"]);
+  const rows=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y)).map(d=>[d.direction,d.service,d.annee,d.mois||"",d.type,d.intitule,d.nb,d.cote||"",d.empl||"",d.mots||"",d.obs||"",d.statut==="en_pret"?"En sortie":"Disponible"]);
   const csv="\ufeff"+[H,...rows].map(r=>r.map(q).join(";")).join("\r\n");
   try{await dl.save({filename:"inventaire-archives-"+today()+".csv",data:csv});toast("Bibliothèque Excel indisponible : export CSV enregistré (s’ouvre dans Excel).")}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+((e&&e.message)||e))}
 }
@@ -2159,7 +2173,7 @@ async function backupXls(){
   const val=v=>v==null?"":typeof v==="object"?JSON.stringify(v):v;
   const gen=(rows,first=[])=>{const keys=[...first];rows.forEach(r=>Object.keys(r).forEach(k=>{if(!keys.includes(k))keys.push(k)}));return rows.map(r=>{const o={};keys.forEach(k=>o[k]=val(r[k]));return o})};
   const emp=d=>{const p=d.statut==="en_pret"&&prets.find(x=>x.docId===d.id&&x.statut==="en_cours");return p?p.demandeur+(p.service?" ("+p.service+")":""):""};
-  const inv=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Intitulé":d.intitule,"Support":d.type,"Nombre":d.nb,"Catégorie":d.cat||"","Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Statut":d.statut==="en_pret"?"En sortie":d.statut==="detruit"?"Détruit":"Disponible","Emprunteur":emp(d),"Destruction suspendue":d.gel?"Oui":"","Observations":d.obs||"","ID":d.id}));
+  const inv=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Intitulé":d.intitule,"Support":d.type,"Nombre":d.nb,"Catégorie":d.cat||"","Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Statut":d.statut==="en_pret"?"En sortie":d.statut==="detruit"?"Détruit":"Disponible","Emprunteur":emp(d),"Destruction suspendue":d.gel?"Oui":"","Observations":d.obs||"","ID":d.id}));
   const ver=[];[...versements].sort((a,b)=>String(a.num).localeCompare(String(b.num))).forEach(v=>{const L=v.lignes&&v.lignes.length?v.lignes:[["","",""]];L.forEach((l,i)=>ver.push({"N° versement":v.num,"Statut":v.statut==="accepte"?"Accepté":"À contrôler","Direction":v.direction,"Service":v.service,"Support":v.type,"Année":v.annee,"Période":v.periode||"","Date":v.date||"","Emplacement":v.empl||"","Observations":v.obs||"","Ligne":i+1,"Document":l[0],"Nombre":l[1],"Anomalie":l[2]||""}))});
   const sor=gen([...prets].sort((a,b)=>String(b.sortie).localeCompare(String(a.sortie))),["ref","docLabel","demandeur","service","mode","valide","sortie","prevu","retour","statut"]);
   const eq=membres.map(m=>({"Nom":m.nom,"Prénom":m.prenom,"Fonction":m.fonction,"Actif":m.actif===false?"Non":"Oui"}));
@@ -2177,7 +2191,7 @@ async function exportXls(){
   if(!await libX())return exportCsv();
   let dl=null;try{dl=await PF.use("downloads")}catch(e){}
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
-  const A=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||cmp(x.intitule,y.intitule)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Type":d.type,"Intitulé":d.intitule,"Nombre":d.nb,"Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Observations":d.obs||"","Statut":d.statut==="en_pret"?"En sortie":"Disponible","Emprunteur":(d.statut==="en_pret"&&(pe=prets.find(p=>p.docId===d.id&&p.statut==="en_cours")))?pe.demandeur+(pe.service?" ("+pe.service+")":""):""}));
+  const A=[...docs].sort((x,y)=>ocmp(x.direction,y.direction)||ocmp(x.service,y.service)||x.annee-y.annee||tcmp(x,y)).map(d=>({"Direction":d.direction,"Service":d.service,"Année":d.annee,"Mois":d.mois||"","Type":d.type,"Intitulé":d.intitule,"Nombre":d.nb,"Cote":d.cote||"","Emplacement":d.empl||"","Mots-clés":d.mots||"","Observations":d.obs||"","Statut":d.statut==="en_pret"?"En sortie":"Disponible","Emprunteur":(d.statut==="en_pret"&&(pe=prets.find(p=>p.docId===d.id&&p.statut==="en_cours")))?pe.demandeur+(pe.service?" ("+pe.service+")":""):""}));
   const B=prets.map(p=>({"Document":p.docLabel,"Demandeur":p.demandeur,"Service":p.service,"Modalité":p.mode,"Validé par":p.valide||"","Sortie":p.sortie,"Retour prévu":p.prevu,"Retour réel":p.retour||"","Statut":p.statut==="en_cours"?"En cours":"Rendu"}));
   const wb=XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb,XLSX.utils.json_to_sheet(A),"Inventaire");
