@@ -478,7 +478,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="9 nov. 2026 – 3";
+const APP_VER="9 nov. 2026 – 4";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -899,7 +899,7 @@ async function back(id){
 /* ---- Calendrier de conservation, demandes, destruction ---- */
 const CAL=[["RC1","Reçus de caisse clients (toutes catégories)",10,"D"],["RC2","Rapports de collecte et de traitement des reçus",5,"D"],
 ["ADM1","Courriers entrants et sortants",5,"D"],["ADM2","PV de réunion interne",10,"V"],["ADM3","Notes de service internes",3,"D"],["ADM4","Rapports intermédiaires",3,"D"],["ADM5","Rapports annuels d’activité",10,"V"],["ADM6","Brochures, supports médias, publications",5,"T"],
-["RH1","Dossier individuel du personnel",10,"P"],["RH2","Registres du personnel",30,"V"],["RH3","Dossiers de recrutement (non retenus)",5,"D"],["RH4","Dossiers de congés, absences",5,"D"],["RH5","Bulletins de paie",10,"D"],["RH6","Dossiers disciplinaires",10,"D"],
+["RH1","Dossier individuel du personnel",10,"P"],["RH2","Registres du personnel",30,"V"],["RH3","Dossiers de recrutement (non retenus)",5,"D"],["RH4","Dossiers de congés, absences",5,"D"],["RH5","Bulletins de paie",10,"D"],["RH6","Dossiers disciplinaires",10,"D"],["RH7","Déclarations fiscales et sociales (ITS, CNSS)",10,"D"],
 ["F1","Factures fournisseurs et pièces comptables",10,"D"],["F2","Bilans, comptes de résultat, états financiers",10,"V"],["F3","Journaux comptables, grands livres",10,"D"],["F4","Bons de commande, pièces d’achat",5,"D"],["F5","Quittances, reçus de paiement internes",5,"D"],["F6","TDR de collecte et documents budgétaires",5,"D"],
 ["J1","Contrats et conventions (IRBP, TP, baux)",10,"V"],["J2","Conventions partenaires et accords commerciaux",10,"V"],["J3","Dossiers de contentieux et recouvrement",10,"D"],["J4","PV de caisse, demandes d’explication, décharges",5,"D"],["J5","Documents à valeur probante",10,"V"],
 ["M1","Factures et reçus MyNITA, NIGELEC, NDE",10,"D"],["M2","Contrats de partenariat, plateformes monétiques",10,"V"],["M3","Rapports de transaction et journaux électroniques",5,"D"],
