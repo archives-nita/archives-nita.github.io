@@ -127,6 +127,16 @@ html{scroll-behavior:smooth}
 #lst>.card,#plst>.card,#flist>.card{margin:0}
 }
 @media(min-width:1100px){dialog{width:min(660px,94vw)}dialog.ask{width:min(440px,92vw)}}
+/* GED */
+dialog.wide{width:min(980px,96vw)}
+.gchips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 10px}.gchip{border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:99px;padding:8px 16px;font:inherit;cursor:pointer;min-height:40px}.gchip.on{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+.gbc{margin:10px 0 6px;font-size:15px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}.glink{background:none;border:0;color:var(--ac);font:inherit;font-weight:600;cursor:pointer;padding:4px 2px;min-height:0;box-shadow:none}
+.gfolds{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0}.gfold{display:flex;gap:12px;align-items:center;text-align:left;background:var(--cd);border:1px solid var(--bd);border-radius:14px;padding:12px 14px;font:inherit;color:var(--tx);cursor:pointer;box-shadow:var(--sh);transition:transform .1s}.gfold:hover{transform:translateY(-1px);border-color:var(--ac)}
+.gfi{flex-shrink:0;width:34px;height:26px;border-radius:5px;background:var(--or);position:relative;opacity:.9}.gfi:before{content:"";position:absolute;left:0;top:-5px;width:15px;height:7px;border-radius:4px 4px 0 0;background:var(--or)}
+.gfile{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.gmain{flex:1 1 260px;min-width:0;word-break:break-word}.gfile .acts{margin:0;flex:0 0 auto}
+.gk{flex-shrink:0;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:.5px;color:#fff;background:#6b7280}.gk-PDF{background:#c0392b}.gk-IMG{background:#7c3aed}.gk-DOC{background:#2563eb}.gk-XLS{background:#15803d}.gk-PPT{background:#d97706}
+.gdrop{min-height:120px;border-radius:14px}.gempty{text-align:center;padding:26px 14px;border:1.5px dashed var(--bd);box-shadow:none;background:transparent}
+
 @media(min-width:1800px){#lst,#plst,#flist{grid-template-columns:repeat(auto-fill,minmax(400px,1fr))}}
 </style>
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -143,11 +153,11 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdnjs
 <button data-a="tab" data-v="dash" class="on">Tableau de bord</button>
 <button data-a="tab" data-v="inv">Inventaire</button>
 <button data-a="tab" data-v="vers">Versements</button>
+<button data-a="tab" data-v="ged" id="nged" style="display:none">GED</button>
 <button class="stf" data-a="tab" data-v="pret">Prêts</button>
 <button class="stf" data-a="tab" data-v="cons">Conservation</button>
 <button data-a="tab" data-v="rap">Rapports</button>
 <button class="adm" data-a="tab" data-v="team">Équipe et accès</button>
-<button class="adm" data-a="tab" data-v="fic">Mes fichiers</button>
 <button class="adm" data-a="tab" data-v="ia" id="nia" style="display:none">Assistant IA</button>
 <button data-a="aide">Aide</button>
 </nav>
@@ -441,6 +451,7 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdnjs
   async function boot(){
     if(!window.supabase||!CFG.url||!CFG.key){overlay('<p>Impossible de charger le service de connexion. Vérifiez votre accès internet puis actualisez la page.</p>');readyRes(null);return}
     sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    window.GEDSB=()=>sb;
     sb.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY")newPwdView();if(ev==="SIGNED_OUT"&&ME)location.reload()});
     let {data:{session}}=await sb.auth.getSession();
     if(location.hash.includes("type=recovery")){return}   // l'écran de nouveau mot de passe est géré par l'évènement ci-dessus
@@ -478,7 +489,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="9 nov. 2026 – 6";
+const APP_VER="9 nov. 2026 – GED 2";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -624,13 +635,15 @@ function render(){bkSchedule();if(rqT)return;rqT=setTimeout(()=>{rqT=0;render0()
 function render0(){
   if(tab==="inv"&&document.activeElement&&document.activeElement.id==="q"&&$("#lst")){$("#lst").innerHTML=listHTML();return}
   if(tab==="fic"&&document.activeElement&&document.activeElement.id==="fq"&&$("#flist")){$("#flist").innerHTML=ficList();return}
+  if(tab==="ged"&&document.activeElement&&document.activeElement.id==="gq"&&$("#glist")){$("#glist").innerHTML=gedList();return}
   if(tab==="pret"&&document.activeElement&&document.activeElement.id==="pq"&&$("#plst")){$("#plst").innerHTML=pbody();fillNames();return}
   $("#dl_dir").innerHTML=orgDirs().map(x=>`<option value="${esc(x)}">`).join("");
   $("#dl_srv").innerHTML=orgSrvs().map(x=>`<option value="${esc(x)}">`).join("");
   $("#dl_emp").innerHTML=[...new Set(docs.map(d=>d.empl).filter(Boolean))].sort((a,b)=>cmp(a,b)).map(x=>`<option value="${esc(x)}">`).join("");
   if(!db)return;
   applyRole();
-  $("#app").innerHTML=tab==="dash"?dash():tab==="inv"?inv():tab==="pret"?pret():tab==="cons"?cons():tab==="vers"?vers():tab==="rap"?rapports():tab==="ia"?iaView():tab==="fic"?ficView():team();
+  $("#app").innerHTML=tab==="dash"?dash():tab==="inv"?inv():tab==="pret"?pret():tab==="cons"?cons():tab==="vers"?vers():tab==="rap"?rapports():tab==="ia"?iaView():tab==="fic"?ficView():tab==="ged"?gedView():team();
+  {const fb=$("#fab");if(fb)fb.style.visibility=tab==="ged"?"hidden":""}
   const badge=v=>{let n=0;if(v==="pret"){if(P.arch)n+=prets.filter(p=>p.statut==="en_cours"&&late(p)).length+demandes.filter(x=>x.statut==="validee").length;if(P.val)n+=demandes.filter(x=>x.statut==="a_valider").length}else if(P.arch&&v==="cons")n=docs.filter(echu).length;else if(P.arch&&v==="vers")n=versements.filter(x=>x.statut==="a_controler").length;return n};
   document.querySelectorAll("nav button[data-v]").forEach(b=>{b.classList.toggle("on",b.dataset.v===tab);if(!b.dataset.l)b.dataset.l=b.textContent;const n=badge(b.dataset.v);b.textContent=b.dataset.l+(n?" ("+n+")":"")});
   fillNames();if(tab==="team")bkRender();if(tab==="ia"){iaPaint();iaPaintSug()}
@@ -2159,7 +2172,7 @@ const FEATS=[
 ["Conservation","Calendrier de conservation, contrôles périodiques, listes et procès-verbaux de destruction."],
 ["Rapports","Rapports et statistiques de l’activité."],
 ["Équipe et accès","Comptes, rôles (admin, archiviste, responsable, demandeur, lecteur), journal des modifications, rapport d’activité PDF (jour, semaine, mois, année)."],
-["Mes fichiers","Dossier de fichiers numérisés (admin)."],
+["GED","Espaces de documents numériques par service : dépôt, versions, niveaux d’accès, journal, archivage."],
 ["Sécurité","Connexion par mot de passe, déconnexion automatique après 30 minutes d’inactivité, droits contrôlés côté serveur, journal des actions."],
 ["Autres","Salutation Bonjour/Bonsoir, installation sur téléphone et ordinateur, export PDF et e-mail partout, saisie rapide."]];
 async function backupXls(){
@@ -2273,6 +2286,227 @@ async function doImp(){
     jr("Import Excel",pend.length+" entrée(s)");out.textContent=`Terminé : ${pend.length} entrées importées.`;pend=[];
   }catch(e){out.textContent="Import interrompu : "+(e&&e.message||e)+". Relancez : les entrées déjà écrites seront ignorées.";$("#go").disabled=false}
 }
+
+/* ---- GED : gestion électronique des documents (version en ligne uniquement) ---- */
+const G={ready:false,busy:false,act:false,espAll:[],acc:[],srv:"",dos:null,D:[],F:[],q:"",vue:"actif",err:"",t:0};
+const gsb=()=>window.GEDSB?window.GEDSB():null;
+const GEXT={pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",webp:"image/webp",txt:"text/plain",csv:"text/csv",doc:"application/msword",xls:"application/vnd.ms-excel",ppt:"application/vnd.ms-powerpoint",docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",pptx:"application/vnd.openxmlformats-officedocument.presentationml.presentation"};
+const GMAX=50*1024*1024;
+const GNIV={admin:"Administrateur",archiviste:"Archiviste",lecteur:"Lecteur",contributeur:"Contributeur",responsable:"Responsable de service",directeur:"Directeur",direction:"Directeur (consultation)"};
+const GACT={depot:"Dépôt",nouvelle_version:"Nouvelle version",consultation:"Consultation",telechargement:"Téléchargement",verification:"Vérification d’intégrité",corbeille:"Mise à la corbeille",restauration:"Restauration",archivage:"Archivage",desarchivage:"Désarchivage",gel:"Gel",degel:"Levée du gel",renommage:"Renommage",deplacement:"Déplacement",fiche:"Fiche modifiée",suppression_definitive:"Suppression définitive"};
+const gext=n=>((String(n).match(/\.([a-z0-9]+)$/i)||[])[1]||"").toLowerCase();
+const gkind=f=>{const e=gext(f.nom);return e==="pdf"?"PDF":/^(png|jpe?g|webp)$/.test(e)?"IMG":/^docx?$/.test(e)?"DOC":/^(xlsx?|csv)$/.test(e)?"XLS":/^pptx?$/.test(e)?"PPT":"TXT"};
+const gsz=n=>{n=+n||0;return n>=1048576?(n/1048576).toFixed(1).replace(".",",")+" Mo":n>=1024?Math.round(n/1024)+" Ko":n+" o"};
+const gdt=t=>t?new Date(t).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}):"–";
+const gsrv=id=>refSrv.find(s=>s.id===id)||{nom:"Service",direction:""};
+const gniv=id=>{if(P.admin)return "admin";if(P.fn==="Archiviste")return "archiviste";const a=G.acc.find(x=>x.user_id===P.id&&x.service_id===id);if(a)return a.niveau;const dir=gsrv(id).direction;return G.acc.some(x=>x.user_id===P.id&&x.niveau==="directeur"&&dir&&gsrv(x.service_id).direction===dir)?"direction":null};
+const gW=()=>["admin","archiviste","contributeur","responsable","directeur"].includes(gniv(G.srv)),gM=()=>["admin","archiviste","responsable","directeur"].includes(gniv(G.srv)),gA=()=>["admin","archiviste"].includes(gniv(G.srv));
+const gOwn=f=>gM()||(f.cree_par===P.id&&gniv(G.srv)==="contributeur");
+const gLock=f=>(f.statut==="archive"||f.gel)&&!gA();
+const gq=async q=>{const {data,error}=await q;if(error)throw new Error(error.message||String(error));return data};
+const gmine=()=>G.espAll.filter(e=>e.actif&&gniv(e.service_id)).sort((a,b)=>ocmp(gsrv(a.service_id).nom,gsrv(b.service_id).nom));
+const gpath=id=>{const o=[];let d=G.D.find(x=>x.id===id),n=0;while(d&&n++<30){o.unshift(d);d=G.D.find(x=>x.id===d.parent)}return o};
+const gfile=id=>G.F.find(x=>x.id===id);
+const gfin=f=>{const c=cal(f.cat);return c&&c[2]&&f.annee?f.annee+c[2]:null};
+async function gsha(buf){try{if(!crypto.subtle)return "";return [...new Uint8Array(await crypto.subtle.digest("SHA-256",buf))].map(b=>b.toString(16).padStart(2,"0")).join("")}catch(e){return ""}}
+const guid=()=>crypto.randomUUID?crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-8xxx-xxxxxxxxxxxx".replace(/x/g,()=>(Math.random()*16|0).toString(16));
+async function gedLoad(){
+  const sb=gsb();if(!sb||G.busy)return;G.busy=true;G.err="";
+  try{
+    G.espAll=await gq(sb.from("ged_espaces").select("*"));
+    G.acc=await gq(sb.from("ged_acces").select("*"));
+    const mine=gmine();
+    if(!mine.some(e=>e.service_id===G.srv)){G.srv=mine[0]?mine[0].service_id:"";G.dos=null}
+    if(G.srv){
+      G.D=await gq(sb.from("ged_dossiers").select("*").eq("service_id",G.srv).order("nom"));
+      const F=[];for(let i=0;i<20000;i+=1000){const p=await gq(sb.from("ged_fichiers").select("*").eq("service_id",G.srv).order("cree_le",{ascending:false}).range(i,i+999));F.push(...p);if(p.length<1000)break}
+      G.F=F;
+    }else{G.D=[];G.F=[]}
+    if(G.dos&&!G.D.some(d=>d.id===G.dos))G.dos=null;
+  }catch(e){G.err=e.message||String(e)}
+  G.busy=false;G.ready=true;G.t=Date.now();if(tab==="ged")render();
+}
+const gReload=()=>{G.t=0;return gedLoad()};
+function gedCard(f,showPath){
+  const k=gkind(f),tr=f.statut==="corbeille",fn=gfin(f),p=showPath?gpath(f.dossier).map(d=>d.nom).join(" › "):"";
+  return `<div class="card gfile"><span class="gk gk-${k}">${k}</span><div class="gmain"><div><b>${esc(f.nom)}</b> ${f.version>1?`<span class="b">v${f.version}</span>`:""}${f.confidentiel?'<span class="b er">Confidentiel</span>':""}${f.statut==="archive"?'<span class="b ok">Archive</span>':""}${f.gel?'<span class="b wa">Gelé</span>':""}</div>
+  <div class="mu">${gsz(f.taille)} · déposé le ${gdt(f.cree_le)}${f.cree_nom?" par "+esc(f.cree_nom):""}${f.annee?" · "+f.annee:""}${f.cat?" · "+esc(f.cat)+(fn?" (fin "+fn+")":""):""}${p?" · "+esc(p):""}</div>${f.description?`<div class="mu">${esc(f.description)}</div>`:""}</div>
+  <div class="acts">${tr?`${gOwn(f)?`<button class="sm pri" data-g="restore" data-id="${esc(f.id)}">Restaurer</button>`:""}${P.admin?`<button class="sm" data-g="purge" data-id="${esc(f.id)}">Supprimer définitivement</button>`:""}`:`<button class="sm pri" data-g="open" data-id="${esc(f.id)}">Ouvrir</button><button class="sm" data-g="dl" data-id="${esc(f.id)}">Télécharger</button><button class="sm" data-g="det" data-id="${esc(f.id)}">Détails</button>`}</div></div>`;
+}
+function gedList(){
+  const ws=norm(G.q).split(" ").filter(Boolean),tr=G.vue==="corbeille";
+  let fs=G.F.filter(f=>tr?f.statut==="corbeille":(f.courant&&f.statut!=="corbeille"));
+  if(ws.length)fs=fs.filter(f=>{const k=norm([f.nom,f.description,f.cat,f.cree_nom,f.annee||""].join(" "));return ws.every(w=>k.includes(w))});
+  else if(!tr)fs=fs.filter(f=>(f.dossier||null)===G.dos);
+  fs.sort((a,b)=>NCOL.compare(a.nom,b.nom));
+  const ds=(ws.length||tr)?[]:G.D.filter(d=>(d.parent||null)===G.dos).sort((a,b)=>NCOL.compare(a.nom,b.nom));
+  const cnt=id=>G.F.filter(f=>f.dossier===id&&f.courant&&f.statut!=="corbeille").length+G.D.filter(d=>d.parent===id).length;
+  let h="";
+  if(ws.length)h+=`<div class="mu" style="margin:4px 0"><b>${fs.length}</b> document(s) trouvé(s) dans tout l’espace</div>`;
+  if(tr)h+=`<div class="mu" style="margin:4px 0">Corbeille : ${fs.length} document(s). Un document reste ici jusqu’à sa restauration ou sa suppression définitive par l’administrateur.</div>`;
+  if(ds.length)h+=`<div class="gfolds">${ds.map(d=>`<button class="gfold" data-g="dos" data-id="${esc(d.id)}"><span class="gfi" aria-hidden="true"></span><span><b>${esc(d.nom)}</b><br><span class="mu">${cnt(d.id)} élément(s)</span></span></button>`).join("")}</div>`;
+  h+=fs.slice(0,300).map(f=>gedCard(f,!!ws.length||tr)).join("");
+  if(fs.length>300)h+=`<p class="mu">… et ${fs.length-300} autres : précisez la recherche.</p>`;
+  if(!ds.length&&!fs.length)h+=`<div class="card gempty"><b>${ws.length?"Aucun document ne correspond.":tr?"La corbeille est vide.":"Ce dossier est vide."}</b>${!ws.length&&!tr&&gW()?'<div class="mu">Touchez « + Déposer » ou glissez des fichiers ici.</div>':""}</div>`;
+  return h;
+}
+function gedView(){
+  if(!gsb())return '<div class="card"><b>GED</b><div class="mu">La GED est disponible dans la version en ligne de l’application.</div></div>';
+  if(!G.ready||Date.now()-G.t>120000){gedLoad();if(!G.ready)return '<p class="mu">Chargement de la GED…</p>'}
+  const mine=gmine(),head=`<h2 style="margin-bottom:2px">GED</h2><div class="mu" style="margin-bottom:8px">Gestion électronique des documents · chaque service dépose et consulte ses fichiers selon son niveau d’accès.</div>`;
+  if(G.err)return head+`<div class="card late"><b>La GED n’a pas pu être chargée.</b><div class="mu">${esc(G.err)}</div><div class="acts"><button class="sm pri" data-g="refresh">Réessayer</button></div></div>`;
+  if(!mine.length)return head+`<div class="card"><b>Aucun espace ne vous est encore ouvert.</b><div class="mu">Demandez à l’administrateur de vous donner un niveau d’accès à l’espace de votre service.</div></div>${P.admin?'<div class="row"><button data-g="acc">Espaces et accès</button></div>':""}`;
+  const cur=G.F.filter(f=>f.courant&&f.statut!=="corbeille"),tot=G.F.reduce((n,f)=>n+(+f.taille||0),0),nt=G.F.filter(f=>f.statut==="corbeille").length,bc=gpath(G.dos);
+  return head+`<div class="gchips">${mine.map(e=>`<button class="gchip ${e.service_id===G.srv?"on":""}" data-g="srv" data-id="${esc(e.service_id)}">${esc(gsrv(e.service_id).nom)}</button>`).join("")}</div>
+  <div class="kpis"><div class="kpi"><b>${cur.length}</b><span class="mu">Documents</span></div><div class="kpi"><b>${G.D.length}</b><span class="mu">Dossiers</span></div><div class="kpi"><b>${cur.filter(f=>f.statut==="archive").length}</b><span class="mu">Archivés</span></div><div class="kpi"><b style="font-size:20px">${gsz(tot)}</b><span class="mu">Espace utilisé</span></div></div>
+  <div class="row"><input id="gq" type="search" placeholder="Rechercher dans l’espace (nom, description, catégorie, déposant…)" value="${esc(G.q)}">${gW()?'<button class="pri" data-g="depot">+ Déposer</button>':""}</div>
+  <div class="row tools">${gW()?'<button data-g="newdos">+ Dossier</button>':""}${gM()?`<button data-g="vue">${G.vue==="corbeille"?"← Retour aux documents":"Corbeille ("+nt+")"}</button><button data-g="jrn">Journal</button>`:""}${P.admin?'<button data-g="acc">Espaces et accès</button>':""}<button data-g="refresh">Actualiser</button><span class="mu" style="align-self:center">Votre niveau : <b>${esc(GNIV[gniv(G.srv)]||"")}</b></span></div>
+  ${G.vue==="corbeille"?"":`<div class="gbc"><button class="glink" data-g="dos" data-id="">${esc(gsrv(G.srv).nom)}</button>${bc.map(d=>` › <button class="glink" data-g="dos" data-id="${esc(d.id)}">${esc(d.nom)}</button>`).join("")}${G.dos&&gM()?` <button class="sm" data-g="rendos">Renommer</button><button class="sm" data-g="deldos">Supprimer le dossier</button>`:""}</div>`}
+  <div id="glist" class="${gW()?"gdrop":""}">${gedList()}</div>`;
+}
+function gDlg(html,wide){const L=$("#dlg");L.classList.toggle("wide",!!wide);L.innerHTML=html;if(!L.open)L.showModal()}
+function gClose(){const L=$("#dlg");if(L.open)L.close();L.classList.remove("wide")}
+const gCatSel=v=>`<label for="g_cat">Catégorie de conservation</label><select id="g_cat"><option value="">Non classé</option>${CAL.map(c=>`<option value="${esc(c[0])}" ${c[0]===v?"selected":""}>${esc(c[0]+" – "+c[1])} (${c[2]?c[2]+" ans":"sans limite"})</option>`).join("")}</select>`;
+function gedDepotDlg(prev){
+  gDlg(`<h2>${prev?"Nouvelle version":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
+  <label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+  <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · 50 Mo maximum par fichier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
+  ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
+  <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des responsables et du Service Archives)</label>`}
+  <div id="g_prog" class="mu" style="margin-top:8px"></div>
+  <div class="acts"><button class="pri" data-g="${esc(prev?"ver-go":"depot-go")}" data-id="${esc(prev?prev.id:"")}">Déposer</button><button data-a="close">Annuler</button></div>`);
+}
+async function gedUpload(files,meta,prev){
+  const sb=gsb(),out=$("#g_prog"),errs=[];let ok=0;
+  for(let i=0;i<files.length;i++){
+    const f=files[i],mime=GEXT[gext(f.name)];
+    if(out)out.textContent=`Dépôt ${i+1} / ${files.length} : ${f.name}…`;
+    if(!mime){errs.push(f.name+" : type de fichier non accepté");continue}
+    if(f.size>GMAX){errs.push(f.name+" : plus de 50 Mo");continue}
+    if(!f.size){errs.push(f.name+" : fichier vide");continue}
+    try{
+      const buf=await f.arrayBuffer(),sha=await gsha(buf);
+      if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(f.name+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
+      const path=G.srv+"/"+guid(),up=await sb.storage.from("ged").upload(path,new Blob([buf],{type:mime}),{contentType:mime,upsert:false});
+      if(up.error)throw new Error(up.error.message||"envoi refusé");
+      const row={service_id:G.srv,dossier:prev?prev.dossier:G.dos,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
+      if(prev){row.lignee=prev.lignee;row.description=prev.description||"";row.annee=prev.annee||null;row.cat=prev.cat||"";row.confidentiel=!!prev.confidentiel}
+      const ins=await sb.from("ged_fichiers").insert(row);
+      if(ins.error){try{await sb.storage.from("ged").remove([path])}catch(e){}throw new Error(ins.error.message||"enregistrement refusé")}
+      ok++;
+    }catch(e){errs.push(f.name+" : "+(e.message||e))}
+  }
+  return {ok,errs};
+}
+async function gblob(f){const {data,error}=await gsb().storage.from("ged").download(f.chemin);if(error||!data)throw new Error((error&&error.message)||"fichier introuvable");return data}
+function gj(action,f,detail){try{gsb().from("ged_journal").insert({action,service_id:f.service_id,fichier:f.id,detail:detail||f.nom}).then(()=>{},()=>{})}catch(e){}}
+async function gedOpen(f){
+  toast("Ouverture…");const b=await gblob(f);gj("consultation",f);const k=gkind(f),e=gext(f.nom);let body;
+  if(k==="PDF"||k==="IMG"){const u=URL.createObjectURL(b);body=k==="PDF"?`<iframe title="Aperçu" src="${u}" style="width:100%;height:68vh;border:0;border-radius:10px;background:#fff"></iframe><div class="mu">Si l’aperçu ne s’affiche pas sur votre téléphone, utilisez « Télécharger ».</div>`:`<img alt="" src="${u}" style="max-width:100%;border-radius:10px">`}
+  else if(e==="txt"||e==="csv")body=`<pre style="white-space:pre-wrap;max-height:60vh;overflow:auto;background:var(--cd);padding:10px;border-radius:10px">${esc((await b.text()).slice(0,200000))}</pre>`;
+  else body='<p class="mu">Aperçu non disponible pour ce type de fichier. Téléchargez-le pour l’ouvrir avec Word, Excel ou PowerPoint.</p>';
+  gDlg(`<h2>${esc(f.nom)}</h2>${body}<div class="acts"><button class="pri" data-g="dl" data-id="${esc(f.id)}">Télécharger</button><button data-g="det" data-id="${esc(f.id)}">Détails</button><button data-a="close">Fermer</button></div>`,true);
+}
+async function gedDl(f){
+  const b=await gblob(f);gj("telechargement",f);let dl=null;try{dl=await PF.use("downloads")}catch(e){}
+  if(dl&&dl.save){try{await dl.save({filename:f.nom,data:b})}catch(e){if(!e||e.code!=="declined")throw e}}
+  else{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=f.nom;document.body.appendChild(a);a.click();a.remove()}
+}
+function gedDet(f){
+  const vs=G.F.filter(x=>x.lignee===f.lignee).sort((a,b)=>b.version-a.version),c=cal(f.cat),fn=gfin(f),lock=gLock(f),own=gOwn(f)&&!lock&&f.courant;
+  const r=(k,v)=>v?`<tr><td class="mu" style="padding:3px 8px 3px 0;vertical-align:top;white-space:nowrap">${k}</td><td style="word-break:break-word">${v}</td></tr>`:"";
+  gDlg(`<h2>${esc(f.nom)}</h2><div>${f.statut==="archive"?'<span class="b ok">Archive</span>':'<span class="b">Document actif</span>'}${f.confidentiel?'<span class="b er">Confidentiel</span>':""}${f.gel?'<span class="b wa">Gelé (litige ou audit)</span>':""}</div>
+  <table style="margin-top:8px;width:100%">${r("Espace",esc(gsrv(f.service_id).nom))}${r("Dossier",esc(gpath(f.dossier).map(d=>d.nom).join(" › ")||"Racine"))}${r("Description",esc(f.description))}${r("Année",f.annee||"")}
+  ${r("Conservation",c?esc(c[0]+" – "+c[1])+" · "+(c[2]?c[2]+" ans":"sans limite")+" · "+esc(SORT[c[3]]||"")+(fn?" · fin "+fn:""):"Non classé")}
+  ${r("Version","v"+f.version+(f.courant?" (en cours)":" (ancienne)"))}${r("Taille",gsz(f.taille))}${r("Déposé",gdt(f.cree_le)+(f.cree_nom?" par "+esc(f.cree_nom):""))}${r("Modifié",f.modifie_le?gdt(f.modifie_le):"")}
+  ${r("Empreinte SHA-256",f.sha256?`<code style="font-size:11px">${esc(f.sha256)}</code>`:"Non calculée")}</table>
+  ${vs.length>1?`<h3 style="margin-top:10px">Versions (${vs.length})</h3>${vs.map(v=>`<div class="card top" style="margin:4px 0"><div><b>v${v.version}</b> <span class="mu">${gdt(v.cree_le)}${v.cree_nom?" · "+esc(v.cree_nom):""} · ${gsz(v.taille)}</span></div><div><button class="sm" data-g="open" data-id="${esc(v.id)}">Ouvrir</button></div></div>`).join("")}`:""}
+  <div id="g_hist"></div>
+  <div class="acts"><button class="pri" data-g="open" data-id="${esc(f.id)}">Ouvrir</button><button data-g="dl" data-id="${esc(f.id)}">Télécharger</button><button data-g="verif" data-id="${esc(f.id)}">Vérifier l’intégrité</button>
+  ${own&&gW()?`<button data-g="ver" data-id="${esc(f.id)}">Nouvelle version</button>`:""}${own?`<button data-g="edit" data-id="${esc(f.id)}">Modifier la fiche</button><button data-g="trash" data-id="${esc(f.id)}">Corbeille</button>`:""}
+  ${gA()&&f.courant&&f.statut!=="corbeille"?`<button data-g="${esc(f.statut==="archive"?"unarch":"arch")}" data-id="${esc(f.id)}">${f.statut==="archive"?"Retirer des archives":"Classer comme archive"}</button><button data-g="gel" data-id="${esc(f.id)}">${f.gel?"Lever le gel":"Geler (litige, audit)"}</button>`:""}
+  ${gM()?`<button data-g="hist" data-id="${esc(f.id)}">Historique</button>`:""}<button data-a="close">Fermer</button></div>
+  ${lock?'<div class="mu">Document archivé ou gelé : seule l’équipe des archives peut le modifier.</div>':""}`);
+}
+function gedEditDlg(f){
+  const opts=[["","Racine de l’espace"],...G.D.map(d=>[d.id,gpath(d.id).map(x=>x.nom).join(" › ")]).sort((a,b)=>NCOL.compare(a[1],b[1]))];
+  gDlg(`<h2>Modifier la fiche</h2><label for="g_nom">Nom du document</label><input id="g_nom" maxlength="200" value="${esc(f.nom)}"><label for="g_desc">Description</label><input id="g_desc" maxlength="300" value="${esc(f.description)}">
+  <label for="g_an">Année du document</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(f.annee||"")}">${gCatSel(f.cat)}
+  <label for="g_dos">Dossier</label><select id="g_dos">${opts.map(o=>`<option value="${esc(o[0])}" ${(f.dossier||"")===o[0]?"selected":""}>${esc(o[1])}</option>`).join("")}</select>
+  ${gM()?`<label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto" ${f.confidentiel?"checked":""}> Confidentiel</label>`:""}
+  <div class="acts"><button class="pri" data-g="edit-go" data-id="${esc(f.id)}">Enregistrer</button><button data-a="close">Annuler</button></div>`);
+}
+async function gedAccDlg(){
+  let an=[];try{an=await user.annuaire()}catch(e){}
+  const nm=id=>{const u=an.find(x=>x.user_id===id);return u?(([u.prenom,u.nom].filter(Boolean).join(" ")||u.email)+(u.email?" · "+u.email:"")):"Compte"};
+  const rows=G.acc.filter(a=>a.service_id===G.srv),free=an.filter(u=>u.role&&u.actif!==false&&!rows.some(r=>r.user_id===u.user_id)&&!["admin","archiviste"].includes(u.role));
+  const act=new Map(G.espAll.map(e=>[e.service_id,e.actif]));
+  gDlg(`<h2>Espaces et accès</h2>${G.srv?`<h3>Accès à l’espace « ${esc(gsrv(G.srv).nom)} »</h3>
+  ${rows.map(a=>`<div class="card top" style="margin:4px 0"><div><b>${esc(nm(a.user_id))}</b><div class="mu">${esc(GNIV[a.niveau]||a.niveau)}</div></div><button class="sm" data-g="acc-del" data-id="${esc(a.user_id)}">Retirer</button></div>`).join("")||'<p class="mu">Personne n’a encore d’accès à cet espace, en dehors des administrateurs et archivistes.</p>'}
+  <label for="g_user">Ajouter une personne</label><select id="g_user"><option value="">Choisir un compte…</option>${free.map(u=>`<option value="${esc(u.user_id)}">${esc(nm(u.user_id))}</option>`).join("")}</select>
+  <label for="g_niv">Niveau d’accès</label><select id="g_niv"><option value="lecteur">Lecteur : consulter et télécharger</option><option value="contributeur">Contributeur : + déposer, créer des dossiers</option><option value="responsable">Responsable de service : + renommer, déplacer, corbeille</option><option value="directeur">Directeur : + voir tous les services de la direction</option></select>
+  <div class="acts"><button class="pri" data-g="acc-add">Donner l’accès</button></div>
+  <div class="mu">Seuls les comptes ayant déjà une fonction dans « Équipe et accès » apparaissent. Les administrateurs et archivistes voient tous les espaces.</div>`:""}
+  <h3 style="margin-top:14px">Espaces ouverts</h3>${[...refSrv].sort((a,b)=>ocmp(a.direction,b.direction)||ocmp(a.nom,b.nom)).map(s=>`<div class="card top" style="margin:4px 0"><div><b>${esc(s.nom)}</b><div class="mu">${esc(s.direction||"")}</div></div><button class="sm ${act.get(s.id)?"":"pri"}" data-g="esp" data-id="${esc(s.id)}">${act.get(s.id)?"Fermer l’espace":"Ouvrir l’espace"}</button></div>`).join("")}
+  <div class="acts"><button data-a="close">Fermer</button></div>`);
+}
+async function gedJrnDlg(fid){
+  const sb=gsb();let q=sb.from("ged_journal").select("*").eq("service_id",G.srv);
+  if(fid){const f=gfile(fid);q=q.in("fichier",G.F.filter(x=>f&&x.lignee===f.lignee).map(x=>x.id))}
+  const rows=await gq(q.order("t",{ascending:false}).range(0,299));
+  const h=rows.map(j=>`<tr><td class="mu" style="white-space:nowrap;padding:3px 8px 3px 0;vertical-align:top">${gdt(j.t)}</td><td style="padding:3px 8px 3px 0;vertical-align:top"><b>${esc(GACT[j.action]||j.action)}</b><br><span class="mu">${esc(j.nom||"–")}</span></td><td class="mu" style="word-break:break-word">${esc(j.detail)}</td></tr>`).join("")||'<tr><td class="mu">Aucune action enregistrée.</td></tr>';
+  if(fid&&$("#g_hist")){$("#g_hist").innerHTML=`<h3 style="margin-top:10px">Historique du document</h3><table style="width:100%">${h}</table>`;return}
+  gDlg(`<h2>Journal de l’espace</h2><div class="mu">${esc(gsrv(G.srv).nom)} · 300 dernières actions · ce journal ne peut être ni modifié ni effacé.</div><table style="width:100%;margin-top:8px">${h}</table><div class="acts"><button data-a="close">Fermer</button></div>`,true);
+}
+async function gedAct(g,id){
+  const sb=gsb(),f=id?gfile(id):null,upd=async(p,msg)=>{await gq(sb.from("ged_fichiers").update(p).eq("id",id));gClose();toast(msg);await gReload()};
+  if(g==="srv"){G.srv=id;G.dos=null;G.q="";G.vue="actif";G.ready=false;G.t=0;return render()}
+  if(g==="dos"){G.dos=id||null;G.q="";return render()}
+  if(g==="vue"){G.vue=G.vue==="corbeille"?"actif":"corbeille";return render()}
+  if(g==="refresh"){G.ready=false;G.t=0;return render()}
+  if(g==="newdos"){const n=(await askText("Nom du nouveau dossier","")||"").trim();if(!n)return;await gq(sb.from("ged_dossiers").insert({service_id:G.srv,parent:G.dos,nom:n}));toast("Dossier créé.");return gReload()}
+  if(g==="rendos"){const d=G.D.find(x=>x.id===G.dos);if(!d)return;const n=(await askText("Nouveau nom du dossier",d.nom)||"").trim();if(!n||n===d.nom)return;await gq(sb.from("ged_dossiers").update({nom:n}).eq("id",d.id));toast("Dossier renommé.");return gReload()}
+  if(g==="deldos"){const d=G.D.find(x=>x.id===G.dos);if(!d)return;if(G.D.some(x=>x.parent===d.id)||G.F.some(x=>x.dossier===d.id))return toast("Suppression impossible : le dossier contient encore des documents (y compris en corbeille ou en anciennes versions) ou des sous-dossiers.");
+    if(!await ask("Supprimer le dossier « "+d.nom+" » ?","Supprimer"))return;await gq(sb.from("ged_dossiers").delete().eq("id",d.id));G.dos=d.parent||null;toast("Dossier supprimé.");return gReload()}
+  if(g==="depot")return gedDepotDlg(null);
+  if(g==="ver"&&f)return gedDepotDlg(f);
+  if(g==="depot-go"||g==="ver-go"){
+    const files=[...($("#g_files").files||[])];if(!files.length)return toast("Choisissez au moins un fichier.");
+    const an=$("#g_an")?+$("#g_an").value||null:null;if(an&&(an<1900||an>2100))return toast("Année invalide.");
+    const r=await gedUpload(files,{description:($("#g_desc")||{}).value||"",annee:an,cat:($("#g_cat")||{}).value||"",confidentiel:!!($("#g_conf")&&$("#g_conf").checked)},g==="ver-go"?f:null);
+    await gReload();
+    if(r.errs.length){gDlg(`<h2>Dépôt terminé</h2><p><b>${r.ok}</b> document(s) déposé(s), <b>${r.errs.length}</b> refusé(s).</p>${r.errs.map(x=>`<div class="mu">• ${esc(x)}</div>`).join("")}<div class="acts"><button class="pri" data-a="close">Fermer</button></div>`)}
+    else{gClose();toast(r.ok+" document(s) déposé(s).")}
+    return;
+  }
+  if(!f&&["open","dl","det","edit","edit-go","trash","restore","purge","arch","unarch","gel","verif","hist"].includes(g))return toast("Document introuvable : actualisez la page.");
+  if(g==="open")return gedOpen(f);
+  if(g==="dl")return gedDl(f);
+  if(g==="det")return gedDet(f);
+  if(g==="hist")return gedJrnDlg(id);
+  if(g==="edit")return gedEditDlg(f);
+  if(g==="edit-go"){const nom=$("#g_nom").value.trim(),an=+$("#g_an").value||null;if(!nom)return toast("Le nom est obligatoire.");if(an&&(an<1900||an>2100))return toast("Année invalide.");
+    if(gext(nom)!==gext(f.nom))return toast("L’extension du fichier ne peut pas changer ("+gext(f.nom)+").");
+    const p={nom,description:$("#g_desc").value.trim(),annee:an,cat:$("#g_cat").value,dossier:$("#g_dos").value||null};if($("#g_conf"))p.confidentiel=$("#g_conf").checked;return upd(p,"Fiche enregistrée.")}
+  if(g==="trash"){if(!await ask("Mettre « "+f.nom+" » à la corbeille ? Il pourra être restauré.","Corbeille"))return;return upd({statut:"corbeille"},"Document mis à la corbeille.")}
+  if(g==="restore")return upd({statut:"actif"},"Document restauré.");
+  if(g==="arch"){if(!f.cat)return toast("Indiquez d’abord la catégorie de conservation (Modifier la fiche).");if(!await ask("Classer « "+f.nom+" » comme archive ? Le service ne pourra plus le modifier ni le supprimer.","Archiver"))return;return upd({statut:"archive"},"Document classé comme archive.")}
+  if(g==="unarch"){if(!await ask("Retirer « "+f.nom+" » des archives ?","Confirmer"))return;return upd({statut:"actif"},"Document retiré des archives.")}
+  if(g==="gel")return upd({gel:!f.gel},f.gel?"Gel levé.":"Document gelé : aucune suppression possible.");
+  if(g==="purge"){if(!await ask("Supprimer définitivement « "+f.nom+" » (v"+f.version+") ? Cette action est irréversible et reste inscrite au journal.","Supprimer définitivement"))return;
+    await gq(sb.from("ged_fichiers").delete().eq("id",id));try{await sb.storage.from("ged").remove([f.chemin])}catch(e){}toast("Document supprimé définitivement.");return gReload()}
+  if(g==="verif"){toast("Vérification…");const b=await gblob(f),h=await gsha(await b.arrayBuffer());if(!h||!f.sha256)return toast("Vérification impossible sur cet appareil.");const ok=h===f.sha256;gj("verification",f,f.nom+" · "+(ok?"conforme":"NON CONFORME"));
+    return ask(ok?"Intégrité vérifiée : le fichier est identique à celui déposé le "+gdt(f.cree_le)+".":"ATTENTION : le fichier ne correspond plus à l’empreinte enregistrée au dépôt. Prévenez le Service Archives.","OK")}
+  if(g==="jrn")return gedJrnDlg("");
+  if(g==="acc")return gedAccDlg();
+  if(g==="acc-add"){const u=$("#g_user").value;if(!u)return toast("Choisissez un compte.");await gq(sb.from("ged_acces").insert({user_id:u,service_id:G.srv,niveau:$("#g_niv").value}));toast("Accès donné.");await gReload();return gedAccDlg()}
+  if(g==="acc-del"){if(!await ask("Retirer cet accès ?","Retirer"))return;await gq(sb.from("ged_acces").delete().eq("user_id",id).eq("service_id",G.srv));toast("Accès retiré.");await gReload();return gedAccDlg()}
+  if(g==="esp"){const e=G.espAll.find(x=>x.service_id===id);if(e)await gq(sb.from("ged_espaces").update({actif:!e.actif}).eq("service_id",id));else await gq(sb.from("ged_espaces").insert({service_id:id}));await gReload();return gedAccDlg()}
+}
+document.addEventListener("click",async e=>{const b=e.target.closest&&e.target.closest("[data-g]");if(!b||G.act)return;G.act=true;try{await gedAct(b.dataset.g,b.dataset.id||"")}catch(x){toast("Erreur : "+((x&&x.message)||x))}G.act=false});
+document.addEventListener("input",e=>{if(e.target.id==="gq"){G.q=e.target.value;const l=$("#glist");if(l)l.innerHTML=gedList()}});
+["dragover","drop"].forEach(ev=>document.addEventListener(ev,e=>{if(tab!=="ged"||!gsb()||!G.srv||!gW()||!e.dataTransfer||![...(e.dataTransfer.types||[])].includes("Files"))return;e.preventDefault();if(ev==="drop"&&e.dataTransfer.files.length&&G.vue!=="corbeille"){gedDepotDlg(null);try{$("#g_files").files=e.dataTransfer.files}catch(x){}}}));
+if(window.PLATFORM_SB){const n=document.getElementById("nged");if(n)n.style.display=""}
 
 document.addEventListener("click",async e=>{
   const b=e.target.closest("[data-a]");if(!b)return;
