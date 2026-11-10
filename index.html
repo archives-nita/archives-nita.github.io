@@ -149,11 +149,21 @@ dialog.wide{width:min(980px,96vw)}
 .gk{flex-shrink:0;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:.5px;color:#fff;background:#6b7280}.gk-PDF{background:#c0392b}.gk-IMG{background:#7c3aed}.gk-DOC{background:#2563eb}.gk-XLS{background:#15803d}.gk-PPT{background:#d97706}
 .gdrop{min-height:120px;border-radius:14px}.gempty{text-align:center;padding:26px 14px;border:1.5px dashed var(--bd);box-shadow:none;background:transparent}
 .gacc{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}.gul{max-height:70vh;overflow:auto;margin-top:8px;display:flex;flex-direction:column;gap:6px}
-.gu{display:block;width:100%;text-align:left;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;color:var(--tx);cursor:pointer;box-shadow:none;line-height:1.5}.gu.on{border-color:var(--ac);background:var(--ac);color:#fff}.gu.on .mu{color:rgba(255,255,255,.85)}
+.gu{display:block;flex-shrink:0;width:100%;text-align:left;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:10px 12px;font:inherit;color:var(--tx);cursor:pointer;box-shadow:none;line-height:1.5}.gu.on{border-color:var(--ac);background:var(--ac);color:#fff}.gu.on .mu{color:rgba(255,255,255,.85)}
 .gad{background:var(--cd);border:1px solid var(--bd);border-radius:14px;margin:8px 0;overflow:hidden;box-shadow:var(--sh)}.gar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 12px;border-top:1px solid var(--bd)}.gar select{width:auto;max-width:300px;flex-shrink:0}.gad>.gar:first-child{background:rgba(43,58,140,.08);border-top:0;font-weight:700}
 .gflt{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:8px}
 .gtb{width:100%;border-collapse:collapse;margin-top:8px;font-size:13.5px}.gtb th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--mu,#6b7280);padding:6px 8px;border-bottom:2px solid var(--bd)}.gtb td{padding:6px 8px;border-bottom:1px solid var(--bd);vertical-align:top}
-@media(max-width:860px){.gwrap,.gacc{grid-template-columns:1fr}.gnav{display:none}.gsel{display:block}.gul{max-height:230px}#gq{flex:1 1 100%}.gar{flex-wrap:wrap}.gar select{max-width:100%;width:100%}}
+@media(max-width:860px){.gwrap,.gacc{grid-template-columns:1fr}.gnav{display:none}.gsel{display:block}.gul{max-height:230px}.gar{flex-wrap:wrap}.gar select{max-width:100%;width:100%}#gq{flex:1 1 100%}
+.ghd{flex-direction:column;align-items:stretch;gap:8px}.ghd>*{min-width:0}.gtabs{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);max-width:100%}.gtab{white-space:normal;padding:9px 6px;font-size:13.5px;line-height:1.2}
+.gtitle{flex-direction:column;align-items:stretch}.gtitle .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%}.gtitle .acts .pri{grid-column:1/-1}.gtitle button{white-space:normal}
+.gcol .row select{flex:1 1 0;max-width:none!important;min-width:0}
+.gbc{font-size:14px}.gbc .sm{flex:1 1 auto}
+.gfolds{grid-template-columns:1fr 1fr;gap:8px}.gfold{padding:10px;gap:8px}.gfi{width:28px;height:21px}
+.gfile{align-items:flex-start;gap:10px;padding:12px}.gk{width:38px;height:38px;border-radius:10px;font-size:10px}.gmain{flex:1 1 0}
+.gfile .acts{flex:1 1 100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(70px,1fr));gap:6px}.gfile .acts button{padding-left:4px;padding-right:4px;min-width:0}
+.gflt{grid-template-columns:1fr 1fr}.gtb{font-size:12.5px}.gtb th,.gtb td{padding:6px 5px}
+.gad .gar>span{flex:1 1 100%}}
+@media(max-width:420px){.gflt{grid-template-columns:1fr}}
 
 @media(min-width:1800px){#lst,#plst,#flist{grid-template-columns:repeat(auto-fill,minmax(400px,1fr))}}
 </style>
@@ -507,7 +517,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="10 nov. 2026 – GED 3";
+const APP_VER="10 nov. 2026 – GED 4";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -2306,13 +2316,13 @@ async function doImp(){
 }
 
 /* ---- GED : gestion électronique des documents (version en ligne uniquement) ---- */
-const G={ready:false,busy:false,act:false,sload:false,view:"docs",esp:[],acc:[],accd:[],res:{},srv:"",dos:null,D:[],F:[],cache:{},q:"",vue:"actif",tri:"nom",typ:"",lim:150,err:"",t:0,an:null,au:"",aq:"",open:{},pend:null,
+const G={drop:null,ready:false,busy:false,act:false,sload:false,view:"docs",esp:[],acc:[],accd:[],res:{},srv:"",dos:null,D:[],F:[],cache:{},q:"",vue:"actif",tri:"nom",typ:"",lim:150,err:"",t:0,an:null,au:"",aq:"",open:{},pend:null,
   R:{dir:"",srv:"",per:"mois",mois:"",tri:"",an:"",d1:"",d2:"",cons:false,tous:false,data:null,busy:false}};
 const gsb=()=>window.GEDSB?window.GEDSB():null;
 const GEXT={pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",webp:"image/webp",txt:"text/plain",csv:"text/csv",doc:"application/msword",xls:"application/vnd.ms-excel",ppt:"application/vnd.ms-powerpoint",docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",pptx:"application/vnd.openxmlformats-officedocument.presentationml.presentation"};
 const GMAX=50*1024*1024,GQUOTA=1073741824;
-const GR={lecteur:1,contributeur:2,responsable:3},GRN=[null,"lecteur","contributeur","responsable"];
-const GNIV={admin:"Administrateur (tous les droits)",archiviste:"Archiviste (tous les espaces)",lecteur:"Lecture seule",contributeur:"Lecture et dépôt",responsable:"Lecture, dépôt et modification"};
+const GR={deposant:1,lecteur:2,contributeur:3,responsable:4},GRN=[null,"deposant","lecteur","contributeur","responsable"];
+const GNIV={admin:"Administrateur (tous les droits)",archiviste:"Archiviste (tous les espaces)",deposant:"Déposant (voit seulement ses propres dépôts)",lecteur:"Lecture seule",contributeur:"Lecture et dépôt",responsable:"Lecture, dépôt et modification"};
 const GROLE={admin:"Administrateur",archiviste:"Archiviste",responsable:"Responsable de service",demandeur:"Demandeur",lecteur:"Lecteur"};
 const GACT={depot:"Dépôt",nouvelle_version:"Nouvelle version",consultation:"Consultation",telechargement:"Téléchargement",verification:"Vérification d’intégrité",corbeille:"Mise à la corbeille",restauration:"Restauration",archivage:"Archivage",desarchivage:"Retrait des archives",gel:"Gel",degel:"Levée du gel",renommage:"Renommage",deplacement:"Déplacement",fiche:"Fiche modifiée",suppression_definitive:"Suppression définitive"};
 const GCONS=["consultation","telechargement","verification"];
@@ -2323,7 +2333,7 @@ const gdt=t=>t?new Date(t).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"
 const gsrv=id=>refSrv.find(s=>s.id===id)||{id,nom:"Service",direction:""};
 const gnivU=(uid,id,acc,accd)=>{let r=0;const a=acc.find(x=>x.user_id===uid&&x.service_id===id);if(a)r=GR[a.niveau]||0;const dn=gsrv(id).direction,d=dn&&refDir.find(x=>x.nom===dn);if(d){const b=accd.find(x=>x.user_id===uid&&x.direction_id===d.id);if(b)r=Math.max(r,GR[b.niveau]||0)}return GRN[r]};
 const gniv=id=>P.admin?"admin":P.fn==="Archiviste"?"archiviste":gnivU(P.id,id,G.acc,G.accd);
-const gW=()=>["admin","archiviste","contributeur","responsable"].includes(gniv(G.srv)),gM=()=>["admin","archiviste","responsable"].includes(gniv(G.srv)),gA=()=>["admin","archiviste"].includes(gniv(G.srv));
+const gW=()=>["admin","archiviste","deposant","contributeur","responsable"].includes(gniv(G.srv)),gM=()=>["admin","archiviste","responsable"].includes(gniv(G.srv)),gA=()=>["admin","archiviste"].includes(gniv(G.srv));
 const gLock=f=>(f.statut==="archive"||f.gel)&&!gA();
 const gq=async q=>{const {data,error}=await q;if(error)throw new Error(error.message||String(error));return data};
 const gAll=async mk=>{const o=[];for(let i=0;i<60000;i+=1000){const p=await gq(mk().range(i,i+999));o.push(...p);if(p.length<1000)break}return o};
@@ -2376,7 +2386,7 @@ function gedList(){
   if(ds.length)h+=`<div class="gfolds">${ds.map(d=>`<button class="gfold" data-g="dos" data-id="${esc(d.id)}"><span class="gfi" aria-hidden="true"></span><span><b>${esc(d.nom)}</b><br><span class="mu">${cnt(d.id)} élément(s)</span></span></button>`).join("")}</div>`;
   h+=fs.slice(0,G.lim).map(f=>gedCard(f,!!flat)).join("");
   if(fs.length>G.lim)h+=`<div class="row"><button data-g="more">Afficher la suite (${fs.length-G.lim} autres)</button></div>`;
-  if(!ds.length&&!fs.length)h+=`<div class="card gempty"><b>${ws.length||G.typ?"Aucun document ne correspond.":tr?"La corbeille est vide.":"Ce dossier est vide."}</b>${!flat&&gW()?'<div class="mu">Touchez « + Déposer » ou glissez des fichiers ici.</div>':""}</div>`;
+  if(!ds.length&&!fs.length)h+=`<div class="card gempty"><b>${ws.length||G.typ?"Aucun document ne correspond.":tr?"La corbeille est vide.":"Ce dossier est vide."}</b>${!flat&&gW()?`<div class="mu">Touchez « + Déposer des fichiers », ou glissez ici des fichiers ou un dossier entier.${gniv(G.srv)==="deposant"?" Vous ne voyez dans cet espace que vos propres dépôts.":""}</div>`:""}</div>`;
   return h;
 }
 function gedDocs(){
@@ -2390,7 +2400,7 @@ function gedDocs(){
   const cur=G.F.filter(f=>f.courant&&f.statut!=="corbeille"),sz=G.F.reduce((n,f)=>n+(+f.taille||0),0),nt=G.F.filter(f=>f.statut==="corbeille").length,bc=gpath(G.dos);
   return `<div class="gwrap">${nav}<div class="gcol">${sel}
   <div class="gtitle"><div><h3 style="margin:0">${esc(cs.nom)}</h3><div class="mu">${esc(cs.direction||"")} · Votre accès : <b>${esc(GNIV[gniv(G.srv)]||"")}</b></div></div>
-  <div class="acts" style="margin:0">${gW()&&G.vue!=="corbeille"?'<button class="pri" data-g="depot">+ Déposer</button><button data-g="newdos">+ Dossier</button>':""}</div></div>
+  <div class="acts" style="margin:0">${gW()&&G.vue!=="corbeille"?`<button class="pri" data-g="depot">+ Déposer des fichiers</button>${"webkitdirectory" in HTMLInputElement.prototype?'<button data-g="depotdir">+ Déposer un dossier entier</button>':""}<button data-g="newdos">+ Nouveau dossier</button>`:""}</div></div>
   <div class="kpis"><div class="kpi"><b>${cur.length}</b><span class="mu">Documents</span></div><div class="kpi"><b>${G.D.length}</b><span class="mu">Dossiers</span></div><div class="kpi"><b>${cur.filter(f=>f.statut==="archive").length}</b><span class="mu">Archivés</span></div><div class="kpi"><b style="font-size:20px">${gsz(sz)}</b><span class="mu">Volume de l’espace</span></div></div>
   <div class="row"><input id="gq" type="search" placeholder="Rechercher (nom, description, catégorie, personne…)" value="${esc(G.q)}">
   <select id="gtyp" aria-label="Type de fichier" style="max-width:170px"><option value="">Tous les types</option>${[["PDF","PDF"],["IMG","Images"],["DOC","Word"],["XLS","Excel et CSV"],["PPT","PowerPoint"],["TXT","Texte"]].map(o=>`<option value="${esc(o[0])}" ${G.typ===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>
@@ -2416,16 +2426,16 @@ function gedAccView(){
   if(!G.an){gedAnLoad();return '<p class="mu">Chargement des comptes…</p>'}
   const us=G.an.filter(u=>u.role&&u.actif!==false).sort((a,b)=>ocmp(gun(a),gun(b))),ws=norm(G.aq).split(" ").filter(Boolean),lst=us.filter(u=>{const k=norm(gun(u)+" "+(u.email||""));return ws.every(w=>k.includes(w))});
   const nb=u=>G.acc.filter(a=>a.user_id===u.user_id).length+G.accd.filter(a=>a.user_id===u.user_id).length,all=u=>u.role==="admin"||u.role==="archiviste",u=us.find(x=>x.user_id===G.au);
-  const opt=v=>`<option value="">Aucun accès</option><option value="lecteur" ${v==="lecteur"?"selected":""}>Lecture seule</option><option value="contributeur" ${v==="contributeur"?"selected":""}>Lecture et dépôt</option><option value="responsable" ${v==="responsable"?"selected":""}>Lecture, dépôt et modification</option>`;
-  const SL={lecteur:"lecture seule",contributeur:"lecture et dépôt",responsable:"lecture, dépôt et modification"};
+  const opt=v=>`<option value="">Aucun accès</option><option value="deposant" ${v==="deposant"?"selected":""}>Déposant (ses dépôts seulement)</option><option value="lecteur" ${v==="lecteur"?"selected":""}>Lecture seule</option><option value="contributeur" ${v==="contributeur"?"selected":""}>Lecture et dépôt</option><option value="responsable" ${v==="responsable"?"selected":""}>Lecture, dépôt et modification</option>`;
+  const SL={deposant:"déposant",lecteur:"lecture seule",contributeur:"lecture et dépôt",responsable:"lecture, dépôt et modification"};
   let right;
   if(!u)right='<div class="card gempty"><b>Choisissez un utilisateur</b><div class="mu">Vous définissez ensuite, direction par direction et service par service, ce qu’il peut faire dans la GED.</div></div>';
   else if(all(u))right=`<div class="card"><h3 style="margin:0">${esc(gun(u))}</h3><div class="mu">${esc(u.email||"")} · ${esc(GROLE[u.role]||u.role)}</div><p>Ce compte voit et gère <b>tous les espaces</b> de la GED du fait de sa fonction. ${u.role==="admin"?"L’administrateur peut tout faire, y compris gérer les accès et supprimer définitivement.":"L’archiviste peut déposer, modifier, classer comme archive et geler dans tous les espaces."}</p><div class="mu">Pour limiter ce compte, changez d’abord sa fonction dans « Équipe et accès ».</div></div>`;
   else{
     const dirs=[...refDir].sort((a,b)=>ocmp(a.nom,b.nom));
     right=`<div class="card"><div class="top"><div><h3 style="margin:0">${esc(gun(u))}</h3><div class="mu">${esc(u.email||"")} · fonction : ${esc(GROLE[u.role]||u.role)}</div></div>${nb(u)?`<button class="sm" data-g="acc-clear" data-id="${esc(u.user_id)}">Retirer tous ses accès</button>`:""}</div>
-    <div class="mu" style="margin-top:6px"><b>Lecture seule</b> : consulter et télécharger · <b>Lecture et dépôt</b> : + déposer des fichiers et créer des dossiers · <b>Lecture, dépôt et modification</b> : + nouvelle version, renommer, déplacer, corbeille, documents confidentiels, journal.</div>
-    <div class="mu">Un accès donné sur une <b>direction</b> vaut pour tous ses services, y compris ceux créés plus tard. Le choix est enregistré dès que vous le modifiez.</div></div>
+    <div class="mu" style="margin-top:6px"><b>Déposant</b> : déposer des fichiers et des dossiers, et ne voir que ses propres dépôts · <b>Lecture seule</b> : consulter et télécharger tous les documents de l’espace · <b>Lecture et dépôt</b> : + déposer des fichiers et créer des dossiers · <b>Lecture, dépôt et modification</b> : + nouvelle version, renommer, déplacer, corbeille, documents confidentiels, journal.</div>
+    <div class="mu">Un accès donné sur une <b>direction</b> vaut pour tous ses services, y compris ceux créés plus tard. Si un service a aussi son propre réglage, le plus élevé des deux s’applique (déposant, puis lecture, puis lecture et dépôt, puis modification). Le choix est enregistré dès que vous le modifiez.</div></div>
     ${dirs.map(d=>{const dv=(G.accd.find(a=>a.user_id===u.user_id&&a.direction_id===d.id)||{}).niveau||"",ss=refSrv.filter(s=>s.direction===d.nom).sort((a,b)=>ocmp(a.nom,b.nom));
       return `<div class="gad"><div class="gar"><span>${esc(d.nom)}<br><span class="mu" style="font-weight:400">Toute la direction</span></span><select data-gc="dir" data-id="${esc(d.id)}" aria-label="Accès à la direction ${esc(d.nom)}">${opt(dv)}</select></div>
       ${ss.map(s=>{const sv=(G.acc.find(a=>a.user_id===u.user_id&&a.service_id===s.id)||{}).niveau||"",ef=gnivU(u.user_id,s.id,G.acc,G.accd);return `<div class="gar"><span>${esc(s.nom)}${dv&&(GR[dv]||0)>=(GR[sv]||0)?`<br><span class="mu">hérite de la direction : ${SL[dv]}</span>`:ef&&sv?`<br><span class="mu">accès effectif : ${SL[ef]}</span>`:""}</span><select data-gc="srv" data-id="${esc(s.id)}" aria-label="Accès au service ${esc(s.nom)}">${opt(sv)}</select></div>`}).join("")||'<div class="gar"><span class="mu">Aucun service dans cette direction.</span></div>'}</div>`}).join("")}`;
@@ -2518,36 +2528,54 @@ function gedRepPdf(){
 function gDlg(html,wide){const L=$("#dlg");L.classList.toggle("wide",!!wide);L.innerHTML=html;if(!L.open)L.showModal()}
 function gClose(){const L=$("#dlg");if(L.open)L.close();L.classList.remove("wide")}
 const gCatSel=v=>`<label for="g_cat">Catégorie de conservation</label><select id="g_cat"><option value="">Non classé</option>${CAL.map(c=>`<option value="${esc(c[0])}" ${c[0]===v?"selected":""}>${esc(c[0]+" – "+c[1])} (${c[2]?c[2]+" ans":"sans limite"})</option>`).join("")}</select>`;
-function gedDepotDlg(prev){
-  gDlg(`<h2>${prev?"Nouvelle version":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
-  <label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+function gedDepotDlg(prev,dir,drop){
+  G.drop=drop||null;const nd=drop?new Set(drop.map(x=>x.rel.join("/")).filter(Boolean)).size:0;
+  gDlg(`<h2>${prev?"Nouvelle version":dir||drop?"Déposer un dossier entier":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
+  ${drop?`<p><b>${drop.length}</b> fichier(s) dans <b>${nd}</b> dossier(s) prêts à être déposés. Les dossiers et sous-dossiers seront recréés à l’identique.</p>`:dir?`<label for="g_files">Dossier à déposer</label><input id="g_files" type="file" webkitdirectory multiple><div class="mu">Choisissez un dossier : tous ses fichiers sont déposés, et ses sous-dossiers sont recréés à l’identique dans la GED.</div>`:`<label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">`}
   <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · 50 Mo maximum par fichier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
   ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
   <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des personnes ayant le niveau « modification » et du Service Archives)</label>`}
   <div id="g_prog" class="mu" style="margin-top:8px"></div>
   <div class="acts"><button class="pri" data-g="${esc(prev?"ver-go":"depot-go")}" data-id="${esc(prev?prev.id:"")}">Déposer</button><button data-a="close">Annuler</button></div>`);
 }
-async function gedUpload(files,meta,prev){
-  const sb=gsb(),out=$("#g_prog"),errs=[];let ok=0;
-  for(let i=0;i<files.length;i++){
-    const f=files[i],mime=GEXT[gext(f.name)];
-    if(out)out.textContent=`Dépôt ${i+1} / ${files.length} : ${f.name}…`;
-    if(!mime){errs.push(f.name+" : type de fichier non accepté");continue}
-    if(f.size>GMAX){errs.push(f.name+" : plus de 50 Mo");continue}
-    if(!f.size){errs.push(f.name+" : fichier vide");continue}
+async function gFolder(parent,nom){
+  const sb=gsb(),ex=G.D.find(d=>(d.parent||null)===(parent||null)&&d.nom.toLowerCase()===nom.toLowerCase());if(ex)return ex.id;
+  for(let k=1;k<10;k++){const n=k===1?nom:nom+" ("+k+")",r=await sb.from("ged_dossiers").insert({service_id:G.srv,parent:parent||null,nom:n}).select();
+    if(!r.error){const d=(r.data||[])[0];if(!d||!d.id)throw new Error("dossier non créé");G.D.push(d);return d.id}
+    if(!/duplicate|unique/i.test(r.error.message||""))throw new Error(r.error.message||"dossier refusé")}
+  throw new Error("nom de dossier déjà utilisé");
+}
+async function gedUpload(items,meta,prev){
+  const sb=gsb(),out=$("#g_prog"),errs=[],dirs={};let ok=0,skip=0;
+  items=items.filter(x=>{const n=x.f.name;if(x.rel.length&&(n.startsWith(".")||n.startsWith("~$")||/^(thumbs\.db|desktop\.ini)$/i.test(n))){skip++;return false}return true});
+  for(let i=0;i<items.length;i++){
+    const f=items[i].f,rel=items[i].rel,mime=GEXT[gext(f.name)],lab=(rel.length?rel.join("/")+"/":"")+f.name;
+    if(out)out.textContent=`Dépôt ${i+1} / ${items.length} : ${lab}…`;
+    if(!mime){errs.push(lab+" : type de fichier non accepté");continue}
+    if(f.size>GMAX){errs.push(lab+" : plus de 50 Mo");continue}
+    if(!f.size){errs.push(lab+" : fichier vide");continue}
     try{
+      let dos=prev?prev.dossier:G.dos,key="";
+      for(const seg of rel){const nm=String(seg).trim().slice(0,120);if(!nm)continue;key+="/"+nm.toLowerCase();if(!dirs[key])dirs[key]=await gFolder(dos,nm);dos=dirs[key]}
       const buf=await f.arrayBuffer(),sha=await gsha(buf);
-      if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(f.name+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
+      if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(lab+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
       const path=G.srv+"/"+guid(),up=await sb.storage.from("ged").upload(path,new Blob([buf],{type:mime}),{contentType:mime,upsert:false});
       if(up.error)throw new Error(up.error.message||"envoi refusé");
-      const row={service_id:G.srv,dossier:prev?prev.dossier:G.dos,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
+      const row={service_id:G.srv,dossier:dos||null,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
       if(prev){row.lignee=prev.lignee;row.description=prev.description||"";row.annee=prev.annee||null;row.cat=prev.cat||"";row.confidentiel=!!prev.confidentiel}
       const ins=await sb.from("ged_fichiers").insert(row);
       if(ins.error){try{await sb.storage.from("ged").remove([path])}catch(e){}throw new Error(ins.error.message||"enregistrement refusé")}
+      if(sha)G.F.push({sha256:sha,statut:"actif",courant:true,nom:f.name,lignee:"",version:1});
       ok++;
-    }catch(e){errs.push(f.name+" : "+(e.message||e))}
+    }catch(e){errs.push(lab+" : "+(e.message||e))}
   }
-  return {ok,errs};
+  return {ok,errs,skip,nd:Object.keys(dirs).length};
+}
+/* lecture d'un dossier glissé sur la page (avec ses sous-dossiers) */
+async function gWalk(en,rel,out){
+  if(out.length>2000)return;
+  if(en.isFile){const f=await new Promise((r,j)=>en.file(r,j));out.push({f,rel});return}
+  if(en.isDirectory){const rd=en.createReader(),sub=[...rel,en.name];for(;;){const b=await new Promise((r,j)=>rd.readEntries(r,j));if(!b.length)break;for(const c of b)await gWalk(c,sub,out)}}
 }
 async function gblob(f){const {data,error}=await gsb().storage.from("ged").download(f.chemin);if(error||!data)throw new Error((error&&error.message)||"fichier introuvable");return data}
 function gj(action,f,detail){try{gsb().from("ged_journal").insert({action,service_id:f.service_id,fichier:f.id,detail:detail||f.nom}).then(()=>{},()=>{})}catch(e){}}
@@ -2663,14 +2691,16 @@ async function gedAct(g,id){
   if(g==="deldos"){const d=G.D.find(x=>x.id===G.dos);if(!d)return;if(G.D.some(x=>x.parent===d.id)||G.F.some(x=>x.dossier===d.id))return toast("Suppression impossible : le dossier contient encore des documents (y compris en corbeille ou en anciennes versions) ou des sous-dossiers.");
     if(!await ask("Supprimer le dossier « "+d.nom+" » ?","Supprimer"))return;await gq(sb.from("ged_dossiers").delete().eq("id",d.id));G.dos=d.parent||null;toast("Dossier supprimé.");return gAfter()}
   if(g==="depot")return gedDepotDlg(null);
+  if(g==="depotdir")return gedDepotDlg(null,true);
   if(g==="ver"&&f)return gedDepotDlg(f);
   if(g==="depot-go"||g==="ver-go"){
-    const files=[...($("#g_files").files||[])];if(!files.length)return toast("Choisissez au moins un fichier.");
+    const inp=$("#g_files"),files=G.drop&&g==="depot-go"?G.drop:[...((inp&&inp.files)||[])].map(x=>({f:x,rel:(x.webkitRelativePath||"").split("/").slice(0,-1)}));if(!files.length)return toast("Choisissez au moins un fichier.");
+    if(files.length>1000)return toast("Trop de fichiers à la fois ("+files.length+") : déposez le dossier en plusieurs fois (1 000 fichiers maximum).");
     const an=$("#g_an")?+$("#g_an").value||null:null;if(an&&(an<1900||an>2100))return toast("Année invalide.");
     const r=await gedUpload(files,{description:($("#g_desc")||{}).value||"",annee:an,cat:($("#g_cat")||{}).value||"",confidentiel:!!($("#g_conf")&&$("#g_conf").checked)},g==="ver-go"?f:null);
-    await gAfter();
-    if(r.errs.length)gDlg(`<h2>Dépôt terminé</h2><p><b>${r.ok}</b> document(s) déposé(s), <b>${r.errs.length}</b> refusé(s).</p>${r.errs.map(x=>`<div class="mu">• ${esc(x)}</div>`).join("")}<div class="acts"><button class="pri" data-a="close">Fermer</button></div>`);
-    else{gClose();toast(r.ok+" document(s) déposé(s).")}
+    G.drop=null;await gAfter();const plus=(r.nd?" · "+r.nd+" dossier(s) créé(s)":"")+(r.skip?" · "+r.skip+" fichier(s) système ignoré(s)":"");
+    if(r.errs.length)gDlg(`<h2>Dépôt terminé</h2><p><b>${r.ok}</b> document(s) déposé(s), <b>${r.errs.length}</b> refusé(s)${esc(plus)}.</p>${r.errs.map(x=>`<div class="mu">• ${esc(x)}</div>`).join("")}<div class="acts"><button class="pri" data-a="close">Fermer</button></div>`);
+    else{gClose();toast(r.ok+" document(s) déposé(s)"+plus+".")}
     return;
   }
   if(g==="save-go"){if(G.pend)await gSave(G.pend.blob,G.pend.fn);return}
@@ -2709,7 +2739,12 @@ document.addEventListener("change",async e=>{const t=e.target;if(tab!=="ged")ret
   if(t.dataset&&t.dataset.gc){t.disabled=true;try{await gedAccSet(t.dataset.gc,t.dataset.id,t.value)}catch(x){toast("Erreur : "+(x.message||x));render()}return}
   if(t.dataset&&t.dataset.gr){const k=t.dataset.gr;G.R[k]=t.type==="checkbox"?t.checked:t.value;if(k==="dir")G.R.srv="";if(k==="cons"||k==="tous"){if(G.R.data)render();return}G.R.data=null;render()}});
 document.addEventListener("toggle",e=>{const t=e.target;if(t&&t.dataset&&t.dataset.gd!==undefined)G.open[t.dataset.gd]=t.open},true);
-["dragover","drop"].forEach(ev=>document.addEventListener(ev,e=>{if(tab!=="ged"||G.view!=="docs"||!gsb()||!G.srv||!gW()||!e.dataTransfer||![...(e.dataTransfer.types||[])].includes("Files"))return;e.preventDefault();if(ev==="drop"&&e.dataTransfer.files.length&&G.vue!=="corbeille"){gedDepotDlg(null);try{$("#g_files").files=e.dataTransfer.files}catch(x){}}}));
+["dragover","drop"].forEach(ev=>document.addEventListener(ev,e=>{if(tab!=="ged"||G.view!=="docs"||!gsb()||!G.srv||!gW()||!e.dataTransfer||![...(e.dataTransfer.types||[])].includes("Files"))return;e.preventDefault();
+  if(ev!=="drop"||G.vue==="corbeille")return;
+  const ens=[...(e.dataTransfer.items||[])].map(i=>i.webkitGetAsEntry?i.webkitGetAsEntry():null).filter(Boolean);
+  if(ens.some(x=>x.isDirectory)){const out=[];toast("Lecture du dossier…");(async()=>{for(const en of ens)await gWalk(en,[],out)})().then(()=>{if(out.length)gedDepotDlg(null,true,out);else toast("Le dossier est vide.")},x=>toast("Lecture du dossier impossible : "+((x&&x.message)||x)));return}
+  if(e.dataTransfer.files.length){gedDepotDlg(null);try{$("#g_files").files=e.dataTransfer.files}catch(x){}}}));
+document.addEventListener("change",e=>{const t=e.target;if(t.id==="g_files"&&t.webkitdirectory&&$("#g_prog")){const fs=[...t.files],nd=new Set(fs.map(x=>(x.webkitRelativePath||"").split("/").slice(0,-1).join("/")).filter(Boolean)).size;$("#g_prog").textContent=fs.length?fs.length+" fichier(s) dans "+nd+" dossier(s) seront déposés.":"Ce dossier ne contient aucun fichier."}});
 if(window.PLATFORM_SB){const n=document.getElementById("nged");if(n)n.style.display=""}
 
 document.addEventListener("click",async e=>{
