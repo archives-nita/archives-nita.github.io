@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-UGqyL9GgObkwIm7R+8pfgT+67r4R1/efdyuMohaMpgU=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-ZllJOC3wb3OValenFR45qCiHadQgziELJnfEcAoN2m4=' 'sha256-zOQKlpa/7DqVPvCssIB/wlQcxJ44nmSjpjeWutFdzOs=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-x95FrOpJNPzLc/JnjwHQCYnt2BXAVq2d8JTdGx+C1gY=' 'sha256-/7Ej8wXPM3gMA4wiJf4CkoXkJ/TUNZbsYV3MaFkwvtA=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co data: blob:; frame-src blob:; worker-src blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-HiqzWllLS9jOPZB3IXvwpenKYPNq0NMZfXI69rIdwqw=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-ZllJOC3wb3OValenFR45qCiHadQgziELJnfEcAoN2m4=' 'sha256-7xpyMl62FlfkaepN+261cqX8GJdFTOorl95tuE8AS90=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-mKtuRscMHAt36HahQUzBtGLIiiY7ISZldSmTxtNgO54=' 'sha256-/7Ej8wXPM3gMA4wiJf4CkoXkJ/TUNZbsYV3MaFkwvtA=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co data: blob:; frame-src blob:; worker-src blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
@@ -404,12 +404,13 @@ h2[id^="sec_"]{scroll-margin-top:80px}
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Archives NITA"><meta name="application-name" content="Archives NITA">
 <link rel="apple-touch-icon" href="icone-192.png"><link rel="icon" type="image/png" href="icone-192.png">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#f2f4fb" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#060a1b" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f2f4fb" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#060a1b" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
 <script>
 /* Thème (automatique / clair / sombre) et icônes du menu */
-(function(){let t=null;try{t=localStorage.getItem("arch_theme")}catch(e){}if(t==="light"||t==="dark")document.documentElement.dataset.theme=t})();
+const thmMeta=m=>{const x=document.querySelector('meta[name="color-scheme"]');if(x)x.content=m==="light"?"light":m==="dark"?"dark":"light dark"};
+(function(){let t=null;try{t=localStorage.getItem("arch_theme")}catch(e){}if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t;thmMeta(t)}})();
 const NAVI={dash:'<rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/>',
 inv:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V9M10 13h4"/>',
 vers:'<path d="M12 3v10m-4-4 4 4 4-4"/><path d="M3 14h5l1.5 3h5L16 14h5v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
@@ -430,7 +431,7 @@ function navH(b,n){const l=b.dataset.l||b.textContent;return navIco(b.dataset.v|
 function navSync(){const nv=document.querySelector("nav"),on=nv&&nv.querySelector("button.on");if(!on||nv.scrollWidth<=nv.clientWidth+2||nv._on===on)return;nv._on=on;nv.scrollTo({left:on.offsetLeft-(nv.clientWidth-on.offsetWidth)/2,behavior:"smooth"})}
 const THN={auto:"Thème automatique",light:"Thème clair",dark:"Thème sombre"},THS={auto:"Auto",light:"Clair",dark:"Sombre"};
 function thmPaint(){const b=document.getElementById("thm");if(!b)return;const m=document.documentElement.dataset.theme||"auto";b.innerHTML=navIco(m)+'<span class="tl">'+THS[m]+'</span>';b.title=THN[m]+" (cliquer pour changer)";b.setAttribute("aria-label",b.title)}
-function thmNext(){const r=document.documentElement,m=r.dataset.theme||"auto",n=m==="auto"?"light":m==="light"?"dark":"auto";if(n==="auto")delete r.dataset.theme;else r.dataset.theme=n;try{n==="auto"?localStorage.removeItem("arch_theme"):localStorage.setItem("arch_theme",n)}catch(e){}thmPaint()}
+function thmNext(){const r=document.documentElement,m=r.dataset.theme||"auto",n=m==="auto"?"light":m==="light"?"dark":"auto";if(n==="auto")delete r.dataset.theme;else r.dataset.theme=n;thmMeta(n);try{n==="auto"?localStorage.removeItem("arch_theme"):localStorage.setItem("arch_theme",n)}catch(e){}thmPaint()}
 document.addEventListener("DOMContentLoaded",()=>{const a=document.querySelector('nav button[data-a="aide"]');if(a){a.dataset.i="aide";a.dataset.l=a.textContent;a.innerHTML=navH(a,0)}document.querySelectorAll("nav button[data-v]").forEach(b=>{b.dataset.l=b.dataset.l||b.textContent;b.innerHTML=navH(b,0)});thmPaint();const t=document.getElementById("thm");if(t)t.addEventListener("click",thmNext)});
 </script>
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -828,7 +829,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="11 nov. 2026 – Analyse 2";
+const APP_VER="11 nov. 2026 – Analyse 2.1";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -3366,7 +3367,7 @@ init();
   const hb=document.getElementById("acct");
   const ini=n=>String(n||"?").split(/[\s@.]+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"?";
   const paint=()=>{if(!hb)return;const me=window.SBME&&window.SBME();if(!me){hb.style.display="none";return}hb.style.display="";const nm=((me.prenom||"")+" "+(me.nom||"")).trim()||me.email,court=me.prenom||nm.split(" ")[0];hb.innerHTML='<span class="av">'+esc(ini(nm))+'</span><span class="tl">'+esc(court)+'</span>';hb.title="Mon compte ("+me.email+")";hb.setAttribute("aria-label","Mon compte")};
-  setTimeout(paint,1500);setTimeout(paint,4000);
+  (function loop(n){paint();const ok=window.SBME&&window.SBME();if(!ok&&n<180)setTimeout(()=>loop(n+1),1000);else if(ok&&n<200)setTimeout(()=>{paint();if(n<3)loop(n+100)},4000)})(0);
   const ROLE={admin:"Administrateur",archiviste:"Archiviste",responsable:"Responsable de service",demandeur:"Demandeur",lecteur:"Lecteur"};
   function force(pw,me){const p=String(pw);let c=0;if(/[a-z]/.test(p))c++;if(/[A-Z]/.test(p))c++;if(/[0-9]/.test(p))c++;if(/[^A-Za-z0-9]/.test(p))c++;
     const low=p.toLowerCase(),loc=String(me&&me.email||"").split("@")[0].toLowerCase();
