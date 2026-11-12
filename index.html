@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-fOwjgIRmv5+Crtuz8J7hW7abOYXiCU98u9vlc/ER0jw=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-ZllJOC3wb3OValenFR45qCiHadQgziELJnfEcAoN2m4=' 'sha256-AO3vigSR+lmnPeTSzchPwUc122jTKaUhn9yDNyPh0b8=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-mKtuRscMHAt36HahQUzBtGLIiiY7ISZldSmTxtNgO54=' 'sha256-/7Ej8wXPM3gMA4wiJf4CkoXkJ/TUNZbsYV3MaFkwvtA=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co data: blob:; frame-src blob:; worker-src blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-fOwjgIRmv5+Crtuz8J7hW7abOYXiCU98u9vlc/ER0jw=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-sbVSGhXBviREspsM0L2RWnFp5hASy0MjYv+EOKS5VQA=' 'sha256-qhNGOCKGovIXBNumFA9P/24whx3YzOUD2K1ME+nVJak=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-1jTqh6UTOvA5rYvYXyozmSPdz7CgaOfIH54VUZMVmRo=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <title>Archives – inventaire et suivi</title>
@@ -367,6 +367,14 @@ dialog.tour p{color:var(--mu);line-height:1.55;margin:6px 0 14px}
 .tdots{display:flex;gap:6px;justify-content:center;margin:4px 0 6px}.tdots i{width:7px;height:7px;border-radius:9px;background:var(--bd);transition:width .2s,background-color .2s}.tdots i.on{width:22px;background:var(--fill)}
 dialog.tour .acts{justify-content:center}dialog.tour .acts button{flex:1}
 dialog.sudo h2{margin-top:0}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+button,a,label,summary,select,[data-a],[data-g]{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+dialog,.row.tools,.row.filt{overscroll-behavior:contain}
+#upd{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,180%);z-index:61;display:flex;gap:12px;align-items:center;max-width:min(520px,92vw);padding:10px 12px 10px 16px;border-radius:14px;background:var(--cd,#fff);color:var(--tx);box-shadow:var(--sh2,0 10px 30px rgba(0,0,0,.2));border:1px solid var(--ln,#dfe2ee);font-size:14px;transition:transform .35s cubic-bezier(.2,.8,.2,1)}#upd.in{transform:translate(-50%,0)}
+.diag{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0 10px}.diag td{padding:5px 6px;border-bottom:1px solid var(--ln,#e5e7f0);vertical-align:top}.diag td:first-child{color:var(--mu);width:44%}.diag .g{color:var(--ok,#1b7a4a);font-weight:600}.diag .w{color:#b26a00;font-weight:600}.diag .r{color:var(--er,#b3261e);font-weight:600}
+.pkor{display:flex;align-items:center;gap:10px;margin:14px 0 10px;color:var(--mu);font-size:13px}.pkor:before,.pkor:after{content:"";flex:1;height:1px;background:var(--ln,#dfe2ee)}
+.pkb{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;border-radius:12px;font-weight:600}
+.pkl{list-style:none;margin:6px 0 10px;padding:0}.pkl li{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px 10px;border:1px solid var(--ln,#dfe2ee);border-radius:10px;margin-bottom:6px}.pkl li span{min-width:0;overflow:hidden;text-overflow:ellipsis}
 /* Proposition d'installation */
 #inst{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top,0px));transform:translate(-50%,-170%);z-index:100000;display:flex;gap:12px;align-items:center;width:min(560px,94vw);padding:12px 12px 12px 14px;border-radius:18px;background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border:1px solid var(--gbd);box-shadow:var(--sh2);color:var(--tx);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 #inst.on{transform:translate(-50%,0)}
@@ -485,7 +493,7 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdn.j
 </main>
 <dialog id="dlg"></dialog><button id="fab" class="pri w rq" data-a="new" aria-label="Nouvelle entrée" title="Nouvelle entrée">+</button><div id="toast"></div>
 <datalist id="dl_dir"></datalist><datalist id="dl_srv"></datalist><datalist id="dl_emp"></datalist>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js" integrity="sha384-0w2KAL2YHP6wKOkUDzkCDGgVvfmHnj02DHeQ6XcHOgTfFsGyonKOpShMH1x6nk9o" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js" integrity="sha384-BWcjm9OdFth9TbhCxZPdm+gAOUMAzQy9nmTs12ioXdCcbVnJaPMn+fMUoQCLt60R" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>window.SB_CONFIG={url:"https://yyuvzfibbpexundcxsrb.supabase.co",key:"sb_publishable_XcqSdZAAmZ5Xc0tAAgWJAg_oikbFALx"};</script>
 <script>
 /* ===== Connexion Supabase : remplace les services de la plateforme Claude =====
@@ -506,6 +514,17 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdn.j
   const mkErr=e=>{const m=(e&&e.message)||"Erreur";const x=new Error(/row-level security|permission denied|droit insuffisant/i.test(m)||(e&&e.code==="42501")?"Droit insuffisant pour cette action.":m);x.code=(e&&(e.code==="42501"||/row-level security|permission denied/i.test(m)))?"not_granted":(e&&e.code)||"erreur";return x};
   const fr=m=>/Invalid login credentials/i.test(m)?"E-mail ou mot de passe incorrect.":/rate limit|too many/i.test(m)?"Trop de tentatives : patientez quelques minutes.":/Email not confirmed/i.test(m)?"Compte non confirmé : contactez l'administrateur.":/network|fetch/i.test(m)?"Connexion au serveur impossible : vérifiez votre accès internet.":m;
 
+  /* Face ID / empreinte (passkey, vérifiée par le serveur) */
+  const PK_OK=()=>!!(window.PublicKeyCredential&&navigator.credentials&&window.isSecureContext);
+  const pkErr=e=>{const c=(e&&(e.code||e.error_code))||"",m=(e&&e.message)||String(e||"");
+    if(/passkey_disabled/i.test(c+m))return "La connexion par Face ID / empreinte n’est pas encore activée par l’administrateur.";
+    if(/NotAllowed|abort|cancel|ERROR_CEREMONY_ABORTED|timed out/i.test(c+m+(e&&e.name||"")))return "Vérification annulée ou expirée. Réessayez.";
+    if(/credential_not_found/i.test(c+m))return "Aucune empreinte / Face ID enregistrée pour ce compte sur cet appareil. Connectez-vous avec le mot de passe puis activez-la dans « Mon compte ».";
+    if(/credential_exists/i.test(c+m))return "Cet appareil est déjà enregistré pour votre compte.";
+    if(/not support/i.test(m))return "Ce navigateur ne permet pas Face ID / empreinte.";
+    return fr(m)};
+  window.SBPK={ok:PK_OK,err:pkErr};
+
   /* ---------- Écran de connexion ---------- */
   function overlay(html){
     let o=$$("#sbauth");
@@ -516,7 +535,7 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdn.j
   const hideOverlay=()=>{const o=$$("#sbauth");if(o)o.remove()};
   function loginView(msg){
     return new Promise(res=>{
-      const o=overlay(`<label for="sb_em">Adresse e-mail</label><input id="sb_em" type="email" autocomplete="username" inputmode="email"><label for="sb_pw">Mot de passe</label><input id="sb_pw" type="password" autocomplete="current-password"><div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0">${esc(msg||"")}</div><div class="acts"><button class="pri" id="sb_go">Se connecter</button></div><p style="margin:14px 0 0"><a href="#" id="sb_forgot" style="color:var(--ac,#25348A)">Mot de passe oublié ?</a></p>`);
+      const o=overlay(`<label for="sb_em">Adresse e-mail</label><input id="sb_em" type="email" autocomplete="username" inputmode="email"><label for="sb_pw">Mot de passe</label><input id="sb_pw" type="password" autocomplete="current-password"><div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0">${esc(msg||"")}</div><div class="acts"><button class="pri" id="sb_go">Se connecter</button></div>${PK_OK()?`<div class="pkor"><span>ou</span></div><button id="sb_pk" class="pkb" type="button"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" d="M12 11v3m-4.5-5.5A6 6 0 0 1 18 12c0 2.5-.4 4.6-1.2 6.4M6 12a6 6 0 0 0 .2 1.6M9 12a3 3 0 0 1 6 0c0 3-.6 5.6-1.8 7.8M9 14.8c-.2 1.9-.8 3.6-1.8 5M4.8 7.8A9 9 0 0 1 21 12"/></svg> Face ID / empreinte</button>`:""}<p style="margin:14px 0 0"><a href="#" id="sb_forgot" style="color:var(--ac,#25348A)">Mot de passe oublié ?</a></p>`);
       const msgEl=o.querySelector("#sb_msg");
       const go=async()=>{
         const email=o.querySelector("#sb_em").value.trim(),password=o.querySelector("#sb_pw").value;
@@ -529,6 +548,9 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdn.j
         try{sessionStorage.removeItem("arch_echecs")}catch(e){}res();
       };
       o.querySelector("#sb_go").onclick=go;
+      const pk=o.querySelector("#sb_pk");if(pk)pk.onclick=async()=>{pk.disabled=true;msgEl.style.color="var(--mu,#5f6580)";msgEl.textContent="Vérification Face ID / empreinte…";
+        try{const {error}=await sb.auth.signInWithPasskey();if(error)throw error;try{sessionStorage.removeItem("arch_echecs")}catch(e){}res()}
+        catch(e){pk.disabled=false;msgEl.style.color="var(--er,#b3261e)";msgEl.textContent=pkErr(e)}};
       o.querySelector("#sb_pw").addEventListener("keydown",e=>{if(e.key==="Enter")go()});
       o.querySelector("#sb_forgot").onclick=async e=>{e.preventDefault();const email=o.querySelector("#sb_em").value.trim();
         if(!email){msgEl.style.color="var(--er,#b3261e)";msgEl.textContent="Saisissez d'abord votre e-mail ci-dessus.";return}
@@ -790,7 +812,7 @@ const libQ=()=>window.qrcode?Promise.resolve(true):(_pq=_pq||_lib("https://cdn.j
   }
   async function boot(){
     if(!window.supabase||!CFG.url||!CFG.key){overlay('<p>Impossible de charger le service de connexion. Vérifiez votre accès internet puis actualisez la page.</p>');readyRes(null);return}
-    sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    sb=window.supabase.createClient(CFG.url,CFG.key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,experimental:{passkey:true}}});
     window.GEDSB=()=>sb;window.SBME=()=>ME;
     sb.auth.onAuthStateChange(ev=>{if(ev==="PASSWORD_RECOVERY")newPwdView();if(ev==="SIGNED_OUT"&&ME)location.reload()});
     let {data:{session}}=await sb.auth.getSession();
@@ -830,7 +852,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="11 nov. 2026 – Analyse 2.2";
+const APP_VER="11 nov. 2026 – E-mails 3.3";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -893,7 +915,7 @@ function dash(){
   const s=stats(),by={};
   docs.forEach(d=>by[d.direction]=(by[d.direction]||0)+(+d.nb||0));
   const max=Math.max(1,...Object.values(by));
-  return `${salut()}<div class="row"><input id="qs" type="search" placeholder="Rechercher un document (puis Entrée)…"></div>
+  return `${salut()}<div class="row"><input id="qs" type="search" enterkeyhint="search" placeholder="Rechercher un document (puis Entrée)…"></div>
   <div class="row"><button class="pri w" data-a="new">+ Nouvelle entrée</button><button class="w" data-a="lend">Sortie directe</button><button class="rq" data-a="dem">Demander</button><button class="w" data-a="copie">Copie scannée</button></div>
   ${!ready?'<p class="mu">Chargement des données…</p>':""}${ready&&!docs.length?'<div class="card"><b>Pour démarrer</b><div class="mu">1. « + Nouvelle entrée » pour saisir un premier document, ou « Importer » (onglet Inventaire) pour charger un fichier Excel.<br>2. Classez chaque entrée dans une catégorie de conservation.<br>3. « Sortie directe » enregistre un prêt ou une consultation.</div></div>':""}<div class="kpis">
   <div class="kpi"><b>${docs.length}</b><span class="mu">Entrées d’inventaire</span></div>
@@ -921,10 +943,10 @@ function listHTML(){
   for(const d of a.slice(0,lim)){
     if(!flat&&d.direction!==k1){h+=`<h3>${esc(d.direction)}</h3>`;k1=d.direction;k2="";k3=""}
     if(!flat&&d.service!==k2){h+=`<h4>${esc(d.service)}</h4>`;k2=d.service;k3=""}
-    const k4=d.annee+"|"+(MOISN.includes(String(d.mois||"").toLowerCase())?String(d.mois).toLowerCase():"");if(!flat&&k4!==k3){h+=`<h5>${d.annee}${k4.split("|")[1]?" · "+esc(k4.split("|")[1]):""}</h5>`;k3=k4}
+    const k4=d.annee+"|"+(MOISN.includes(String(d.mois||"").toLowerCase())?String(d.mois).toLowerCase():"");if(!flat&&k4!==k3){h+=`<h5>${esc(d.annee)}${k4.split("|")[1]?" · "+esc(k4.split("|")[1]):""}</h5>`;k3=k4}
     const out=d.statut==="en_pret",pr=out?actPret[d.id]:null;
     h+=`<div class="card"><div class="top"><b>${esc(d.intitule)}</b><span class="b ${d.statut==="detruit"?"er":out?"wa":"ok"}">${d.statut==="detruit"?"Détruit":out?"En sortie":"Disponible"}</span></div>
-    <div class="mu">${flat?`<span class="b">${esc(d.direction)} › ${esc(d.service)} · ${d.annee}</span> `:""}<span class="b">${esc(d.type)}</span>${d.mois?esc(d.mois)+" · ":""}${d.nb} unité(s) ${cb(d)}${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
+    <div class="mu">${flat?`<span class="b">${esc(d.direction)} › ${esc(d.service)} · ${esc(d.annee)}</span> `:""}<span class="b">${esc(d.type)}</span>${d.mois?esc(d.mois)+" · ":""}${esc(d.nb)} unité(s) ${cb(d)}${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
     ${pr?`<div class="mu" style="color:var(--wa)"><b>Emprunté par ${esc(pr.demandeur||"–")}</b>${pr.service?" ("+esc(pr.service)+")":""}${pr.ref?" · "+esc(pr.ref):""}${pr.sortie?" · sorti le "+fmt(pr.sortie):""}</div>`:""}
     ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
     <div class="acts">${d.statut!=="disponible"?"":`<button class="sm pri w" data-a="lend" data-v="${esc(d.id)}" title="Prêter / consulter"><span class="l1">Prêter / consulter</span><span class="l2">Prêter</span></button>`}<button class="sm" data-a="fiche" data-v="${esc(d.id)}">Fiche</button><button class="sm w" data-a="mloc" data-v="${esc(d.id)}" title="Changer l’emplacement"><span class="l1">Emplacement</span><span class="l2">Lieu</span></button><button class="sm w" data-a="edit" data-v="${esc(d.id)}">Modifier</button></div></div>`;
@@ -1003,11 +1025,11 @@ function openDoc(id){
   const d=docs.find(x=>x.id===id)||{};
   $("#dlg").innerHTML=`<h2>${id?"Modifier le document":"Nouveau document"}</h2>
   ${inp("direction","Direction (niveau 1)",d.direction,'list="dl_dir"')}${inp("service","Service (niveau 2)",d.service,'list="dl_srv"')}<div class="row adm"><button type="button" class="sm" data-a="qdir">+ Nouvelle direction</button><button type="button" class="sm" data-a="qsrv">+ Nouveau service</button></div>
-  ${inp("annee","Année (niveau 3)",d.annee||new Date().getFullYear(),'type="number"')}${inp("mois","Mois (facultatif)",d.mois)}
+  ${inp("annee","Année (niveau 3)",d.annee||new Date().getFullYear(),'type="number" inputmode="numeric"')}${inp("mois","Mois (facultatif)",d.mois)}
   <label for="f_cat">Catégorie (calendrier de conservation)</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${esc(c[0])}" ${c[0]===d.cat?"selected":""}>${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select><div class="mu">L’année saisie est celle du déclencheur : production, clôture de l’exercice, échéance du contrat…</div>
   <label for="f_gel">Destruction suspendue (litige, audit)</label><select id="f_gel"><option value="">Non</option><option value="1" ${d.gel?"selected":""}>Oui</option></select>${inp("intitule","Intitulé du document (niveau 4, ordre alphabétique)",d.intitule)}
   <label for="f_type">Support (niveau 5)</label><select id="f_type">${TYPES.map(t=>`<option ${t===d.type?"selected":""}>${t}</option>`).join("")}</select>
-  ${inp("nb","Nombre d’unités",d.nb||1,'type="number" min="1"')}${inp("cote","Cote du plan de classement (auto si vide)",d.cote)}
+  ${inp("nb","Nombre d’unités",d.nb||1,'type="number" inputmode="numeric" min="1"')}${inp("cote","Cote du plan de classement (auto si vide)",d.cote)}
   ${inp("empl","Emplacement (armoire, étagère…)",d.empl,'list="dl_emp"')}${inp("mots","Mots-clés (documents stratégiques)",d.mots)}${inp("obs","Observations",d.obs)}
   <div class="acts"><button class="pri" data-a="savedoc" data-v="${esc(id||"")}">Enregistrer</button>${id?"":`<button data-a="saveagain">Enregistrer + suivante</button>`}${id&&(P.admin||P.owner)?`<button style="color:var(--er)" data-a="deldoc" data-v="${esc(id)}">Supprimer cette entrée</button>`:""}<button data-a="close">Annuler</button></div>`;
   $("#dlg").showModal();
@@ -1017,7 +1039,7 @@ const ini=s=>s.split(/\s+/).filter(w=>w.length>2).map(w=>w[0]).join("").toUpperC
 const STOPW=new Set(["de","des","du","la","le","les","et","en","au","aux","a"]),sigW=s=>String(s||"").replace(/[\/,.;:()&]/g," ").split(/\s+/).map(w=>w.replace(/^[ldLD][’']/,"")).filter(w=>w&&!STOPW.has(w.toLowerCase()));
 const sigDir=s=>{const n=norm(s);if(n.includes("affaires juridiques"))return "DAJR";if(n.includes("clientele"))return "DCL";return sigW(s).map(w=>w[0]).join("").toUpperCase()||"X"};
 const sigSrv=s=>{const n=norm(s);if(/(^| )ong( |$)/.test(n))return "ONG";const w=sigW(s).filter((x,i)=>!(i===0&&/^service$/i.test(x)));if(!w.length)return "SRV";return w.length===1?norm(w[0]).replace(/ /g,"").slice(0,3).toUpperCase():w.map(x=>x[0]).join("").toUpperCase()};
-const cotePre=d=>`${sigDir(d.direction)}-${sigSrv(d.service)}-${d.annee}-`;
+const cotePre=d=>`${sigDir(d.direction)}-${sigSrv(d.service)}-${esc(d.annee)}-`;
 async function saveDoc(id){
   const g=k=>$("#f_"+k).value.trim();
   const o={direction:g("direction"),service:g("service"),annee:+g("annee"),mois:g("mois"),cat:g("cat"),gel:g("gel")==="1",intitule:g("intitule"),type:g("type"),nb:Math.max(1,+g("nb")||1),cote:g("cote"),empl:g("empl"),mots:g("mots"),obs:g("obs")};
@@ -1079,7 +1101,7 @@ async function saveLend(){
   try{
     for(let i=0;i<sel.length;i+=20){
       await Promise.all(sel.slice(i,i+20).map(async d=>{
-        await db.collection("prets").doc().set({docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,titre:d.intitule||"",type:d.type||"",cote:d.cote||"",annee:d.annee||"",direction:d.direction||"",dservice:d.service||"",ref,grp,demandeur:g("dem"),service:g("srv"),mode:g("mode"),valide:g("val"),sortie:g("sortie"),prevu,retour:"",statut:"en_cours",par:P.id||""});
+        await db.collection("prets").doc().set({docId:d.id,docLabel:`${d.intitule} (${esc(d.annee)}, ${d.service})`,titre:d.intitule||"",type:d.type||"",cote:d.cote||"",annee:d.annee||"",direction:d.direction||"",dservice:d.service||"",ref,grp,demandeur:g("dem"),service:g("srv"),mode:g("mode"),valide:g("val"),sortie:g("sortie"),prevu,retour:"",statut:"en_cours",par:P.id||""});
         await db.doc("docs/"+d.id).update({statut:"en_pret"});
       }));
     }
@@ -1387,7 +1409,7 @@ function openDem(){
 async function saveDem(){
   const g=k=>$("#f_"+k).value.trim(),sel=[...DS.keys()].map(id=>docs.find(x=>x.id===id)).filter(Boolean);
   if(!sel.length||!g("nom")||!g("srv")||!g("poste")||!g("objet"))return toast("Au moins un document, le nom et prénom, le service, le poste et l’objet sont obligatoires.");
-  const items=sel.map(d=>({id:d.id,label:`${d.intitule} (${d.annee}, ${d.service})`})),label=items.length>1?`${items[0].label} + ${items.length-1} autre(s)`:items[0].label;
+  const items=sel.map(d=>({id:d.id,label:`${d.intitule} (${esc(d.annee)}, ${d.service})`})),label=items.length>1?`${items[0].label} + ${items.length-1} autre(s)`:items[0].label;
   try{await db.collection("demandes").doc().set({docId:items[0].id,docLabel:label,items,nom:g("nom"),srv:g("srv"),poste:g("poste"),mode:g("mode"),objet:g("objet"),sou:g("sou"),statut:"a_valider",par:P.id||"x",creeLe:today()});jr("Demande créée",items.length+" document(s) · "+items[0].label+" · "+g("nom")+" ("+g("srv")+")");$("#dlg").close()}catch(e){fail(e)}
 }
 async function treatDem(id){
@@ -1399,7 +1421,7 @@ async function treatDem(id){
   const sp=x.mode==="Consultation sur place",in7=plus(7),ref=lsRef(),grp=ref;
   try{
     await Promise.all(ok.flatMap(d=>[
-      db.collection("prets").doc().set({demId:id,docId:d.id,docLabel:`${d.intitule} (${d.annee}, ${d.service})`,titre:d.intitule||"",type:d.type||"",cote:d.cote||"",annee:d.annee||"",direction:d.direction||"",dservice:d.service||"",ref,grp,demandeur:nom,service:x.srv,mode:x.mode,valide:"",valideUid:x.valPar||"",sortie:today(),prevu:sp?today():in7,retour:"",statut:"en_cours",par:P.id||""}),
+      db.collection("prets").doc().set({demId:id,docId:d.id,docLabel:`${d.intitule} (${esc(d.annee)}, ${d.service})`,titre:d.intitule||"",type:d.type||"",cote:d.cote||"",annee:d.annee||"",direction:d.direction||"",dservice:d.service||"",ref,grp,demandeur:nom,service:x.srv,mode:x.mode,valide:"",valideUid:x.valPar||"",sortie:today(),prevu:sp?today():in7,retour:"",statut:"en_cours",par:P.id||""}),
       db.doc("docs/"+d.id).update({statut:"en_pret"})]));
     await db.doc("demandes/"+id).update({statut:"traitee"});jr(ok.length>1?"Sortie groupée (demande traitée)":"Demande traitée : sortie enregistrée",ref+" · "+ok.length+" document(s) · "+nom);
   }catch(e){fail(e)}
@@ -1436,7 +1458,7 @@ function cons(){
   ${echeancier()}<h2>Listes de destruction en cours</h2>${open.map(destCard).join("")||'<p class="mu">Aucune liste en cours.</p>'}
   <h2 style="margin-top:16px">Arrivés à échéance</h2>
   <div class="row"><button class="pri w" data-a="newlist" ${el.length?"":"disabled"}>Créer la liste de destruction (${Math.min(el.length,150)} max)</button></div>
-  ${el.slice(0,40).map(d=>`<div class="card"><b>${esc(d.intitule)}</b><div class="mu">${esc(d.direction)} › ${esc(d.service)} › ${d.annee} · ${esc(cal(d.cat)[1])} · fin ${fin(d)}</div></div>`).join("")}${el.length>40?`<p class="mu">… et ${el.length-40} autres.</p>`:""}
+  ${el.slice(0,40).map(d=>`<div class="card"><b>${esc(d.intitule)}</b><div class="mu">${esc(d.direction)} › ${esc(d.service)} › ${esc(d.annee)} · ${esc(cal(d.cat)[1])} · fin ${fin(d)}</div></div>`).join("")}${el.length>40?`<p class="mu">… et ${el.length-40} autres.</p>`:""}
   <h2 style="margin-top:16px">Registre des destructions</h2>${done.map(destCard).join("")||'<p class="mu">Aucune destruction enregistrée.</p>'}${ctlList()}`;
 }
 async function newList(){
@@ -1444,7 +1466,7 @@ async function newList(){
   const el=docs.filter(d=>echu(d)&&d.direction===p0.direction&&d.service===p0.service).slice(0,150);
   let num;try{num=await freeNum("destructions","PV",destr)}catch(e){return fail(e)}
   try{
-    await db.doc("destructions/"+hid(num)).set({num,statut:"a_valider",motif:"Expiration de la durée de conservation (calendrier, Annexe 21)",sensible:false,ap:{},par:P.id||"x",creeLe:today(),direction:p0.direction,srv:[...new Set(el.map(d=>d.service))],items:el.map(d=>({id:d.id,label:`${d.intitule} (${d.service}, ${d.annee})`,nb:d.nb,fin:fin(d)}))});
+    await db.doc("destructions/"+hid(num)).set({num,statut:"a_valider",motif:"Expiration de la durée de conservation (calendrier, Annexe 21)",sensible:false,ap:{},par:P.id||"x",creeLe:today(),direction:p0.direction,srv:[...new Set(el.map(d=>d.service))],items:el.map(d=>({id:d.id,label:`${d.intitule} (${d.service}, ${esc(d.annee)})`,nb:d.nb,fin:fin(d)}))});
     for(let i=0;i<el.length;i+=10)await Promise.all(el.slice(i,i+10).map(d=>db.doc("docs/"+d.id).update({liste:num})));
     jr("Liste de destruction créée",num+" · "+el.length+" entrée(s)");
   }catch(e){fail(e)}
@@ -1497,7 +1519,7 @@ function openBulk(){
   ${inp("bq","Intitulé contenant ou commençant par (ex. Journal Achat)")}
   <label for="f_bm">Recherche</label><select id="f_bm"><option value="contient">Contient</option><option value="debut">Commence par</option></select>
   <label for="f_bd">Direction</label><select id="f_bd"><option value="">Toutes</option>${dirs.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
-  ${inp("ban","Année (facultatif)","",'type="number"')}
+  ${inp("ban","Année (facultatif)","",'type="number" inputmode="numeric"')}
   <label for="f_bc">Catégorie de conservation à appliquer</label><select id="f_bc"><option value="">Choisir…</option>${CAL.map(c=>`<option value="${esc(c[0])}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
   <label><input type="checkbox" id="f_bo" checked style="width:auto"> Seulement les entrées sans catégorie</label>
   <p id="bcount" class="mu"></p>
@@ -1600,7 +1622,7 @@ function rapports(){
   const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   const sel=(id,o,v)=>`<select id="${id}">${o.map(x=>`<option value="${esc(x[0])}" ${x[0]===v?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`;
   return `<div class="row">${sel("rt",[["mens","Rapport mensuel des documents reçus"],["ann","Rapport annuel d’activité"],["inv","Inventaire et situation juridique"],["glob","Rapport global de l’inventaire"]],rp.t)}</div>
-  <div class="row">${rp.t==="mens"?`<input type="month" id="rym" value="${rp.ym}">`:rp.t==="ann"?`<input type="number" id="ry" value="${rp.y}">`:sel("rd",[["","Toutes les directions"],...dirs.map(x=>[x,x])],rp.dir)}</div>
+  <div class="row">${rp.t==="mens"?`<input type="month" id="rym" value="${rp.ym}">`:rp.t==="ann"?`<input type="number" inputmode="numeric" id="ry" value="${rp.y}">`:sel("rd",[["","Toutes les directions"],...dirs.map(x=>[x,x])],rp.dir)}</div>
   <div class="row"><button class="pri" data-a="rgen">Générer</button><button data-a="rexp">Exporter Excel</button><button data-a="rexph">Version imprimable</button></div>
   <div class="tb">${rp.rep?repHTML(rp.rep):'<p class="mu">Choisissez un rapport, puis appuyez sur Générer.</p>'}</div>`;
 }
@@ -1693,9 +1715,9 @@ function qrSvg(text){
 function openFiche(id){
   const d=docs.find(x=>x.id===id);if(!d)return;
   $("#dlg").innerHTML=`<h2>${esc(d.intitule)}</h2>
-  <div class="mu">${esc(d.direction)} › ${esc(d.service)} › ${d.annee}${d.mois?" › "+esc(d.mois):""}</div>
+  <div class="mu">${esc(d.direction)} › ${esc(d.service)} › ${esc(d.annee)}${d.mois?" › "+esc(d.mois):""}</div>
   <div style="margin:8px 0"><span class="b ${d.statut==="detruit"?"er":d.statut==="en_pret"?"wa":"ok"}">${d.statut==="detruit"?"Détruit":d.statut==="en_pret"?"En sortie":"Disponible"}</span> ${cb(d)}</div>
-  <div class="mu">${esc(d.type)} · ${d.nb} unité(s)${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
+  <div class="mu">${esc(d.type)} · ${esc(d.nb)} unité(s)${d.cote?" · cote "+esc(d.cote):""}${d.empl?" · "+esc(d.empl):""}</div>
   ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
   ${(d.moves&&d.moves.length)?`<h4>Historique des emplacements (${d.moves.length})</h4>`+[...d.moves].reverse().slice(0,10).map(m=>`<div class="mu">${fmt((m.t||"").slice(0,10))} · ${esc(m.de||"—")} → ${esc(m.vers)}${m.nom?" · "+esc(m.nom):""}</div>`).join(""):""}
   ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
@@ -1737,7 +1759,7 @@ function iaPaint(){
 function iaPaintSug(){
   const o=$("#isug");if(!o)return;
   const lab=c=>{const x=CAL.find(y=>y[0]===c);return x?x[1]:c};
-  o.innerHTML=(iaSugMsg?`<p class="mu">${esc(iaSugMsg)}</p>`:"")+iaSug.map((x,i)=>{const d=docs.find(y=>y.id===x.id);return d?`<label style="display:block;margin:6px 0"><input type="checkbox" class="isk" data-i="${esc(i)}" ${x.conf==="haute"?"checked":""}> ${esc(d.intitule)} (${d.annee}) → <b>${esc(x.cat)}</b> ${esc(lab(x.cat))} <span class="mu">· confiance ${esc(x.conf)}</span></label>`:""}).join("")+(iaSug.length?`<div class="row"><button class="pri w" data-a="iapply">Appliquer les suggestions cochées</button></div>`:"");
+  o.innerHTML=(iaSugMsg?`<p class="mu">${esc(iaSugMsg)}</p>`:"")+iaSug.map((x,i)=>{const d=docs.find(y=>y.id===x.id);return d?`<label style="display:block;margin:6px 0"><input type="checkbox" class="isk" data-i="${esc(i)}" ${x.conf==="haute"?"checked":""}> ${esc(d.intitule)} (${esc(d.annee)}) → <b>${esc(x.cat)}</b> ${esc(lab(x.cat))} <span class="mu">· confiance ${esc(x.conf)}</span></label>`:""}).join("")+(iaSug.length?`<div class="row"><button class="pri w" data-a="iapply">Appliquer les suggestions cochées</button></div>`:"");
 }
 function iaView(){
   return `<h2>Assistant IA</h2><p class="mu">Posez une question sur l’inventaire, les prêts ou les échéances. L’assistant consulte les données sans rien modifier. Chaque question utilise votre propre compte Claude.</p>
@@ -1821,7 +1843,7 @@ async function saveCopie(){
   const c={t:new Date().toISOString(),demandeur:g("cdem"),service:g("csrv"),piece:g("cpiece"),docId:d.id,docLabel:(d.cote?d.cote+" · ":"")+d.intitule+" ("+d.annee+")"+(d.empl?" — "+d.empl:""),canal:g("ccan"),contact:g("ccon"),par:P.id||"",...(fileRef||{})};
   try{await db.collection("copies").doc().set(c)}catch(e){return fail(e)}
   jr("Copie scannée enregistrée",c.piece+" · "+c.demandeur);
-  const msg=`Bonjour ${c.demandeur}, voici la copie scannée de « ${c.piece} », retrouvée dans le chrono « ${d.intitule} » (${d.annee}). Cordialement, Service Archivage – NITA SA.`;
+  const msg=`Bonjour ${c.demandeur}, voici la copie scannée de « ${c.piece} », retrouvée dans le chrono « ${d.intitule} » (${esc(d.annee)}). Cordialement, Service Archivage – NITA SA.`;
   const wa="https://wa.me/"+(c.canal==="WhatsApp"?c.contact.replace(/\D/g,""):"")+"?text="+encodeURIComponent(msg),ml="mailto:"+(c.canal==="E-mail"?c.contact:"")+"?subject="+encodeURIComponent("Copie scannée : "+c.piece)+"&body="+encodeURIComponent(msg);
   $("#cmsg").innerHTML=`<div class="card"><b>Demande enregistrée</b><div class="mu">Scannez le document, puis envoyez-le avec ce message :</div><textarea id="cmtxt" rows="4" readonly>${esc(msg)}</textarea>${fileRef?`<div class="mu">Scan joint : ${esc(fileRef.fileName||"fichier")}</div><div class="row"><button data-a="cdl" data-v="${esc(fileRef.fileId)}">Télécharger le scan (pour l’envoyer)</button></div>`:""}<div class="row"><button data-a="ccopy">Copier le message</button><a href="${esc(c.canal==="WhatsApp"?wa:ml)}" target="_blank" rel="noopener" style="flex:1;display:block;padding:9px 12px;border:1px solid var(--bd);border-radius:8px;text-align:center;text-decoration:none;color:var(--tx)">${c.canal==="WhatsApp"?"Ouvrir WhatsApp":"Ouvrir la messagerie"}</a></div><div class="mu">Si le bouton ne s’ouvre pas, copiez le message puis ouvrez WhatsApp ou votre messagerie vous-même.</div></div>`;
 }
@@ -1873,7 +1895,7 @@ function openComp(){
   const sv=[...new Set(docs.map(d=>d.service))].sort();
   $("#dlg").innerHTML=`<h2>Compléter en masse</h2><div class="mu">Sélectionnez des entrées, puis indiquez les valeurs à enregistrer. Seuls les champs remplis sont modifiés.</div>
   <label for="f_cs">Service actuel</label><select id="f_cs"><option value="*">Tous</option>${sv.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("")}</select>
-  <label for="f_cy">Année (facultatif)</label><input id="f_cy" type="number">
+  <label for="f_cy">Année (facultatif)</label><input id="f_cy" type="number" inputmode="numeric">
   <label for="f_cx">Intitulé contenant (facultatif)</label><input id="f_cx">
   <label for="f_ce2">Seulement les entrées sans emplacement</label><select id="f_ce2"><option value="0">Non</option><option value="1">Oui</option></select>
   <label for="f_cl">Emplacement actuel</label><select id="f_cl"><option value="*">Tous</option><option value="__none">(sans emplacement)</option>${[...new Set(docs.map(d=>d.empl).filter(Boolean))].sort((a,b)=>cmp(a,b)).map(e=>`<option value="${esc(e)}">${esc(e)}</option>`).join("")}</select>
@@ -1921,7 +1943,7 @@ function ficView(){
   return `<h2>Mes fichiers</h2><p class="mu">Rangez vos documents Word, Excel, PowerPoint, PDF, images… dans des dossiers. Accès réservé aux administrateurs. Les fichiers ne sont pas inclus dans la sauvegarde JSON.</p>
   <div class="mu">${fichiers.length} fichier(s) · ${fsize(fichiers.reduce((n,f)=>n+(+f.taille||0),0))} au total</div>
   <div class="row"><button class="sm" data-a="fopen" data-v="">Mes fichiers</button>${path.map(d=>`<span>›</span><button class="sm" data-a="fopen" data-v="${esc(d.id)}">${esc(d.nom)}</button>`).join('')}</div>
-  <input id="fq" type="search" placeholder="Rechercher un dossier ou un fichier…" value="${esc(fq)}" style="margin:8px 0">
+  <input id="fq" type="search" enterkeyhint="search" placeholder="Rechercher un dossier ou un fichier…" value="${esc(fq)}" style="margin:8px 0">
   <div class="row"><button class="pri" data-a="fnew">+ Nouveau dossier</button></div>
   <label for="ffile">Ajouter des fichiers dans ce dossier</label><input id="ffile" type="file" multiple>
   <div id="fmsg" class="mu"></div><div id="flist">${ficList()}</div>`;
@@ -2171,7 +2193,7 @@ function openAide(){
   s("Conservation","Les entrées à éliminer sont regroupées en liste. Il faut 4 validations (5 si document sensible), puis la destruction, qui est définitive. Faites signer le procès-verbal sur papier avant de détruire.")+
   s("Contrôles","Le contrôle périodique vérifie chaque entrée : présente, absente ou dégradée. Clôturez-le à la fin.")+
   s("Sauvegardes","Téléchargez une sauvegarde complète chaque semaine (onglet Équipe et accès) et gardez-la hors de l’application. Les copies automatiques restent sur l’appareil, non chiffrées.")+
-  `<div class="acts"><button class="pri" data-a="tour">Visite guidée</button><button data-a="close">Fermer</button></div>`;
+  `<div class="acts"><button class="pri" data-a="tour">Visite guidée</button><button data-a="diag">Diagnostic technique</button><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
 }
 function labSel(){
@@ -2186,7 +2208,7 @@ function openLabs(){
   const em=[...new Set(docs.filter(d=>d.statut!=="detruit").map(d=>d.empl||""))].filter(Boolean).sort(cmp),dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   $("#dlg").innerHTML=`<h2>Étiquettes</h2>${inp("lq","Intitulé contenant")}
   <label for="f_ld">Direction</label><select id="f_ld"><option value="">Toutes</option>${dirs.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
-  ${inp("lan","Année (facultatif)","",'type="number"')}
+  ${inp("lan","Année (facultatif)","",'type="number" inputmode="numeric"')}
   <label for="f_le">Emplacement</label><select id="f_le"><option value="">Tous</option>${em.map(x=>`<option>${esc(x)}</option>`).join("")}</select>
   <p id="lcount" class="mu"></p>
   <div class="mu">Le fichier obtenu s’ouvre dans le navigateur : imprimez-le en A4 (12 étiquettes par page). Chaque étiquette porte l’émetteur, le contenu, la période, la cote et un code QR qui ouvre la fiche.</div>
@@ -2200,7 +2222,7 @@ async function genLabels(list){
   if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");
   if(!await libQ())toast("Le générateur de codes QR n’a pas pu se charger : étiquettes sans code QR.");
   const logo=(document.querySelector(".hd img")||{}).src||"";
-  const lab=d=>`<div class="l"><div class="x"><div class="h">Service des Archives</div><div><b>Émetteur :</b> ${esc(d.direction)} › ${esc(d.service)}</div><div><b>Contenu :</b> ${esc(d.intitule)}</div><div><b>Période :</b> ${esc(d.mois?d.mois+" ":"")}${d.annee}</div><div><b>Cote :</b> ${esc(d.cote||"–")}</div><div class="s">${esc(d.type)}${d.empl?" · "+esc(d.empl):""}</div></div><div class="q">${window.qrcode?qrSvg(APP_URL+"#"+d.id):""}</div></div>`;
+  const lab=d=>`<div class="l"><div class="x"><div class="h">Service des Archives</div><div><b>Émetteur :</b> ${esc(d.direction)} › ${esc(d.service)}</div><div><b>Contenu :</b> ${esc(d.intitule)}</div><div><b>Période :</b> ${esc(d.mois?d.mois+" ":"")}${esc(d.annee)}</div><div><b>Cote :</b> ${esc(d.cote||"–")}</div><div class="s">${esc(d.type)}${d.empl?" · "+esc(d.empl):""}</div></div><div class="q">${window.qrcode?qrSvg(APP_URL+"#"+d.id):""}</div></div>`;
   const css=`@page{size:A4;margin:8mm}body{margin:0;font:10px/1.3 Arial,sans-serif;color:#000}.g{display:grid;grid-template-columns:1fr 1fr;gap:3mm}.l{border:1px solid #000;border-radius:3px;padding:2mm;display:flex;gap:2mm;height:44mm;box-sizing:border-box;break-inside:avoid;overflow:hidden}.x{flex:1;min-width:0}.h{font-weight:bold;color:#25348A;border-bottom:2px solid #E8561A;margin-bottom:1mm;padding:2mm 0 1mm 21mm;background:url(${logo}) no-repeat left center/19mm auto;min-height:6mm}.q{width:26mm;flex:none}.q svg{width:100%}.s{color:#444;margin-top:1mm}`;
   const html=`<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>Étiquettes</title><style>${css}</style></head><body><div class="g">${list.map(lab).join("")}</div></body></html>`;
   try{await dl.save({filename:"etiquettes.html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+(e&&e.message||e))}
@@ -2356,7 +2378,7 @@ function openVers(){
   $("#dlg").innerHTML=`<h2>Nouveau versement</h2>
   ${inp("direction","Direction versante","",'list="dl_dir"')}${inp("service","Service versant","",'list="dl_srv"')}<div class="row adm"><button type="button" class="sm" data-a="qdir">+ Nouvelle direction</button><button type="button" class="sm" data-a="qsrv">+ Nouveau service</button></div>
   <label for="f_type">Support</label><select id="f_type">${TYPES.map(t=>`<option>${t}</option>`).join("")}</select>
-  ${inp("annee","Année (exercice)",new Date().getFullYear()-1,'type="number"')}${inp("periode","Période couverte")}
+  ${inp("annee","Année (exercice)",new Date().getFullYear()-1,'type="number" inputmode="numeric"')}${inp("periode","Période couverte")}
   ${inp("date","Date de prise en charge",today(),'type="date"')}${inp("empl","Emplacement de stockage","",'list="dl_emp"')}
   <label for="f_cat">Catégorie de conservation</label><select id="f_cat"><option value="">À définir</option>${CAL.map(c=>`<option value="${esc(c[0])}">${esc(c[1])} (${c[2]?c[2]+" ans":"permanent"})</option>`).join("")}</select>
   <label for="f_lignes">Dossiers reçus : une ligne par dossier (intitulé ; nombre ; anomalie éventuelle)</label>
@@ -2502,7 +2524,7 @@ function team(){loadAnnu();
   <div class="adm"><h2 style="margin-top:16px">Rapport d’activité (PDF)</h2><p class="mu">Toutes les modifications enregistrées dans le journal sur la période choisie, avec synthèse par utilisateur et par action.</p>
   <div class="row"><select id="ra_per" style="flex:1"><option value="jour">Par jour</option><option value="semaine">Par semaine</option><option value="mois" selected>Par mois</option><option value="annee">Par année</option></select><input id="ra_date" type="date" value="${today()}" style="flex:1"></div>
   <div class="acts"><button class="pri" data-a="actrap">Générer le rapport (PDF)</button></div></div>
-  <div class="adm"><h2 style="margin-top:16px">Journal des modifications</h2><p class="mu">Actions sensibles : suppression, destruction, liste de destruction, versement accepté, import, clôture de contrôle.</p>${[...journal].sort((a,b)=>cmp(b.t||"",a.t||"")).slice(0,40).map(j=>`<div class="mu">${esc((j.t||"").slice(0,16).replace("T"," "))} · ${esc(j.nom||"?")} · <b>${esc(j.act)}</b> · ${esc(j.label||"")}</div>`).join("")||'<p class="mu">Aucune action enregistrée.</p>'}</div><div class="adm"><h2 style="margin-top:16px">Ajouter un membre</h2>
+  <div class="adm"><h2 style="margin-top:16px">Journal des modifications</h2><p class="mu">Actions sensibles : suppression, destruction, liste de destruction, versement accepté, import, clôture de contrôle.</p>${[...journal].sort((a,b)=>cmp(b.t||"",a.t||"")).slice(0,40).map(j=>`<div class="mu">${esc((j.t||"").slice(0,16).replace("T"," "))} · ${esc(j.nom||"?")}${j.srv_par&&j.srv_par!==j.par?" <i>(restauré)</i>":""} · <b>${esc(j.act)}</b> · ${esc(j.label||"")}</div>`).join("")||'<p class="mu">Aucune action enregistrée.</p>'}</div><div class="adm"><h2 style="margin-top:16px">Ajouter un membre</h2>
   <label for="pf">Fonction</label><select id="pf">${FONCTIONS.map(x=>`<option>${x}</option>`).join("")}</select>
   <label for="ps">${window.PLATFORM_SB?"Rechercher un compte par e-mail ou nom":"Rechercher une personne par nom"}</label><input id="ps" placeholder="${window.PLATFORM_SB?"E-mail…":"Nom…"}" autocomplete="off"><div id="pres"></div>
   ${window.PLATFORM_SB?`<p class="mu">Seuls les comptes déjà créés et sans fonction apparaissent. Sans fonction, un compte ne voit rien.</p>`:`<p class="mu">La fonction décrit le rôle dans le service. Pour donner l’accès à la page, utilisez aussi le menu Partager.</p>`}</div>`;
@@ -2744,7 +2766,7 @@ function gedDocs(){
   <div class="gtitle"><div><h3 style="margin:0">${esc(cs.nom)}</h3><div class="mu">${esc(cs.direction||"")} · Votre accès : <b>${esc(GNIV[gniv(G.srv)]||"")}</b></div></div>
   <div class="acts" style="margin:0">${gW()&&G.vue!=="corbeille"?`<button class="pri" data-g="depot">+ Déposer des fichiers</button>${"webkitdirectory" in HTMLInputElement.prototype?'<button data-g="depotdir">+ Déposer un dossier entier</button>':""}<button data-g="newdos">+ Nouveau dossier</button>`:""}</div></div>
   <div class="kpis"><div class="kpi"><b>${cur.length}</b><span class="mu">Documents</span></div><div class="kpi"><b>${G.D.length}</b><span class="mu">Dossiers</span></div><div class="kpi"><b>${cur.filter(f=>f.statut==="archive").length}</b><span class="mu">Archivés</span></div><div class="kpi"><b style="font-size:20px">${gsz(sz)}</b><span class="mu">Volume de l’espace</span></div></div>
-  <div class="row"><input id="gq" type="search" placeholder="Rechercher (nom, description, catégorie, personne…)" value="${esc(G.q)}">
+  <div class="row"><input id="gq" type="search" enterkeyhint="search" placeholder="Rechercher (nom, description, catégorie, personne…)" value="${esc(G.q)}">
   <select id="gtyp" aria-label="Type de fichier" style="max-width:170px"><option value="">Tous les types</option>${[["PDF","PDF"],["IMG","Images"],["DOC","Word"],["XLS","Excel et CSV"],["PPT","PowerPoint"],["TXT","Texte"]].map(o=>`<option value="${esc(o[0])}" ${G.typ===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>
   <select id="gtri" aria-label="Tri" style="max-width:190px">${[["nom","Tri : nom"],["date","Tri : plus récents"],["taille","Tri : plus volumineux"]].map(o=>`<option value="${esc(o[0])}" ${G.tri===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div>
   <div class="gbc">${G.vue==="corbeille"?'<b>Corbeille</b>':`<button class="glink" data-g="dos" data-id="">${esc(cs.nom)}</button>${bc.map(d=>` › <button class="glink" data-g="dos" data-id="${esc(d.id)}">${esc(d.nom)}</button>`).join("")}${G.dos&&gM()?` <button class="sm" data-g="rendos">Renommer</button><button class="sm" data-g="deldos">Supprimer le dossier</button>`:""}`}
@@ -2883,7 +2905,7 @@ function gedAccView(){
   }
   return `<div class="card" style="margin-bottom:10px"><b>Gestion des accès à la GED</b> <span class="b">Réservé à l’administrateur</span><div class="mu">Choisissez un utilisateur, puis les directions et services qu’il peut voir et ce qu’il peut y faire. Seuls les comptes ayant une fonction dans « Équipe et accès » apparaissent ici.</div>
   <div class="acts"><button class="sm" data-g="acc-pdf">Tableau des accès (PDF)</button></div></div>
-  <div class="gacc"><div><input id="gaq" type="search" placeholder="Rechercher un utilisateur" value="${esc(G.aq)}"><div class="gul" id="gul">${gedUsers(lst,nb,all)}</div></div><div>${right}</div></div>`;
+  <div class="gacc"><div><input id="gaq" type="search" enterkeyhint="search" placeholder="Rechercher un utilisateur" value="${esc(G.aq)}"><div class="gul" id="gul">${gedUsers(lst,nb,all)}</div></div><div>${right}</div></div>`;
 }
 function gedUsers(lst,nb,all){return lst.map(u=>`<button class="gu ${u.user_id===G.au?"on":""}" data-g="au" data-id="${esc(u.user_id)}"><b>${esc(gun(u))}</b><br><span class="mu">${esc(u.email||"")}</span><br><span class="b">${esc(GROLE[u.role]||u.role)}</span><span class="b ${all(u)||nb(u)?"ok":""}">${all(u)?"Tous les espaces":nb(u)?nb(u)+" accès":"Aucun accès"}</span></button>`).join("")||'<p class="mu">Aucun compte ne correspond.</p>'}
 async function gedAccSet(kind,id,val){
@@ -2974,7 +2996,7 @@ function gedDepotDlg(prev,dir,drop){
   gDlg(`<h2>${prev?"Nouvelle version":dir||drop?"Déposer un dossier entier":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
   ${drop?`<p><b>${drop.length}</b> fichier(s) dans <b>${nd}</b> dossier(s) prêts à être déposés. Les dossiers et sous-dossiers seront recréés à l’identique.</p>`:dir?`<label for="g_files">Dossier à déposer</label><input id="g_files" type="file" webkitdirectory multiple><div class="mu">Choisissez un dossier : tous ses fichiers sont déposés, et ses sous-dossiers sont recréés à l’identique dans la GED.</div>`:`<label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">`}
   <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · 50 Mo maximum par fichier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
-  ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
+  ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" inputmode="numeric" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
   <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des personnes ayant le niveau « modification » et du Service Archives)</label>`}
   <div id="g_prog" class="mu" style="margin-top:8px"></div>
   <div class="acts"><button class="pri" data-g="${esc(prev?"ver-go":"depot-go")}" data-id="${esc(prev?prev.id:"")}">Déposer</button><button data-a="close">Annuler</button></div>`);
@@ -3158,7 +3180,7 @@ function gedDet(f){
 function gedEditDlg(f){
   const opts=[["","Racine de l’espace"],...G.D.map(d=>[d.id,gpath(d.id).map(x=>x.nom).join(" › ")]).sort((a,b)=>NCOL.compare(a[1],b[1]))];
   gDlg(`<h2>Modifier la fiche</h2><label for="g_nom">Nom du document</label><input id="g_nom" maxlength="200" value="${esc(f.nom)}"><label for="g_desc">Description</label><input id="g_desc" maxlength="300" value="${esc(f.description)}">
-  <label for="g_an">Année du document</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(f.annee||"")}">${gCatSel(f.cat)}
+  <label for="g_an">Année du document</label><input id="g_an" type="number" inputmode="numeric" min="1900" max="2100" value="${esc(f.annee||"")}">${gCatSel(f.cat)}
   <label for="g_dos">Dossier</label><select id="g_dos">${opts.map(o=>`<option value="${esc(o[0])}" ${(f.dossier||"")===o[0]?"selected":""}>${esc(o[1])}</option>`).join("")}</select>
   <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto" ${f.confidentiel?"checked":""}> Confidentiel</label>
   <div class="acts"><button class="pri" data-g="edit-go" data-id="${esc(f.id)}">Enregistrer</button><button data-a="close">Annuler</button></div>`);
@@ -3271,7 +3293,7 @@ document.addEventListener("click",async e=>{
   else if(a==="iask")iaAsk();else if(a==="istop"){if(iaCtl)iaCtl.abort()}else if(a==="iclr"){iaTurns=[];iaCur="";iaPaint()}else if(a==="isug")iaSuggest();else if(a==="iapply")iaApply();
   else if(a==="fprint")ficheDoc(v);
   else if(a==="found"){const d=docs.find(x=>x.id===v);if(d&&await ask("Marquer cette entrée comme retrouvée ou en bon état ?"))db.doc("docs/"+v).update({ctl:"",ctlLe:today()}).then(()=>{jr("Entrée marquée retrouvée",d.intitule+" ("+(d.cote||"sans cote")+")");$("#dlg").close()}).catch(fail)}
-  else if(a==="aide")openAide();else if(a==="tour"){if(window.tourOpen)window.tourOpen()}else if(a==="chk")chkList(v);else if(a==="yr"){Object.assign(f,{q:"",dir:"",an:String(v),typ:"",s:"",st:""});if("srv" in f)f.srv="";lim=100;tab="inv";render();window.scrollTo(0,0)}else if(a==="bkdl")bkDl(v);else if(a==="bkrs")bkRestore(v);
+  else if(a==="aide")openAide();else if(a==="diag"){if(window.diagOpen)window.diagOpen()}else if(a==="tour"){if(window.tourOpen)window.tourOpen()}else if(a==="chk")chkList(v);else if(a==="yr"){Object.assign(f,{q:"",dir:"",an:String(v),typ:"",s:"",st:""});if("srv" in f)f.srv="";lim=100;tab="inv";render();window.scrollTo(0,0)}else if(a==="bkdl")bkDl(v);else if(a==="bkrs")bkRestore(v);
   else if(a==="dem")openDem();else if(a==="savedem")saveDem();else if(a==="dtr")treatDem(v);else if(a==="dcs")demCancelSortie(v);
   else if(a==="dval"){const x=demandes.find(y=>y.id===v);db.doc("demandes/"+v).update({statut:"validee",valPar:P.id||"x",valLe:today()}).then(()=>jr("Demande validée",x&&x.docLabel)).catch(fail)}
   else if(a==="dref"){const m=await askText("Motif du refus ?");if(m){const x=demandes.find(y=>y.id===v);db.doc("demandes/"+v).update({statut:"refusee",motif:m}).then(()=>jr("Demande refusée",(x&&x.docLabel)+" · "+m)).catch(fail)}}
@@ -3394,6 +3416,14 @@ init();
     <label for="acc_n2">Confirmez le nouveau mot de passe</label><input id="acc_n2" type="password" autocomplete="new-password">
     <div id="acc_msg" class="mu" style="min-height:20px;margin:6px 0"></div>
     <div class="acts" style="position:static;border:0;padding:0;margin:0"><button class="pri" id="acc_pw">Changer le mot de passe</button></div>
+    <h3>Notifications par e-mail</h3>
+    <label class="lsr" style="border:0"><input type="checkbox" id="nt_on" disabled> <span><b>Recevoir les e-mails</b> à <b>${esc(me.email)}</b> : demandes de consultation, validations, documents prêts, rappels de restitution${["admin","archiviste"].includes(me.role)?", nouveaux versements et récapitulatif chaque matin":""}.</span></label>
+    <div id="nt_st" class="mu" style="min-height:18px"></div>
+    <div class="acts" style="position:static;border:0;padding:0;margin:0 0 6px"><button id="nt_test">M’envoyer un e-mail de test</button></div>
+    <h3>Face ID / empreinte</h3>
+    <p class="mu" id="pk_info">${window.SBPK&&window.SBPK.ok()?"Connectez-vous sans mot de passe sur cet appareil, avec Face ID, l’empreinte digitale ou le code de déverrouillage. Votre empreinte ne quitte jamais l’appareil.":"Ce navigateur ne permet pas la connexion par Face ID / empreinte."}</p>
+    <ul class="pkl" id="pk_list"></ul>
+    ${window.SBPK&&window.SBPK.ok()?`<div class="acts" style="position:static;border:0;padding:0;margin:0 0 6px"><button id="pk_add">Activer sur cet appareil</button></div><div id="pk_m" class="mu" style="min-height:18px"></div>`:""}
     <h3>Cet appareil</h3>
     <label class="lsr" style="border:0"><input type="checkbox" id="acc_perso" ${perso?"checked":""}> <span><b>Appareil personnel</b> : garder les sauvegardes locales et les préférences après la déconnexion. Laissez décoché sur un ordinateur partagé : tout est effacé de l’appareil à la déconnexion.</span></label>
     <h3>Sécurité du compte</h3>
@@ -3411,6 +3441,20 @@ init();
       const up=await sb.auth.updateUser({password:a});bt.disabled=false;if(up.error){m.style.color="var(--er)";return m.textContent="Changement refusé : "+(up.error.message||up.error)}
       ["acc_old","acc_n1","acc_n2"].forEach(i=>$("#"+i).value="");f();m.style.color="var(--ok)";m.textContent="Mot de passe changé. Pensez à déconnecter les autres appareils si besoin.";toast("Mot de passe changé.")};
     $("#acc_all").onclick=async()=>{if(!await ask("Se déconnecter de tous les appareils, y compris celui-ci ? Il faudra se reconnecter partout.","Tout déconnecter"))return;try{await sb.auth.signOut({scope:"global"})}catch(e){}try{await window.localWipe()}catch(e){}location.reload()};
+    const pkList=async()=>{const ul=$("#pk_list");if(!ul||!sb.auth.passkey)return;try{const {data,error}=await sb.auth.passkey.list();if(error)throw error;
+        ul.innerHTML=(data||[]).length?(data||[]).map(k=>`<li><span><b>${esc(k.friendly_name||"Appareil")}</b> <span class="mu">· ajouté le ${esc(new Date(k.created_at).toLocaleDateString("fr-FR"))}${k.last_used_at?" · utilisé le "+esc(new Date(k.last_used_at).toLocaleDateString("fr-FR")):""}</span></span><button class="sm" data-pk="${esc(k.id)}">Retirer</button></li>`).join(""):'<li class="mu">Aucun appareil enregistré.</li>';
+        ul.querySelectorAll("[data-pk]").forEach(x=>x.onclick=async()=>{if(!await ask("Retirer cet appareil ? Il faudra le mot de passe pour s’y connecter.","Retirer"))return;const r=await sb.auth.passkey.delete({passkeyId:x.dataset.pk});if(r.error)return toast(window.SBPK.err(r.error));toast("Appareil retiré.");pkList()})}
+      catch(e){ul.innerHTML='<li class="mu">'+esc(window.SBPK?window.SBPK.err(e):String(e))+'</li>'}};
+    pkList();
+    (async()=>{const cb=$("#nt_on"),st=$("#nt_st");if(!cb)return;
+      try{const {data,error}=await sb.rpc("mes_notifs",{});if(error)throw error;cb.checked=!!data;cb.disabled=false}catch(e){st.textContent="Notifications indisponibles pour le moment."}
+      cb.onchange=async()=>{cb.disabled=true;const {data,error}=await sb.rpc("mes_notifs",{p_actif:cb.checked});cb.disabled=false;if(error){cb.checked=!cb.checked;return toast("Réglage impossible : "+error.message)}cb.checked=!!data;toast(data?"Notifications par e-mail activées.":"Notifications par e-mail désactivées.")};
+      if(me.role==="admin"){try{const {data:e}=await sb.rpc("notif_etat");if(e)st.innerHTML=e.configure?`Service d’envoi <b style="color:var(--ok)">actif</b> · ${e.envoyes_7j} envoyé(s) sur 7 jours · ${e.attente} en attente${e.echecs_7j?` · <b style="color:var(--er)">${e.echecs_7j} échec(s)</b>`:""}${e.derniere_erreur&&e.echecs_7j?"<br>Dernière erreur : "+esc(String(e.derniere_erreur).slice(0,160)):""}`:'Service d’envoi <b style="color:var(--er)">pas encore configuré</b> : les e-mails sont mis en attente et partiront dès la configuration (clé Brevo).'}catch(x){}}
+      $("#nt_test").onclick=async()=>{const b=$("#nt_test");b.disabled=true;const {data,error}=await sb.rpc("notif_test");b.disabled=false;if(error)return toast(error.message);
+        if(!cb.checked)return toast("Activez d’abord la case « Recevoir les e-mails ».");toast(data==="ok"?"E-mail de test envoyé : vérifiez votre boîte (et les indésirables) d’ici 1 à 2 minutes.":"E-mail de test mis en attente : il partira dès que le service d’envoi sera configuré.")}})();
+    const pa=$("#pk_add");if(pa)pa.onclick=async()=>{const m=$("#pk_m");pa.disabled=true;m.style.color="var(--mu)";m.textContent="Suivez les instructions de votre appareil…";
+      try{const {error}=await sb.auth.registerPasskey();if(error)throw error;m.style.color="var(--ok)";m.textContent="Activé : à la prochaine connexion, touchez « Face ID / empreinte ».";toast("Face ID / empreinte activé sur cet appareil.");pkList()}
+      catch(e){m.style.color="var(--er)";m.textContent=window.SBPK.err(e)}pa.disabled=false};
   }
   if(hb)hb.addEventListener("click",open);
   /* Première fois sur l'ordinateur d'un administrateur ou archiviste qui avait déjà des sauvegardes locales : considéré comme personnel */
@@ -3435,17 +3479,74 @@ init();
   const dlg=document.createElement("dialog");dlg.className="ask sudo";document.body.appendChild(dlg);
   function sudo(what){return new Promise(res=>{
     const me=window.SBME&&window.SBME(),sb=window.GEDSB&&window.GEDSB();if(!me||!sb)return res(false);
-    dlg.innerHTML=`<h2>Confirmez votre identité</h2><p class="mu">Action sensible : <b>${esc(what)}</b>. Saisissez votre mot de passe. Cette confirmation reste valable 10 minutes.</p><label for="sudo_pw">Mot de passe</label><input id="sudo_pw" type="password" autocomplete="current-password"><div id="sudo_m" class="mu" style="min-height:20px;margin:6px 0;color:var(--er)"></div><div class="acts"><button class="pri" id="sudo_ok">Confirmer</button><button id="sudo_no">Annuler</button></div>`;
+    dlg.innerHTML=`<h2>Confirmez votre identité</h2><p class="mu">Action sensible : <b>${esc(what)}</b>. Saisissez votre mot de passe ou utilisez Face ID / empreinte. Cette confirmation reste valable 10 minutes.</p><label for="sudo_pw">Mot de passe</label><input id="sudo_pw" type="password" autocomplete="current-password"><div id="sudo_m" class="mu" style="min-height:20px;margin:6px 0;color:var(--er)"></div><div class="acts"><button class="pri" id="sudo_ok">Confirmer</button>${window.SBPK&&window.SBPK.ok()?'<button id="sudo_pk">Face ID / empreinte</button>':""}<button id="sudo_no">Annuler</button></div>`;
     const end=v=>{dlg.close();res(v)};
     dlg.querySelector("#sudo_no").onclick=()=>end(false);dlg.oncancel=e=>{e.preventDefault();end(false)};
     const go=async()=>{const b=dlg.querySelector("#sudo_ok"),m=dlg.querySelector("#sudo_m"),pw=dlg.querySelector("#sudo_pw").value;if(!pw)return m.textContent="Saisissez votre mot de passe.";b.disabled=true;m.style.color="var(--mu)";m.textContent="Vérification…";
       const r=await sb.auth.signInWithPassword({email:me.email,password:pw});b.disabled=false;if(r.error){m.style.color="var(--er)";m.textContent="Mot de passe incorrect.";return}okT=Date.now();end(true)};
+    const spk=dlg.querySelector("#sudo_pk");if(spk)spk.onclick=async()=>{const m=dlg.querySelector("#sudo_m");spk.disabled=true;m.style.color="var(--mu)";m.textContent="Vérification Face ID / empreinte…";
+      try{const {data,error}=await sb.auth.signInWithPasskey();if(error)throw error;
+        if(!data||!data.user||data.user.id!==me.id){try{await sb.auth.signOut({scope:"local"})}catch(x){}location.reload();return}
+        okT=Date.now();end(true)}catch(e){spk.disabled=false;m.style.color="var(--er)";m.textContent=window.SBPK.err(e)}};
     dlg.querySelector("#sudo_ok").onclick=go;dlg.querySelector("#sudo_pw").addEventListener("keydown",e=>{if(e.key==="Enter")go()});
     dlg.showModal();setTimeout(()=>dlg.querySelector("#sudo_pw").focus(),40)})}
   document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-a],[data-g]");if(!b||b.closest("dialog.sudo"))return;
     const what=(b.dataset.g&&SENS.g[b.dataset.g])||(b.dataset.a&&SENS.a[b.dataset.a]);if(!what||Date.now()-okT<600000)return;
     e.stopImmediatePropagation();e.preventDefault();if(busy)return;busy=true;
     sudo(what).then(ok=>{busy=false;if(ok&&b.isConnected)b.click()})},true);
+})();
+/* ---- Application installable rapide : service worker, mises à jour, mesures de performance ---- */
+(function(){
+  const M={lcp:0,cls:0,inp:0,fcp:0,lt:0};
+  try{new PerformanceObserver(l=>{const e=l.getEntries();if(e.length)M.lcp=Math.round(e[e.length-1].startTime)}).observe({type:"largest-contentful-paint",buffered:true})}catch(e){}
+  try{new PerformanceObserver(l=>{for(const e of l.getEntries())if(!e.hadRecentInput)M.cls+=e.value}).observe({type:"layout-shift",buffered:true})}catch(e){}
+  try{new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.interactionId&&e.duration>M.inp)M.inp=Math.round(e.duration)}).observe({type:"event",buffered:true,durationThreshold:16})}catch(e){}
+  try{new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.name==="first-contentful-paint")M.fcp=Math.round(e.startTime)}).observe({type:"paint",buffered:true})}catch(e){}
+  try{new PerformanceObserver(l=>{for(const e of l.getEntries())M.lt+=Math.max(0,e.duration-50)}).observe({type:"longtask",buffered:true})}catch(e){}
+  /* Service worker : seulement en HTTPS (ou localhost), jamais en aperçu de fichier */
+  const swOk="serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")&&window.PLATFORM_SB;
+  let reg=null,fresh=false;
+  function updBar(){if(document.getElementById("upd"))return;const b=document.createElement("div");b.id="upd";b.setAttribute("role","status");b.innerHTML='<span>Nouvelle version de l’application disponible.</span><button class="pri sm" id="upd_go">Actualiser</button>';document.body.appendChild(b);requestAnimationFrame(()=>b.classList.add("in"));b.querySelector("#upd_go").onclick=()=>location.reload()}
+  if(swOk)addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js",{scope:"./"}).then(r=>{reg=r;
+      r.addEventListener("updatefound",()=>{const w=r.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="activated"&&navigator.serviceWorker.controller&&fresh)updBar()})});
+      setTimeout(()=>{fresh=true},4000);
+      try{if(localStorage.getItem("arch_perso")==="1"&&navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+      document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")try{r.update()}catch(e){}});
+    }).catch(()=>{});
+  });
+  /* Purge du cache de l'appareil lors de l'effacement local (ordinateur partagé) */
+  const lw=window.localWipe;if(lw)window.localWipe=async function(){try{if(navigator.serviceWorker&&navigator.serviceWorker.controller)navigator.serviceWorker.controller.postMessage("purge")}catch(e){}return lw.apply(this,arguments)};
+  /* Diagnostic technique (Aide) */
+  const cl=(v,g,w)=>v<=g?"g":v<=w?"w":"r";
+  window.diagOpen=async function(){
+    const n=performance.getEntriesByType("navigation")[0]||{},c=navigator.connection||{},sb=window.GEDSB&&window.GEDSB();
+    let st="–";try{if(navigator.storage&&navigator.storage.estimate){const e=await navigator.storage.estimate();st=(e.usage/1048576).toFixed(1)+" Mo utilisés"}}catch(e){}
+    let pers="–";try{if(navigator.storage&&navigator.storage.persisted)pers=(await navigator.storage.persisted())?"oui":"non"}catch(e){}
+    let ping="–",pc="";if(sb){try{const t=performance.now();await sb.from("members").select("user_id",{head:true,count:"exact"}).limit(1);const d=Math.round(performance.now()-t);ping=d+" ms";pc=cl(d,300,900)}catch(e){ping="échec";pc="r"}}
+    const csp=!!document.querySelector('meta[http-equiv="Content-Security-Policy"]'),sri=document.querySelectorAll("script[integrity]").length;
+    const ctl=navigator.serviceWorker&&navigator.serviceWorker.controller;
+    const R=[["Version",esc(typeof APP_VER!=="undefined"?APP_VER:"–")],
+      ["Appareil",esc((navigator.userAgentData&&navigator.userAgentData.platform)||navigator.platform||"–")+" · "+innerWidth+"×"+innerHeight+" · ×"+devicePixelRatio],
+      ["Mode",matchMedia("(display-mode: standalone)").matches||navigator.standalone?'<span class="g">application installée</span>':"navigateur"],
+      ["Réseau",(navigator.onLine?'<span class="g">en ligne</span>':'<span class="r">hors ligne</span>')+(c.effectiveType?" · "+esc(c.effectiveType)+(c.downlink?" · "+c.downlink+" Mb/s":"")+(c.saveData?" · économie de données":""):"")],
+      ["Serveur (aller-retour)",pc?`<span class="${pc}">${ping}</span>`:ping],
+      ["Chargement de la page",n.responseStart?Math.round(n.responseStart)+" ms (1er octet) · "+Math.round(n.domContentLoadedEventEnd||0)+" ms (prête)":"–"],
+      ["Premier affichage (FCP)",M.fcp?`<span class="${cl(M.fcp,1800,3000)}">${M.fcp} ms</span>`:"–"],
+      ["Plus grand affichage (LCP)",M.lcp?`<span class="${cl(M.lcp,2500,4000)}">${M.lcp} ms</span>`:"–"],
+      ["Réactivité (INP)",`<span class="${cl(M.inp,200,500)}">${M.inp} ms</span>`],
+      ["Stabilité visuelle (CLS)",`<span class="${cl(M.cls,.1,.25)}">${M.cls.toFixed(3)}</span>`],
+      ["Blocages du processeur",Math.round(M.lt)+" ms"],
+      ["Mémoire JavaScript",performance.memory?(performance.memory.usedJSHeapSize/1048576).toFixed(1)+" Mo":"–"],
+      ["Mise en cache (service worker)",ctl?'<span class="g">active</span> · ouverture instantanée et hors connexion':swOk?'<span class="w">en cours d’installation</span>':"indisponible ici"],
+      ["Stockage sur l’appareil",st+" · persistant : "+pers],
+      ["Sécurité de la page",(csp?'<span class="g">CSP stricte</span>':'<span class="r">sans CSP</span>')+" · "+sri+(sri>1?" bibliothèques vérifiées":" bibliothèque vérifiée")+" (SRI) · "+(window.isSecureContext?"HTTPS":"non sécurisé")+(top===self?"":" · encadrée !")],
+      ["Face ID / empreinte",window.SBPK&&window.SBPK.ok()?'<span class="g">pris en charge</span>':"non pris en charge"]];
+    const txt=R.map(r=>r[0]+" : "+r[1].replace(/<[^>]+>/g,"")).join("\n");
+    $("#dlg").innerHTML=`<h2>Diagnostic technique</h2><p class="mu">Mesures prises sur cet appareil, pour cette session. Vert = bon, orange = moyen, rouge = à améliorer.</p><table class="diag">${R.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table><div class="acts"><button id="dg_cp">Copier</button><button data-a="aide">Retour à l’aide</button><button data-a="close">Fermer</button></div>`;
+    if(!$("#dlg").open)$("#dlg").showModal();
+    $("#dg_cp").onclick=async()=>{try{await navigator.clipboard.writeText(txt);toast("Diagnostic copié.")}catch(e){toast("Copie impossible sur ce navigateur.")}};
+  };
 })();
 /* ---- Visite guidée (une fois par compte, revoir depuis l'Aide) ---- */
 (function(){
