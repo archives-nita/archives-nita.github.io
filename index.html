@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-fOwjgIRmv5+Crtuz8J7hW7abOYXiCU98u9vlc/ER0jw=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-sbVSGhXBviREspsM0L2RWnFp5hASy0MjYv+EOKS5VQA=' 'sha256-qhNGOCKGovIXBNumFA9P/24whx3YzOUD2K1ME+nVJak=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-1jTqh6UTOvA5rYvYXyozmSPdz7CgaOfIH54VUZMVmRo=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-fOwjgIRmv5+Crtuz8J7hW7abOYXiCU98u9vlc/ER0jw=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-sbVSGhXBviREspsM0L2RWnFp5hASy0MjYv+EOKS5VQA=' 'sha256-blsl6+7Fk0x4G2C0joQo01QxbgYN5hSMGfUhUL1kJsg=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-1jTqh6UTOvA5rYvYXyozmSPdz7CgaOfIH54VUZMVmRo=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
@@ -852,7 +852,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="11 nov. 2026 – E-mails 3.3";
+const APP_VER="13 nov. 2026 – R2 3.4";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -2766,7 +2766,7 @@ function gedDocs(){
   <div class="gtitle"><div><h3 style="margin:0">${esc(cs.nom)}</h3><div class="mu">${esc(cs.direction||"")} · Votre accès : <b>${esc(GNIV[gniv(G.srv)]||"")}</b></div></div>
   <div class="acts" style="margin:0">${gW()&&G.vue!=="corbeille"?`<button class="pri" data-g="depot">+ Déposer des fichiers</button>${"webkitdirectory" in HTMLInputElement.prototype?'<button data-g="depotdir">+ Déposer un dossier entier</button>':""}<button data-g="newdos">+ Nouveau dossier</button>`:""}</div></div>
   <div class="kpis"><div class="kpi"><b>${cur.length}</b><span class="mu">Documents</span></div><div class="kpi"><b>${G.D.length}</b><span class="mu">Dossiers</span></div><div class="kpi"><b>${cur.filter(f=>f.statut==="archive").length}</b><span class="mu">Archivés</span></div><div class="kpi"><b style="font-size:20px">${gsz(sz)}</b><span class="mu">Volume de l’espace</span></div></div>
-  <div class="row"><input id="gq" type="search" enterkeyhint="search" placeholder="Rechercher (nom, description, catégorie, personne…)" value="${esc(G.q)}">
+  <div class="row"><input id="gq" type="search" placeholder="Rechercher (nom, description, catégorie, personne…)" value="${esc(G.q)}">
   <select id="gtyp" aria-label="Type de fichier" style="max-width:170px"><option value="">Tous les types</option>${[["PDF","PDF"],["IMG","Images"],["DOC","Word"],["XLS","Excel et CSV"],["PPT","PowerPoint"],["TXT","Texte"]].map(o=>`<option value="${esc(o[0])}" ${G.typ===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>
   <select id="gtri" aria-label="Tri" style="max-width:190px">${[["nom","Tri : nom"],["date","Tri : plus récents"],["taille","Tri : plus volumineux"]].map(o=>`<option value="${esc(o[0])}" ${G.tri===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select></div>
   <div class="gbc">${G.vue==="corbeille"?'<b>Corbeille</b>':`<button class="glink" data-g="dos" data-id="">${esc(cs.nom)}</button>${bc.map(d=>` › <button class="glink" data-g="dos" data-id="${esc(d.id)}">${esc(d.nom)}</button>`).join("")}${G.dos&&gM()?` <button class="sm" data-g="rendos">Renommer</button><button class="sm" data-g="deldos">Supprimer le dossier</button>`:""}`}
@@ -2786,7 +2786,7 @@ function gedView(){
 }
 
 /* ---- Épinglés (favoris personnels), nouveautés depuis la dernière visite, recherche dans tous les espaces ---- */
-const GCOLS="id,service_id,dossier,nom,mime,taille,sha256,chemin,version,lignee,courant,description,annee,cat,confidentiel,statut,gel,cree_par,cree_nom,cree_le,modifie_le,modifie_nom";
+const GCOLS="id,service_id,dossier,nom,mime,taille,sha256,chemin,version,lignee,courant,description,annee,cat,confidentiel,statut,gel,cree_par,cree_nom,cree_le,modifie_le,modifie_nom,stockage";
 const gStar=f=>{const on=G.FAV.has(f.lignee);return `<button class="sm gstar ${on?"on":""}" data-g="fav" data-id="${esc(f.id)}" aria-pressed="${on}" title="${on?"Retirer des épinglés":"Épingler ce document"}">${on?"★ Épinglé":"☆ Épingler"}</button>`};
 async function gedFav(id){
   const f=gfile(id);if(!f)return;const sb=gsb(),on=G.FAV.has(f.lignee);
@@ -2833,7 +2833,7 @@ async function gedFavLoad(){
 }
 /* ---- Récents : derniers documents déposés ou modifiés dans les espaces accessibles ---- */
 async function gedRecLoad(){
-  const sb=gsb(),c="id,service_id,dossier,nom,mime,taille,sha256,chemin,version,lignee,courant,description,annee,cat,confidentiel,statut,gel,cree_par,cree_nom,cree_le,modifie_le,modifie_nom";
+  const sb=gsb(),c="id,service_id,dossier,nom,mime,taille,sha256,chemin,version,lignee,courant,description,annee,cat,confidentiel,statut,gel,cree_par,cree_nom,cree_le,modifie_le,modifie_nom,stockage";
   try{const [a,b]=await Promise.all([gq(sb.from("ged_fichiers").select(c).eq("courant",true).neq("statut","corbeille").order("cree_le",{ascending:false}).limit(40)),gq(sb.from("ged_fichiers").select(c).eq("courant",true).neq("statut","corbeille").not("modifie_le","is",null).order("modifie_le",{ascending:false}).limit(40))]);
     const m=new Map();[...a,...b].forEach(f=>m.set(f.id,f));G.RC=[...m.values()].map(f=>({...f,_t:f.modifie_le&&f.modifie_le>f.cree_le?f.modifie_le:f.cree_le})).sort((x,y)=>x._t<y._t?1:-1).slice(0,40)}
   catch(e){G.RC=[];toast("Récents indisponibles : "+(e.message||e))}
@@ -2905,7 +2905,7 @@ function gedAccView(){
   }
   return `<div class="card" style="margin-bottom:10px"><b>Gestion des accès à la GED</b> <span class="b">Réservé à l’administrateur</span><div class="mu">Choisissez un utilisateur, puis les directions et services qu’il peut voir et ce qu’il peut y faire. Seuls les comptes ayant une fonction dans « Équipe et accès » apparaissent ici.</div>
   <div class="acts"><button class="sm" data-g="acc-pdf">Tableau des accès (PDF)</button></div></div>
-  <div class="gacc"><div><input id="gaq" type="search" enterkeyhint="search" placeholder="Rechercher un utilisateur" value="${esc(G.aq)}"><div class="gul" id="gul">${gedUsers(lst,nb,all)}</div></div><div>${right}</div></div>`;
+  <div class="gacc"><div><input id="gaq" type="search" placeholder="Rechercher un utilisateur" value="${esc(G.aq)}"><div class="gul" id="gul">${gedUsers(lst,nb,all)}</div></div><div>${right}</div></div>`;
 }
 function gedUsers(lst,nb,all){return lst.map(u=>`<button class="gu ${u.user_id===G.au?"on":""}" data-g="au" data-id="${esc(u.user_id)}"><b>${esc(gun(u))}</b><br><span class="mu">${esc(u.email||"")}</span><br><span class="b">${esc(GROLE[u.role]||u.role)}</span><span class="b ${all(u)||nb(u)?"ok":""}">${all(u)?"Tous les espaces":nb(u)?nb(u)+" accès":"Aucun accès"}</span></button>`).join("")||'<p class="mu">Aucun compte ne correspond.</p>'}
 async function gedAccSet(kind,id,val){
@@ -2996,7 +2996,7 @@ function gedDepotDlg(prev,dir,drop){
   gDlg(`<h2>${prev?"Nouvelle version":dir||drop?"Déposer un dossier entier":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
   ${drop?`<p><b>${drop.length}</b> fichier(s) dans <b>${nd}</b> dossier(s) prêts à être déposés. Les dossiers et sous-dossiers seront recréés à l’identique.</p>`:dir?`<label for="g_files">Dossier à déposer</label><input id="g_files" type="file" webkitdirectory multiple><div class="mu">Choisissez un dossier : tous ses fichiers sont déposés, et ses sous-dossiers sont recréés à l’identique dans la GED.</div>`:`<label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">`}
   <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · 50 Mo maximum par fichier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
-  ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" inputmode="numeric" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
+  ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
   <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des personnes ayant le niveau « modification » et du Service Archives)</label>`}
   <div id="g_prog" class="mu" style="margin-top:8px"></div>
   <div class="acts"><button class="pri" data-g="${esc(prev?"ver-go":"depot-go")}" data-id="${esc(prev?prev.id:"")}">Déposer</button><button data-a="close">Annuler</button></div>`);
@@ -3072,12 +3072,13 @@ async function gedUpload(items,meta,prev){
       for(const seg of rel){const nm=String(seg).replace(GBIDI,"").trim().slice(0,120);if(!nm)continue;key+="/"+nm.toLowerCase();if(!dirs[key])dirs[key]=await gFolder(dos,nm);dos=dirs[key]}
       const sha=await gsha(buf);
       if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(lab+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
-      const path=G.srv+"/"+guid(),up=await sb.storage.from("ged").upload(path,new Blob([buf],{type:mime}),{contentType:mime,upsert:false});
-      if(up.error)throw new Error(up.error.message||"envoi refusé");
-      const row={service_id:G.srv,dossier:dos||null,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
+      const dep=await gR2("depot",{service_id:G.srv,mime,taille:buf.byteLength}),path=dep.chemin;
+      const up=await fetch(dep.url,{method:"PUT",body:new Blob([buf],{type:mime}),headers:{"content-type":mime}});
+      if(!up.ok)throw new Error("envoi refusé par le stockage ("+up.status+")");
+      const row={stockage:"r2",service_id:G.srv,dossier:dos||null,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
       if(prev){row.lignee=prev.lignee;row.description=prev.description||"";row.annee=prev.annee||null;row.cat=prev.cat||"";row.confidentiel=!!prev.confidentiel}
       const ins=await sb.from("ged_fichiers").insert(row);
-      if(ins.error){try{await sb.storage.from("ged").remove([path])}catch(e){}throw new Error(ins.error.message||"enregistrement refusé")}
+      if(ins.error){try{await gR2("annuler",{chemin:path})}catch(e){}throw new Error(ins.error.message||"enregistrement refusé")}
       if(sha)G.F.push({sha256:sha,statut:"actif",courant:true,nom:f.name,lignee:"",version:1});
       ok++;
     }catch(e){errs.push(lab+" : "+(e.message||e))}
@@ -3090,7 +3091,12 @@ async function gWalk(en,rel,out){
   if(en.isFile){const f=await new Promise((r,j)=>en.file(r,j));out.push({f,rel});return}
   if(en.isDirectory){const rd=en.createReader(),sub=[...rel,en.name];for(;;){const b=await new Promise((r,j)=>rd.readEntries(r,j));if(!b.length)break;for(const c of b)await gWalk(c,sub,out)}}
 }
-async function gblob(f){const {data,error}=await gsb().storage.from("ged").download(f.chemin);if(error||!data)throw new Error((error&&error.message)||"fichier introuvable");return data}
+async function gR2(action,o){const {data,error}=await gsb().functions.invoke("ged-r2",{body:Object.assign({action},o)});
+  if(error){let m=error.message||"service indisponible";try{const j=await error.context.json();if(j&&j.erreur)m=j.erreur}catch(e){}throw new Error(m)}
+  if(data&&data.erreur)throw new Error(data.erreur);return data}
+async function gblob(f){
+  if(f.stockage!=="supabase"){try{const {url}=await gR2("lien",{chemin:f.chemin});const r=await fetch(url,{cache:"no-store"});if(r.ok)return await r.blob();if(f.stockage==="r2")throw new Error("fichier introuvable ("+r.status+")")}catch(e){if(f.stockage==="r2")throw e}}
+  const {data,error}=await gsb().storage.from("ged").download(f.chemin);if(error||!data)throw new Error((error&&error.message)||"fichier introuvable");return data}
 function gj0(action,detail){try{console.warn("GED – dépôt refusé :",detail)}catch(e){}}
 function gj(action,f,detail){try{gsb().from("ged_journal").insert({action,service_id:f.service_id,fichier:f.id,detail:detail||f.nom}).then(()=>{},()=>{})}catch(e){}}
 /* ---- conversion en PDF ---- */
@@ -3180,7 +3186,7 @@ function gedDet(f){
 function gedEditDlg(f){
   const opts=[["","Racine de l’espace"],...G.D.map(d=>[d.id,gpath(d.id).map(x=>x.nom).join(" › ")]).sort((a,b)=>NCOL.compare(a[1],b[1]))];
   gDlg(`<h2>Modifier la fiche</h2><label for="g_nom">Nom du document</label><input id="g_nom" maxlength="200" value="${esc(f.nom)}"><label for="g_desc">Description</label><input id="g_desc" maxlength="300" value="${esc(f.description)}">
-  <label for="g_an">Année du document</label><input id="g_an" type="number" inputmode="numeric" min="1900" max="2100" value="${esc(f.annee||"")}">${gCatSel(f.cat)}
+  <label for="g_an">Année du document</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(f.annee||"")}">${gCatSel(f.cat)}
   <label for="g_dos">Dossier</label><select id="g_dos">${opts.map(o=>`<option value="${esc(o[0])}" ${(f.dossier||"")===o[0]?"selected":""}>${esc(o[1])}</option>`).join("")}</select>
   <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto" ${f.confidentiel?"checked":""}> Confidentiel</label>
   <div class="acts"><button class="pri" data-g="edit-go" data-id="${esc(f.id)}">Enregistrer</button><button data-a="close">Annuler</button></div>`);
@@ -3241,7 +3247,7 @@ async function gedAct(g,id){
   if(g==="unarch"){if(!await ask("Retirer « "+f.nom+" » des archives ?","Confirmer"))return;return upd({statut:"actif"},"Document retiré des archives.")}
   if(g==="gel")return upd({gel:!f.gel},f.gel?"Gel levé.":"Document gelé : aucune suppression possible.");
   if(g==="purge"){if(!await ask("Supprimer définitivement « "+f.nom+" » (v"+f.version+") ? Cette action est irréversible et reste inscrite au journal.","Supprimer définitivement"))return;
-    await gq(sb.from("ged_fichiers").delete().eq("id",id));try{await sb.storage.from("ged").remove([f.chemin])}catch(e){}toast("Document supprimé définitivement.");return gAfter()}
+    await gq(sb.from("ged_fichiers").delete().eq("id",id));try{if(f.stockage==="r2")await gR2("supprimer",{chemin:f.chemin});else await sb.storage.from("ged").remove([f.chemin])}catch(e){}toast("Document supprimé définitivement.");return gAfter()}
   if(g==="verif"){toast("Vérification…");const b=await gblob(f),h=await gsha(await b.arrayBuffer());if(!h||!f.sha256)return toast("Vérification impossible sur cet appareil.");const ok=h===f.sha256;gj("verification",f,f.nom+" · "+(ok?"conforme":"NON CONFORME"));
     return ask(ok?"Intégrité vérifiée : le fichier est identique à celui déposé le "+gdt(f.cree_le)+".":"ATTENTION : le fichier ne correspond plus à l’empreinte enregistrée au dépôt. Prévenez le Service Archives.","OK")}
 }
