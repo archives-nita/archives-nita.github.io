@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-nSCWx0yKdFALrkqLXTloo+2fUvCw9hJeh0nO92/OyYk=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-HRx4PoAxlxQPWqUsGN17zT960TZpljPQkakFdx1kGUM=' 'sha256-6cAsvX71IU1tgiZ9OEOhPmyautfWdZaXQKUHDN+yqdM=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-B2dI+MeMubmA+yq4huJ75uX8NA8a2bMIQCDPz/WxzLA=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-nSCWx0yKdFALrkqLXTloo+2fUvCw9hJeh0nO92/OyYk=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-UD6WDMz4Q9Rl8e8YS8TR68uZ2lpRB9Q5Fq4RJMfXBE0=' 'sha256-bYc87Yanc+Fv2DKzXyfwgNTg7ZjE3UBh8pkHzHd4hkU=' 'sha256-gZ28Tx7rB+VyFbMSVYQOHvHkHvnxzNJzd2SkpzLlUBs=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-uXuhYEta1IvdRCMr9/9DC8Oz2V9jxxprxZqU71Oo2go=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
@@ -619,8 +619,8 @@ body.pzon #printzone{display:block;position:fixed;inset:0;z-index:2147483000;ove
         (regs[c]=regs[c]||new Set()).add(reg);
         // repère serveur : date de la dernière modification connue (sert à ne recharger que les changements)
         let mark=null;
-        const top=async()=>{const {data,error}=await sb.from("documents").select("updated_at").eq("collection",c).order("updated_at",{ascending:false}).limit(1);if(error)throw error;return data&&data[0]?data[0].updated_at:null};
-        const load=async()=>{try{const m=await top().catch(()=>null);const rows=await fetchAll(c);cache.clear();rows.forEach(r=>cache.set(r.id,r.data));mark=m;emit()}catch(e){if(errcb)errcb(mkErr(e))}};
+        const top=()=>topOf(c);
+        const load=async()=>{try{const pf=takePref(c);let m,rows;if(pf){try{[m,rows]=await Promise.all([pf.m.catch(()=>null),pf.p])}catch(x){rows=null}}if(!rows)[m,rows]=await Promise.all([top().catch(()=>null),fetchAll(c)]);cache.clear();rows.forEach(r=>cache.set(r.id,r.data));mark=m;emit()}catch(e){if(errcb)errcb(mkErr(e))}};   // repère et données en parallèle
         // synchronisation légère : seulement les lignes modifiées depuis le repère (marge de 30 s) + la liste des identifiants (suppressions)
         const sync=async()=>{
           if(!mark||cache.size<=300)return load();          // petite collection : un seul rechargement suffit
@@ -657,6 +657,11 @@ body.pzon #printzone{display:block;position:fixed;inset:0;z-index:2147483000;ove
     }
     return out;
   }
+  async function topOf(c){const {data,error}=await sb.from("documents").select("updated_at").eq("collection",c).order("updated_at",{ascending:false}).limit(1);if(error)throw error;return data&&data[0]?data[0].updated_at:null}
+  // préchargement : l'inventaire et les prêts partent en même temps que la lecture du rôle (les droits restent appliqués par le serveur)
+  const PREF={};
+  function prefetch(cs){cs.forEach(c=>{const p=fetchAll(c),m=topOf(c);p.catch(()=>{});m.catch(()=>{});PREF[c]={t:Date.now(),p,m}})}
+  function takePref(c){const x=PREF[c];delete PREF[c];return x&&Date.now()-x.t<30000?x:null}
   async function fetchAll(c){
     const pg=from=>sb.from("documents").select("id,data").eq("collection",c).order("id").range(from,from+999);
     if(c==="docs"){                                   // grosse collection : les 2 premières pages en parallèle
@@ -808,6 +813,7 @@ body.pzon #printzone{display:block;position:fixed;inset:0;z-index:2147483000;ove
 
   /* ---------- Démarrage ---------- */
   async function loadMe(session){
+    prefetch(["docs","prets"]);
     const u=session.user,{data,error}=await sb.from("members").select("role,nom,prenom,actif").eq("user_id",u.id).maybeSingle();
     if(error)throw error;
     if(!data||data.actif===false)return null;
@@ -907,7 +913,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="14 nov. 2026 – Étiquettes 4.2";
+const APP_VER="14 nov. 2026 – Démarrage rapide 4.3";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 let lim=100,ready=false;
 
@@ -3889,6 +3895,8 @@ init();
   const swOk="serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")&&window.PLATFORM_SB;
   let reg=null,fresh=false;
   function updBar(){if(document.getElementById("upd"))return;const b=document.createElement("div");b.id="upd";b.setAttribute("role","status");b.innerHTML='<span>Nouvelle version de l’application disponible.</span><button class="pri sm" id="upd_go">Actualiser</button>';document.body.appendChild(b);requestAnimationFrame(()=>b.classList.add("in"));b.querySelector("#upd_go").onclick=()=>location.reload()}
+  /* la page s'ouvre depuis la copie de l'appareil ; le service worker prévient quand une nouvelle version est arrivée */
+  if(swOk)try{navigator.serviceWorker.addEventListener("message",e=>{if(e.data&&e.data.t==="maj")updBar()})}catch(e){}
   if(swOk)addEventListener("load",()=>{
     navigator.serviceWorker.register("sw.js",{scope:"./"}).then(r=>{reg=r;
       r.addEventListener("updatefound",()=>{const w=r.installing;if(w)w.addEventListener("statechange",()=>{if(w.state==="activated"&&navigator.serviceWorker.controller&&fresh)updBar()})});
