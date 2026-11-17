@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-qcpbBV66wDlFzhobVHPSRw81jJoVN+eUH6qo71GPu8o=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-+h8dqrXEdy1Wx59Zz6y3b6HwRIg5PMfqR6+YAe3kVY8=' 'sha256-UqKAvypXI1amBrFzkvrg69OMJ7nc/2mY2rwwBF9QJ3g=' 'sha256-O9/EWuAqikuCkOedPYlQHzxbEsZ3thNX+BgTZS2ZAkg=' 'sha256-+bFOj5BviCm1fgE/5t3dqwhs7FlskKDR6P+Af8fGfxg=' 'sha256-YTLTpZvrGQPOT5zhyIjQem5bY3ZQ3tn+qzOxDQQnQ/8=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js https://cdn.jsdelivr.net/gh/cozmo/jsQR@8e6a036beafa7053dd44b1b76ac578d22b1b3311/dist/jsQR.js https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-ISv09XnKTw4Hq/Jbjh9FpqKu4iZV5Xv1Vk5txuKwv2Y=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-k73CxUx4iD/ecv07a6rTG+owAqX0lHbJ1nsUOOOe3VI=' 'sha256-wOVaa/9rhTZq9inqb/BNR8MDiliF0+k/0ZZ25PV27k4=' 'sha256-PyDXkv5xjtHYgmDr8GP2srbCn8GA6H1pca/MC2DDbsA=' 'sha256-JQtZN2mI3gTpernbyjx8hfJHCNetX6WY9n+rCY+/8QA=' 'sha256-SbXh+NcVb2X1ubYMVQsKsFDrg5/pfKW34i+HEdQM8vw=' 'sha256-f0KQ4aeYnhZe1HCktV6o+SW0nIuyLurTSkJsdwCg3+k=' 'sha256-WcmhI9eHTNgLk6dO6LFOXTpZre0paNpo/kl1SWMQQ6I='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.pwnedpasswords.com https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/ https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
@@ -421,7 +421,7 @@ h2[id^="sec_"]{scroll-margin-top:80px}
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
 <script>
 /* Thème (automatique / clair / sombre) et icônes du menu */
-/* La balise color-scheme reste « light dark » : elle empêche Chrome et Samsung Internet d'assombrir la page de force, quel que soit le thème choisi */
+/* La balise color-scheme reste « light dark » : elle empêche Chrome et Samsung Internet d'assombrir la page de force, quel que soit le thème choisi */
 const thmMeta=m=>{const x=document.querySelector('meta[name="color-scheme"]');if(x)x.content="light dark"};
 (function(){let t=null;try{t=localStorage.getItem("arch_theme")}catch(e){}if(t==="light"||t==="dark"){document.documentElement.dataset.theme=t;thmMeta(t)}})();
 const NAVI={dash:'<rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/>',
@@ -532,6 +532,16 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
  .acts.psh{flex-direction:column;align-items:stretch}.acts.psh>span{align-self:auto!important;text-align:center}
  #fab{width:54px;height:54px;min-height:54px;border-radius:18px}
 }
+/* 4.7 : en-têtes de page, états vides, choix des rapports */
+.phd{display:flex;align-items:center;gap:12px;margin:2px 0 14px}.phd h2{margin:0;line-height:1.15}.phd .mu{margin-top:2px;line-height:1.35}
+.phi{flex:0 0 auto;display:inline-grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--as);color:var(--ac)}.phi .ni{width:22px;height:22px}
+.card.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:28px 20px}.card.empty .phi{width:56px;height:56px;border-radius:18px}.card.empty .phi .ni{width:28px;height:28px}
+.card.empty b{font-size:16px}.card.empty .mu{max-width:420px;line-height:1.45}.card.empty button{margin-top:6px}
+.rtg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 10px}@media(min-width:900px){.rtg{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.rtc{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:12px 14px;min-height:64px;border-radius:14px;background:var(--cd);border:1px solid var(--bd);box-shadow:none;color:var(--tx);font-weight:400;white-space:normal}
+.rtc b{font-weight:650}.rtc span{color:var(--mu);font-size:12.5px;line-height:1.3}
+.rtc.on{border-color:var(--ac);background:var(--as);box-shadow:0 0 0 1px var(--ac) inset}.rtc.on b{color:var(--ac)}
+.vh{margin:10px 0}.vh summary{cursor:pointer;font-weight:600}.vhi{padding:8px 0;border-top:1px solid var(--bd);line-height:1.45}.vhi s{opacity:.7}
 </style></head>
 <body><main>
 <aside class="side"><header class="hd"><img alt="NITA Transfert d’Argent" src="data:image/png;base64,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"><div class="hdt"><h1>Service des Archives</h1><div class="mu">Inventaire et registre des consultations et prêts</div></div><button type="button" id="cmdb" class="thm cmdb" aria-label="Recherche rapide" title="Recherche rapide (Ctrl+K)"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="tl">Rechercher</span><span class="kb">Ctrl K</span></button><button type="button" id="scanb" class="thm" aria-label="Scanner une étiquette" title="Scanner une étiquette"><svg class="ni" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16M7 12h10"/></svg></button><button type="button" id="acct" class="thm acct" aria-label="Mon compte" style="display:none"></button><button type="button" id="thm" class="thm" aria-label="Thème"></button></header>
@@ -558,7 +568,7 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
 /* ===== Connexion Supabase : remplace les services de la plateforme Claude =====
    Fournit window.PLATFORM = {db, user, downloads, assets, sample} utilisé par le reste de l'application.
    Seules la clé PUBLIQUE (publishable) et l'adresse du projet sont ici : elles ne donnent aucun droit par elles-mêmes,
-   tout est contrôlé côté serveur (RLS). Ne mettez JAMAIS la clé « service_role » dans cette page. */
+   tout est contrôlé côté serveur (RLS). Ne mettez JAMAIS la clé « service_role » dans cette page. */
 (function(){
   /* Protection contre l'intégration dans un autre site (clics piégés) : GitHub Pages ne permet pas l'en-tête frame-ancestors */
   if(window.self!==window.top){document.documentElement.style.display="none";return}
@@ -580,14 +590,14 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
   const pkErr=e=>{const c=(e&&(e.code||e.error_code))||"",m=(e&&e.message)||String(e||"");
     if(/passkey_disabled/i.test(c+m))return "La connexion par Face ID / empreinte n’est pas encore activée par l’administrateur.";
     if(/NotAllowed|abort|cancel|ERROR_CEREMONY_ABORTED|timed out/i.test(c+m+(e&&e.name||"")))return "Vérification annulée ou expirée. Réessayez.";
-    if(/credential_not_found/i.test(c+m))return "Aucune empreinte / Face ID enregistrée pour ce compte sur cet appareil. Connectez-vous avec le mot de passe puis activez-la dans « Mon compte ».";
+    if(/credential_not_found/i.test(c+m))return "Aucune empreinte / Face ID enregistrée pour ce compte sur cet appareil. Connectez-vous avec le mot de passe puis activez-la dans « Mon compte ».";
     if(/credential_exists/i.test(c+m))return "Cet appareil est déjà enregistré pour votre compte.";
     if(/not support/i.test(m))return "Ce navigateur ne permet pas Face ID / empreinte.";
     return fr(m)};
   window.SBPK={ok:PK_OK,err:pkErr};
 
   /* Mots de passe connus des pirates (NIST SP 800-63B-4 : liste de refus obligatoire).
-     Méthode « k-anonymat » : seuls les 5 premiers caractères de l'empreinte SHA-1 sont envoyés, jamais le mot de passe.
+     Méthode « k-anonymat » : seuls les 5 premiers caractères de l'empreinte SHA-1 sont envoyés, jamais le mot de passe.
      Renvoie le nombre de fuites connues (0 = inconnu des fuites), ou -1 si le service ne répond pas. */
   async function pwned(pw){
     try{
@@ -617,10 +627,10 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
   };
   window.SBMFA=MFA;
   const codeInput=id=>`<input id="${id}" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="7" placeholder="123456" style="font-size:24px;letter-spacing:.3em;text-align:center">`;
-  const AIDE_PERTE="Téléphone perdu ou changé ? Le propriétaire du projet Supabase peut retirer le code : Authentication → Users → votre compte → supprimer le facteur « TOTP ». Vous en activerez alors un nouveau à la connexion suivante.";
+  const AIDE_PERTE="Téléphone perdu ou changé ? Le propriétaire du projet Supabase peut retirer le code : Authentication → Users → votre compte → supprimer le facteur « TOTP ». Vous en activerez alors un nouveau à la connexion suivante.";
   function mfaChallengeView(){
     return new Promise(res=>{
-      const o=overlay(`<p style="margin:0 0 8px"><b>Double vérification</b> : ouvrez votre application d’authentification (Google Authenticator, Microsoft Authenticator…) et saisissez le code « Archives NITA ».</p><label for="sb_code">Code à 6 chiffres</label>${codeInput("sb_code")}<div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0"></div><div class="acts"><button class="pri" id="sb_cok">Valider</button><button id="sb_cout">Se déconnecter</button></div><p class="mu" style="font-size:12.5px;margin:12px 0 0">${esc(AIDE_PERTE)}</p>`);
+      const o=overlay(`<p style="margin:0 0 8px"><b>Double vérification</b> : ouvrez votre application d’authentification (Google Authenticator, Microsoft Authenticator…) et saisissez le code « Archives NITA ».</p><label for="sb_code">Code à 6 chiffres</label>${codeInput("sb_code")}<div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0"></div><div class="acts"><button class="pri" id="sb_cok">Valider</button><button id="sb_cout">Se déconnecter</button></div><p class="mu" style="font-size:12.5px;margin:12px 0 0">${esc(AIDE_PERTE)}</p>`);
       const m=o.querySelector("#sb_msg"),b=o.querySelector("#sb_cok"),inp=o.querySelector("#sb_code");
       const go=async()=>{b.disabled=true;m.style.color="var(--mu,#5f6580)";m.textContent="Vérification…";
         try{await MFA.verify(inp.value);res()}catch(e){b.disabled=false;m.style.color="var(--er,#b3261e)";m.textContent=e.message;inp.select()}};
@@ -814,7 +824,7 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
         const {data,error}=await sb.rpc("merge_doc",{p_collection:c,p_id:id,p_patch:p});
         if(error)throw mkErr(error);
         if(!data)throw mkErr({code:"42501",message:"Document introuvable ou droit insuffisant."});
-        // mise à jour locale sans nouvel aller-retour réseau (fusion superficielle, comme « data || patch » côté serveur)
+        // mise à jour locale sans nouvel aller-retour réseau (fusion superficielle, comme « data || patch » côté serveur)
         let done=false;(regs[c]||[]).forEach(r=>{if(r.merge&&r.merge(id,p))done=true});
         if(!done){const g=await sb.from("documents").select("data").eq("collection",c).eq("id",id).maybeSingle();if(g.data)applyLocal(c,id,g.data.data)}
       },
@@ -831,7 +841,7 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
       }
     };
   }
-  /* « membres » = table members (comptes et rôles) */
+  /* « membres » = table members (comptes et rôles) */
   const mrow=r=>({uid:r.user_id,fonction:ROLE_FN[r.role]||r.role,nom:r.nom||"",prenom:r.prenom||"",actif:r.actif!==false});
   function membersCollection(){
     return {
@@ -1034,7 +1044,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="17 nov. 2026 – Sécurité 4.6";
+const APP_VER="17 nov. 2026 – GED gros fichiers 4.9";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 const LIM0=40,LIMP=80;let lim=LIM0,ready=false;
 
@@ -1115,7 +1125,7 @@ function dash(){
   const max=Math.max(1,...Object.values(by));
   return `${salut()}<div class="row"><input id="qs" type="search" enterkeyhint="search" placeholder="Rechercher un document (puis Entrée)…"></div>
   <div class="row qa"><button class="pri w" data-a="new">+ Nouvelle entrée</button><button class="w" data-a="lend">Sortie directe</button><button class="rq" data-a="dem">Demander</button><button class="w" data-a="copie">Copie scannée</button></div>
-  ${!ready?'<p class="mu">Chargement des données…</p>':""}${ready&&!docs.length?'<div class="card"><b>Pour démarrer</b><div class="mu">1. « + Nouvelle entrée » pour saisir un premier document, ou « Importer » (onglet Inventaire) pour charger un fichier Excel.<br>2. Classez chaque entrée dans une catégorie de conservation.<br>3. « Sortie directe » enregistre un prêt ou une consultation.</div></div>':""}<div class="kpis">
+  ${!ready?'<p class="mu">Chargement des données…</p>':""}${ready&&!docs.length?'<div class="card"><b>Pour démarrer</b><div class="mu">1. « + Nouvelle entrée » pour saisir un premier document, ou « Importer » (onglet Inventaire) pour charger un fichier Excel.<br>2. Classez chaque entrée dans une catégorie de conservation.<br>3. « Sortie directe » enregistre un prêt ou une consultation.</div></div>':""}<div class="kpis">
   <div class="kpi"><b>${docs.length}</b><span class="mu">Entrées d’inventaire</span></div>
   <div class="kpi"><b>${s.units}</b><span class="mu">Unités archivées</span></div>
   <button class="kpi" data-a="pvgo"><b>${s.open.length}</b><span class="mu">Sorties en cours</span></button>
@@ -1126,7 +1136,7 @@ function dash(){
 
 const SK=new WeakMap();
 const skey=d=>{let k=SK.get(d);if(k===undefined){k=" "+norm([d.intitule,d.cote,d.mots,d.direction,d.service,d.empl,d.obs,d.annee,d.mois].join(" "))+" ";SK.set(d,k)}return k};
-/* Recherche par mots : sans accents ni majuscules, espaces en trop ignorés, ordre des mots libre, « salaires » trouve aussi « salaire » */
+/* Recherche par mots : sans accents ni majuscules, espaces en trop ignorés, ordre des mots libre, « salaires » trouve aussi « salaire » */
 const sword=w=>w.length>3&&w.endsWith("s")?w.slice(0,-1):w;
 function filtered(){
   const ws=norm(f.q).split(" ").filter(Boolean).map(sword);
@@ -1150,7 +1160,7 @@ function listHTML(from){
   const flat=f.s==="cote"||f.s==="recent"||f.s==="titre";
   const ws=norm(f.q).split(" ").filter(Boolean).map(sword),nf=!(f.dir||f.srv||f.an||f.typ||f.st||ws.length);
   const a=nf?sortedDocs():sortedDocs().filter(d=>(!f.dir||d.direction===f.dir)&&(!f.srv||d.service===f.srv)&&(!f.an||String(d.annee)===f.an)&&(!f.typ||d.type===f.typ)&&(!f.st||(f.st==="sortie"?d.statut==="en_pret":f.st==="detruit"?d.statut==="detruit":d.statut!=="en_pret"&&d.statut!=="detruit"))&&(!ws.length||ws.every(w=>skey(d).includes(w))));
-  if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
+  if(!a.length)return !ready?'<p class="mu">Chargement des données…</p>':docs.length?'<p class="mu">Aucun document ne correspond à la recherche.</p>':'<p class="mu">L’inventaire est vide. Touchez « + Ajouter » pour saisir une première entrée, ou « Importer » pour charger un fichier Excel.</p>';
   const actPret={};prets.forEach(p=>{if(p.statut==="en_cours"&&p.docId)actPret[p.docId]=p});
   const kk=d=>d.annee+"|"+(MOISN.includes(String(d.mois||"").toLowerCase())?String(d.mois).toLowerCase():""),pv0=from?a[from-1]:null;
   let h=!from&&(f.q||f.dir||f.srv||f.an||f.typ||f.st)?`<div class="mu" style="margin:2px 0 4px"><b>${a.length}</b> entrée(s) trouvée(s)</div>`:"",k1=pv0?pv0.direction:"",k2=pv0?pv0.service:"",k3=pv0?kk(pv0):"";
@@ -1221,6 +1231,11 @@ function pret(){
 let rqT=0,qT=0;
 function render(){bkSchedule();if(rqT)return;rqT=setTimeout(()=>{rqT=0;render0()},50)}
 function renderNow(){bkSchedule();if(rqT){clearTimeout(rqT);rqT=0}render0()}
+/* En-têtes de page : titre + phrase d'explication courte */
+const PH={vers:["Versements","Dossiers transmis par les services : reçus, contrôlés puis acceptés dans l’inventaire."],pret:["Prêts et consultations","Sorties, retours et demandes de consultation."],cons:["Conservation","Échéances, éliminations et calendrier de conservation."],rap:["Rapports","Rapports à générer, imprimer ou exporter vers Excel."],team:["Équipe et accès","Comptes, droits, organisation et maintenance des données."]};
+const phd=t=>`<div class="phd"><span class="phi" aria-hidden="true">${navIco(t)}</span><div><h2>${esc(PH[t][0])}</h2><div class="mu">${esc(PH[t][1])}</div></div></div>`;
+/* État vide : icône, phrase, action */
+const empty=(ico,titre,txt,btn)=>`<div class="card empty"><span class="phi" aria-hidden="true">${navIco(ico)}</span><b>${esc(titre)}</b><div class="mu">${esc(txt)}</div>${btn||""}</div>`;
 function render0(){
   if(tab==="inv"&&document.activeElement&&document.activeElement.id==="q"&&$("#lst")){$("#lst").innerHTML=listHTML();return}
   if(tab==="fic"&&document.activeElement&&document.activeElement.id==="fq"&&$("#flist")){$("#flist").innerHTML=ficList();return}
@@ -1231,8 +1246,8 @@ function render0(){
   $("#dl_emp").innerHTML=[...new Set(docs.map(d=>d.empl).filter(Boolean))].sort((a,b)=>cmp(a,b)).map(x=>`<option value="${esc(x)}">`).join("");
   if(!db)return;
   applyRole();
-  $("#app").innerHTML=tab==="dash"?dash():tab==="inv"?inv():tab==="pret"?pret():tab==="cons"?cons():tab==="vers"?vers():tab==="rap"?rapports():tab==="isad"?isadView():tab==="ia"?iaView():tab==="fic"?ficView():tab==="ged"?gedView():team();
-  {const fb=$("#fab");if(fb)fb.style.visibility=tab==="ged"||tab==="isad"?"hidden":""}
+  $("#app").innerHTML=(PH[tab]?phd(tab):"")+(tab==="dash"?dash():tab==="inv"?inv():tab==="pret"?pret():tab==="cons"?cons():tab==="vers"?vers():tab==="rap"?rapports():tab==="isad"?isadView():tab==="ia"?iaView():tab==="fic"?ficView():tab==="ged"?gedView():team());
+  {const fb=$("#fab");if(fb)fb.style.visibility=tab==="dash"||tab==="inv"?"":"hidden"}
   const badge=v=>{let n=0;if(v==="ged")n+=window.GNEW||0;if(v==="pret"){if(P.arch)n+=prets.filter(p=>p.statut==="en_cours"&&late(p)).length+demandes.filter(x=>x.statut==="validee").length;if(P.val)n+=demandes.filter(x=>x.statut==="a_valider").length}else if(P.arch&&v==="cons")n=docs.filter(echu).length;else if(P.arch&&v==="vers")n=versements.filter(x=>x.statut==="a_controler").length;return n};
   let nTot=0;document.querySelectorAll("nav button[data-v]").forEach(b=>{b.classList.toggle("on",b.dataset.v===tab);if(!b.dataset.l)b.dataset.l=b.textContent;const n=badge(b.dataset.v);nTot+=n;const h=navH(b,n);if(b._h!==h){b.innerHTML=h;b._h=h}});navSync();
   /* pastille sur l’icône de l’application installée (iPhone, Android, ordinateur) */
@@ -1406,7 +1421,7 @@ function pdfDialog(titre,fn,blob,subject,body){
 async function pdfSave(){if(!BON)return;
   const tel=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
   if(tel&&navigator.canShare){const f=new File([BON.blob],BON.fn,{type:"application/pdf"});
-    if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});toast("Choisissez « Enregistrer dans Fichiers » / « Enregistrer sur l’appareil ».");return}catch(e){if(e&&e.name==="AbortError")return}}}
+    if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});toast("Choisissez « Enregistrer dans Fichiers » / « Enregistrer sur l’appareil ».");return}catch(e){if(e&&e.name==="AbortError")return}}}
   const u=URL.createObjectURL(BON.blob),a=document.createElement("a");a.href=u;a.download=BON.fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
 async function pdfMail(){
   if(!BON)return;const to=($("#f_mail").value||"").trim();try{localStorage.setItem("bonMail",to)}catch(e){}
@@ -1481,7 +1496,7 @@ function psRapport(){
 async function psRegrouper(){
   const L=psSel().filter(p=>!p.grp);if(L.length<2)return toast("Sélectionnez au moins 2 sorties individuelles.");
   const dem=[...new Set(L.map(p=>p.demandeur))];
-  if(!await ask(`Regrouper ces ${L.length} documents en une seule sortie ?${dem.length>1?" Les demandeurs diffèrent : « "+L[0].demandeur+" » sera utilisé pour l’en-tête.":""}`,"Regrouper"))return;
+  if(!await ask(`Regrouper ces ${L.length} documents en une seule sortie ?${dem.length>1?" Les demandeurs diffèrent : « "+L[0].demandeur+" » sera utilisé pour l’en-tête.":""}`,"Regrouper"))return;
   const ref=lsRef(),ups=L.map(p=>{const d=docs.find(x=>x.id===p.docId)||{};return {p,u:{ref,grp:ref,titre:p.titre||d.intitule||"",type:p.type||d.type||"",cote:p.cote||d.cote||"",annee:p.annee||d.annee||"",direction:p.direction||d.direction||"",dservice:p.dservice||d.service||"",demandeur:L[0].demandeur,service:L[0].service,mode:L[0].mode,valide:L[0].valide||"",sortie:L.map(x=>x.sortie).filter(Boolean).sort()[0]||L[0].sortie,prevu:L.every(x=>x.prevu)?L.map(x=>x.prevu).sort().pop():""}}});
   try{
     for(let i=0;i<ups.length;i+=20)await Promise.all(ups.slice(i,i+20).map(x=>db.doc("prets/"+x.p.id).update(x.u)));
@@ -1492,13 +1507,13 @@ async function psRegrouper(){
 async function undoBack(id){
   const p=prets.find(x=>x.id===id);if(!p||p.statut!=="rendu")return;
   const d=docs.find(x=>x.id===p.docId);if(d&&d.statut==="en_pret")return toast("Impossible : ce document est de nouveau en sortie (autre prêt en cours).");
-  if(!await ask("Annuler le retour de « "+(p.titre||p.docLabel)+" » ? Le document repasse « en sortie ».","Annuler le retour"))return;
+  if(!await ask("Annuler le retour de « "+(p.titre||p.docLabel)+" » ? Le document repasse « en sortie ».","Annuler le retour"))return;
   try{await db.doc("prets/"+id).update({retour:"",statut:"en_cours",retourPar:"",refEntree:"",entreeRendu:"",entreeRecu:"",entreeObs:""});await db.doc("docs/"+p.docId).update({statut:"en_pret"});jr("Annulation de retour",(p.ref||"")+" · "+(p.titre||p.docLabel))}catch(e){fail(e)}
 }
 async function undoEntree(ref){
   const L=prets.filter(p=>p.refEntree===ref&&p.statut==="rendu");if(!L.length)return;
   const bad=L.filter(p=>{const d=docs.find(x=>x.id===p.docId);return d&&d.statut==="en_pret"});if(bad.length)return toast(bad.length+" document(s) sont de nouveau en sortie : annulation impossible.");
-  if(!await ask(`Annuler l’entrée ${ref} ? Les ${L.length} document(s) repassent « en sortie ».`,"Annuler l’entrée"))return;
+  if(!await ask(`Annuler l’entrée ${ref} ? Les ${L.length} document(s) repassent « en sortie ».`,"Annuler l’entrée"))return;
   try{for(let i=0;i<L.length;i+=20)await Promise.all(L.slice(i,i+20).map(async p=>{await db.doc("prets/"+p.id).update({retour:"",statut:"en_cours",retourPar:"",refEntree:"",entreeRendu:"",entreeRecu:"",entreeObs:""});await db.doc("docs/"+p.docId).update({statut:"en_pret"})}));jr("Annulation d’entrée",ref+" · "+L.length+" document(s)")}catch(e){fail(e)}
 }
 async function back(id){
@@ -1710,7 +1725,7 @@ function toggleSens(id){const x=destr.find(y=>y.id===id);if(x&&P.val)db.doc("des
 function openExec(id){
   $("#dlg").innerHTML=`<h2>Enregistrer la destruction</h2><label for="f_met">Méthode</label><select id="f_met"><option>Broyage industriel</option><option>Incinération contrôlée</option><option>Prestataire agréé</option></select>
   ${inp("obs","Personne ou prestataire ayant assisté à la destruction")}${inp("dt","Date de destruction",today(),'type="date"')}
-  <div class="mu">Action définitive : les documents passent au statut « Détruit » et le PV est conservé de façon permanente. Avant de détruire : exportez la liste, faites-la signer sur papier par le chef de service et le directeur, puis classez l’original.</div>
+  <div class="mu">Action définitive : les documents passent au statut « Détruit » et le PV est conservé de façon permanente. Avant de détruire : exportez la liste, faites-la signer sur papier par le chef de service et le directeur, puis classez l’original.</div>
   <div class="acts"><button class="pri" data-a="doexec" data-v="${esc(id)}">Confirmer</button><button data-a="close">Annuler</button></div>`;
   $("#dlg").showModal();
 }
@@ -1846,10 +1861,11 @@ function repHTML(r){return `<h2 style="margin-top:14px">${esc(r.titre)}</h2><div
 function rapports(){
   const dirs=[...new Set(docs.map(d=>d.direction))].sort(ocmp);
   const sel=(id,o,v)=>`<select id="${id}">${o.map(x=>`<option value="${esc(x[0])}" ${x[0]===v?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`;
-  return `<div class="row">${sel("rt",[["mens","Rapport mensuel des documents reçus"],["ann","Rapport annuel d’activité"],["inv","Inventaire et situation juridique"],["glob","Rapport global de l’inventaire"]],rp.t)}</div>
+  const RT=[["mens","Mensuel","Documents reçus dans le mois"],["ann","Annuel","Activité de l’année"],["inv","Situation juridique","Inventaire et échéances"],["glob","Global","Vue complète de l’inventaire"]];
+  return `<div class="rtg" role="radiogroup" aria-label="Type de rapport">${RT.map(x=>`<button class="rtc${x[0]===rp.t?" on":""}" role="radio" aria-checked="${x[0]===rp.t}" data-a="rtype" data-v="${x[0]}"><b>${esc(x[1])}</b><span>${esc(x[2])}</span></button>`).join("")}</div>
   <div class="row">${rp.t==="mens"?`<input type="month" id="rym" value="${rp.ym}">`:rp.t==="ann"?`<input type="number" inputmode="numeric" id="ry" value="${rp.y}">`:sel("rd",[["","Toutes les directions"],...dirs.map(x=>[x,x])],rp.dir)}</div>
   <div class="row"><button class="pri" data-a="rgen">Générer</button><button data-a="rexp">Exporter Excel</button><button data-a="rexph">Version imprimable</button></div>
-  <div class="tb">${rp.rep?repHTML(rp.rep):'<p class="mu">Choisissez un rapport, puis appuyez sur Générer.</p>'}</div>`;
+  <div class="tb">${rp.rep?repHTML(rp.rep):empty("rap","Aucun rapport affiché","Choisissez le type de rapport et la période, puis touchez « Générer ». Vous pourrez ensuite l’imprimer ou l’exporter vers Excel.")}</div>`;
 }
 function rptChange(e){const id=e.target.id,v=e.target.value;if(id==="rt"){rp.t=v;rp.rep=null;render();return true}if(id==="rym"){rp.ym=v;return true}if(id==="ry"){rp.y=+v||rp.y;return true}if(id==="rd"){rp.dir=v;return true}if(id==="cf"){ctlFilt=v;render();return true}return false}
 async function expRep(){
@@ -1991,7 +2007,7 @@ function isadView(){
   const kidCard=c=>{const D=isDocs(c),r=isRec(c);return `<button class="card isk" data-i="go" data-k="${esc(c)}"><b>${esc(isTitre(c))}</b><span class="mu">${esc(isLvl(c))} · ${esc(isRef(c))} · ${esc(isDates(D)||"sans date")}</span><span class="mu">${esc(isImp(D))}</span><span class="mu">${isScore(c)}/26 éléments renseignés${r.t?"":" · description automatique"}</span></button>`};
   const art=t==="a"?isDocs(k).sort((a,b)=>ocmp(a.intitule,b.intitule)||cmp(a.type,b.type)):[];
   return `<h2>Description archivistique ISAD(G)</h2>
-  <p class="mu">Description à plusieurs niveaux selon la norme internationale ISAD(G) : fonds, sous-fonds (direction), série (service), sous-série (année), puis les dossiers de l’inventaire. Les éléments marqués « auto » sont calculés à partir de l’inventaire et se mettent à jour seuls.</p>
+  <p class="mu">Description à plusieurs niveaux selon la norme internationale ISAD(G) : fonds, sous-fonds (direction), série (service), sous-série (année), puis les dossiers de l’inventaire. Les éléments marqués « auto » sont calculés à partir de l’inventaire et se mettent à jour seuls.</p>
   <div class="row iscr">${isCrumb(k).map((c,i)=>`${i?"<span>›</span>":""}<button class="sm${c[0]===k?" pri":""}" data-i="go" data-k="${esc(c[0])}">${esc(c[1])}</button>`).join("")}</div>
   <div class="card"><div class="mu">${esc(o.niveau)} · ${esc(o.ref)}</div><b style="font-size:17px">${esc(o.titre)}</b><div class="mu">${esc(o.dates||"sans date")} · ${esc(o.imp)}</div>
   <div class="mu" style="margin-top:4px"><span class="b ok">6/6 éléments essentiels</span> <span class="b">${sc}/26 éléments renseignés</span></div>
@@ -2153,6 +2169,7 @@ function openFiche(id){
   ${d.mots?`<div class="mu">Mots-clés : ${esc(d.mots)}</div>`:""}${d.obs?`<div class="mu">${esc(d.obs)}</div>`:""}
   ${(d.moves&&d.moves.length)?`<h4>Historique des emplacements (${d.moves.length})</h4>`+[...d.moves].reverse().slice(0,10).map(m=>`<div class="mu">${fmt((m.t||"").slice(0,10))} · ${esc(m.de||"—")} → ${esc(m.vers)}${m.nom?" · "+esc(m.nom):""}</div>`).join(""):""}
   ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
+  ${P.admin&&window.GEDSB?`<details class="vh" data-id="${esc(d.id)}"><summary>Historique des modifications</summary><div class="vhl mu">Chargement…</div></details>`:""}
   <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${esc(d.id)}">Marquer retrouvé / en bon état</button>`:""}<button class="w" data-a="mloc" data-v="${esc(d.id)}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${esc(d.id)}">Dupliquer</button><button class="w" data-a="copie" data-v="${esc(d.id)}">Envoyer une copie</button><button data-a="fprint" data-v="${esc(d.id)}">Imprimer la fiche</button>${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${esc(d.id)}">Prêter / consulter</button>`:""}${d.statut==="en_pret"?(pr=>pr?`<button class="pri w" data-fb="${esc(pr.id)}">Enregistrer le retour</button>`:"")(prets.find(x=>x.docId===d.id&&x.statut==="en_cours")):""}<button class="w" data-a="fedit" data-v="${esc(d.id)}">Modifier</button><button data-a="lab1" data-v="${esc(d.id)}">Étiquette</button><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
 }
@@ -2275,7 +2292,7 @@ async function saveCopie(){
   const c={t:new Date().toISOString(),demandeur:g("cdem"),service:g("csrv"),piece:g("cpiece"),docId:d.id,docLabel:(d.cote?d.cote+" · ":"")+d.intitule+" ("+d.annee+")"+(d.empl?" — "+d.empl:""),canal:g("ccan"),contact:g("ccon"),par:P.id||"",...(fileRef||{})};
   try{await db.collection("copies").doc().set(c)}catch(e){return fail(e)}
   jr("Copie scannée enregistrée",c.piece+" · "+c.demandeur);
-  const msg=`Bonjour ${c.demandeur}, voici la copie scannée de « ${c.piece} », retrouvée dans le chrono « ${d.intitule} » (${esc(d.annee)}). Cordialement, Service Archivage – NITA SA.`;
+  const msg=`Bonjour ${c.demandeur}, voici la copie scannée de « ${c.piece} », retrouvée dans le chrono « ${d.intitule} » (${esc(d.annee)}). Cordialement, Service Archivage – NITA SA.`;
   const wa="https://wa.me/"+(c.canal==="WhatsApp"?c.contact.replace(/\D/g,""):"")+"?text="+encodeURIComponent(msg),ml="mailto:"+(c.canal==="E-mail"?c.contact:"")+"?subject="+encodeURIComponent("Copie scannée : "+c.piece)+"&body="+encodeURIComponent(msg);
   $("#cmsg").innerHTML=`<div class="card"><b>Demande enregistrée</b><div class="mu">Scannez le document, puis envoyez-le avec ce message :</div><textarea id="cmtxt" rows="4" readonly>${esc(msg)}</textarea>${fileRef?`<div class="mu">Scan joint : ${esc(fileRef.fileName||"fichier")}</div><div class="row"><button data-a="cdl" data-v="${esc(fileRef.fileId)}">Télécharger le scan (pour l’envoyer)</button></div>`:""}<div class="row"><button data-a="ccopy">Copier le message</button><a href="${esc(c.canal==="WhatsApp"?wa:ml)}" target="_blank" rel="noopener" style="flex:1;display:block;padding:9px 12px;border:1px solid var(--bd);border-radius:8px;text-align:center;text-decoration:none;color:var(--tx)">${c.canal==="WhatsApp"?"Ouvrir WhatsApp":"Ouvrir la messagerie"}</a></div><div class="mu">Si le bouton ne s’ouvre pas, copiez le message puis ouvrez WhatsApp ou votre messagerie vous-même.</div></div>`;
 }
@@ -2395,12 +2412,12 @@ async function ficRename(id,k){
 async function ficDelFolder(id){
   const d=dossiers.find(x=>x.id===id);if(!d)return;
   if(fichiers.some(f=>(f.dossier||'')===id)||dossiers.some(x=>(x.parent||'')===id))return toast('Ce dossier n’est pas vide : déplacez ou supprimez son contenu d’abord.');
-  if(!await ask('Supprimer le dossier « '+d.nom+' » ?'))return;
+  if(!await ask('Supprimer le dossier « '+d.nom+' » ?'))return;
   try{await db.doc('dossiers/'+id).delete()}catch(e){fail(e)}
 }
 async function ficDelFile(id){
   const f=fichiers.find(x=>x.id===id);if(!f)return;
-  if(!await ask('Supprimer définitivement « '+f.nom+' » ?'))return;
+  if(!await ask('Supprimer définitivement « '+f.nom+' » ?'))return;
   try{
     if(f.mode==='asset'&&ASSETS&&ASSETS.delete){try{await ASSETS.delete(f.fileId)}catch(e){}}
     else if(f.mode==='chunks')for(let i=0;i<Math.min(100,+f.n||0);i+=10)await Promise.all([...Array(Math.min(10,f.n-i)).keys()].map(k=>db.doc('fichiers_data/'+id+'_'+(i+k)).delete()));
@@ -2410,7 +2427,7 @@ async function ficDelFile(id){
 function ficMove(id){
   const f=fichiers.find(x=>x.id===id);if(!f)return;
   const opts=[['','Mes fichiers (racine)'],...dossiers.map(d=>[d.id,fpath(d.id)]).sort((a,b)=>cmp(a[1],b[1]))];
-  $('#dlg').innerHTML=`<h2>Déplacer « ${esc(f.nom)} »</h2><label for="f_mv">Vers le dossier</label><select id="f_mv">${opts.map(o=>`<option value="${esc(o[0])}" ${o[0]===(f.dossier||'')?'selected':''}>${esc(o[1])}</option>`).join('')}</select><div class="acts"><button class="pri" data-a="fmovedo" data-v="${esc(id)}">Déplacer</button><button data-a="close">Annuler</button></div>`;
+  $('#dlg').innerHTML=`<h2>Déplacer « ${esc(f.nom)} »</h2><label for="f_mv">Vers le dossier</label><select id="f_mv">${opts.map(o=>`<option value="${esc(o[0])}" ${o[0]===(f.dossier||'')?'selected':''}>${esc(o[1])}</option>`).join('')}</select><div class="acts"><button class="pri" data-a="fmovedo" data-v="${esc(id)}">Déplacer</button><button data-a="close">Annuler</button></div>`;
   if(!$('#dlg').open)$('#dlg').showModal();
 }
 async function ficMoveDo(id){
@@ -2421,18 +2438,18 @@ async function ficUpload(files){
   const say=t=>{const m=$('#fmsg');if(m)m.textContent=t};let ok=0;
   for(const f of files){
     const e=fext(f.name);
-    if(!EXT_OK.has(e)){say('« '+f.name+' » : format non pris en charge. Formats acceptés : Word (.docx), Excel (.xlsx), PowerPoint (.pptx), PDF, images, texte, CSV, ZIP. Convertissez les anciens .doc, .xls et .ppt.');continue}
-    if(!f.size){say('« '+f.name+' » est vide.');continue}
+    if(!EXT_OK.has(e)){say('« '+f.name+' » : format non pris en charge. Formats acceptés : Word (.docx), Excel (.xlsx), PowerPoint (.pptx), PDF, images, texte, CSV, ZIP. Convertissez les anciens .doc, .xls et .ppt.');continue}
+    if(!f.size){say('« '+f.name+' » est vide.');continue}
     try{
       const ref=db.collection('fichiers').doc(),meta={nom:f.name,dossier:fcur,taille:f.size,type:ASSET_T[e]||FMIME[e]||f.type||'application/octet-stream',t:new Date().toISOString(),par:P.id||''};
       if(ASSET_T[e]&&ASSETS&&f.size<=20*1048576){try{const u=await ASSETS.upload(f,{type:ASSET_T[e]});meta.mode='asset';meta.fileId=u.id;meta.taille=u.sizeBytes||f.size}catch(x){meta.mode=''}}
       if(!meta.mode){
-        if(f.size>CHMAX){say('« '+f.name+' » dépasse 5 Mo : réduisez-le ou enregistrez-le en PDF.');continue}
+        if(f.size>CHMAX){say('« '+f.name+' » dépasse 5 Mo : réduisez-le ou enregistrez-le en PDF.');continue}
         const n=Math.ceil(f.size/CH);meta.mode='chunks';meta.n=n;
         for(let i=0;i<n;i+=4){await Promise.all([...Array(Math.min(4,n-i)).keys()].map(async k=>{const j=i+k;await db.doc('fichiers_data/'+ref.id+'_'+j).set({d:await b64of(f.slice(j*CH,(j+1)*CH))})}));say(f.name+' : '+Math.min(i+4,n)+' / '+n)}
       }
-      await ref.set(meta);ok++;say('« '+f.name+' » ajouté.');
-    }catch(x){say('« '+f.name+' » : envoi impossible ('+errMsg(x)+').'+(x&&x.code==='quota_exceeded'?' Supprimez des fichiers pour libérer de la place.':''))}
+      await ref.set(meta);ok++;say('« '+f.name+' » ajouté.');
+    }catch(x){say('« '+f.name+' » : envoi impossible ('+errMsg(x)+').'+(x&&x.code==='quota_exceeded'?' Supprimez des fichiers pour libérer de la place.':''))}
   }
   if(ok){jr('Fichiers ajoutés',ok+' fichier(s) · '+fpath(fcur));toast(ok+' fichier(s) ajouté(s).')}
   const fi=$('#ffile');if(fi)fi.value='';
@@ -2509,7 +2526,7 @@ async function orgTransferGo(dir,svc){
   $("#dlg").close();
   const exist=orgSrvs(dest).find(x=>norm(x)===norm(svc)),n=exist||svc;
   const aff=docs.filter(d=>d.direction===dir&&d.service===svc),vs=versements.filter(v=>v.direction===dir&&v.service===svc);
-  const msg="Transférer « "+svc+" » de « "+dir+" » vers « "+dest+" » ?"+(exist?"\nCe service existe déjà dans la direction de destination : les deux seront fusionnés.":"")+"\n"+aff.length+" entrée(s) d’inventaire et "+vs.length+" versement(s) seront déplacés.";
+  const msg="Transférer « "+svc+" » de « "+dir+" » vers « "+dest+" » ?"+(exist?"\nCe service existe déjà dans la direction de destination : les deux seront fusionnés.":"")+"\n"+aff.length+" entrée(s) d’inventaire et "+vs.length+" versement(s) seront déplacés.";
   if(!(await ask(msg,"Transférer")))return;
   const ops=[],U=(q,o)=>ops.push(["u",q,o]),D=q=>ops.push(["d",q]);
   aff.forEach(d=>U("docs/"+d.id,{direction:dest,service:n}));
@@ -2522,22 +2539,22 @@ async function orgTransferGo(dir,svc){
       const m=$("#omsg");if(m)m.textContent="Transfert : "+Math.min(i+20,ops.length)+" / "+ops.length;
     }
     jr("Service transféré",dir+" › "+svc+" → "+dest+" · "+aff.length+" entrée(s)"+(exist?" (fusion)":""));
-    toast("Service transféré vers « "+dest+" » : "+aff.length+" entrée(s) déplacée(s).");
+    toast("Service transféré vers « "+dest+" » : "+aff.length+" entrée(s) déplacée(s).");
   }catch(e){fail(e)}
 }
 async function orgAddDir(){
   const n=((await askText("Nom de la nouvelle direction (division) ?"))||"").trim().slice(0,80);if(!n)return null;
   if(orgDirs().some(x=>norm(x)===norm(n))){toast("Cette direction existe déjà.");return n}
-  try{await db.collection("directions").doc().set({nom:n,t:new Date().toISOString(),par:P.id||""});jr("Direction créée",n);toast("Direction « "+n+" » créée.");return n}catch(e){fail(e);return null}
+  try{await db.collection("directions").doc().set({nom:n,t:new Date().toISOString(),par:P.id||""});jr("Direction créée",n);toast("Direction « "+n+" » créée.");return n}catch(e){fail(e);return null}
 }
 async function orgAddSrv(dir){
-  if(!dir)return null;const n=((await askText("Nom du nouveau service de « "+dir+" » ?"))||"").trim().slice(0,80);if(!n)return null;
+  if(!dir)return null;const n=((await askText("Nom du nouveau service de « "+dir+" » ?"))||"").trim().slice(0,80);if(!n)return null;
   if(orgSrvs(dir).some(x=>norm(x)===norm(n))){toast("Ce service existe déjà dans cette direction.");return n}
-  try{await db.collection("services").doc().set({nom:n,direction:dir,t:new Date().toISOString(),par:P.id||""});jr("Service créé",dir+" › "+n);toast("Service « "+n+" » créé.");return n}catch(e){fail(e);return null}
+  try{await db.collection("services").doc().set({nom:n,direction:dir,t:new Date().toISOString(),par:P.id||""});jr("Service créé",dir+" › "+n);toast("Service « "+n+" » créé.");return n}catch(e){fail(e);return null}
 }
 async function orgDel(col,id){
   const o=(col==="directions"?refDir:refSrv).find(x=>x.id===id);if(!o)return;
-  if(!(await ask("Retirer « "+o.nom+" » de la liste ? Les entrées déjà saisies ne sont pas modifiées.")))return;
+  if(!(await ask("Retirer « "+o.nom+" » de la liste ? Les entrées déjà saisies ne sont pas modifiées.")))return;
   try{await db.doc(col+"/"+id).delete();jr(col==="directions"?"Direction retirée":"Service retiré",o.nom)}catch(e){fail(e)}
 }
 function pretTable(o){
@@ -2554,7 +2571,7 @@ function repPrets(){
 function locHTML(){
   const m={};docs.filter(d=>d.statut!=="detruit").forEach(d=>{const k=d.empl||"";m[k]=m[k]||{e:0,u:0};m[k].e++;m[k].u+=+d.nb||0});
   const l=Object.entries(m).sort((a,b)=>cmp(a[0]||"￿",b[0]||"￿"));
-  return `<div class="adm"><h2 style="margin-top:16px">Emplacements</h2><p class="mu">Où sont rangées vos archives. « Déplacer » change l’emplacement de toutes les entrées d’un emplacement.</p>`+(l.map(([k,g])=>`<div class="card"><div class="top"><b>${esc(k||"Non renseigné")}</b><span class="mu">${g.e} entrée(s) · ${g.u} unité(s)</span></div>${k?`<div class="acts"><button class="sm" data-a="oloc" data-v="${esc(k)}">Déplacer</button><button class="sm" data-a="oloclist" data-v="${esc(k)}">Liste à imprimer</button></div>`:""}</div>`).join("")||'<p class="mu">Aucune entrée.</p>')+`</div>`;
+  return `<div class="adm"><h2 style="margin-top:16px">Emplacements</h2><p class="mu">Où sont rangées vos archives. « Déplacer » change l’emplacement de toutes les entrées d’un emplacement.</p>`+(l.map(([k,g])=>`<div class="card"><div class="top"><b>${esc(k||"Non renseigné")}</b><span class="mu">${g.e} entrée(s) · ${g.u} unité(s)</span></div>${k?`<div class="acts"><button class="sm" data-a="oloc" data-v="${esc(k)}">Déplacer</button><button class="sm" data-a="oloclist" data-v="${esc(k)}">Liste à imprimer</button></div>`:""}</div>`).join("")||'<p class="mu">Aucune entrée.</p>')+`</div>`;
 }
 function openCompLoc(loc){openComp();const s=$("#f_cl");if(s){s.value=loc;compPrev();const n=$("#f_ne");if(n)n.focus()}}
 function repEmpl(loc){
@@ -2577,11 +2594,11 @@ async function moveLocSave(id){
 }
 async function orgRename(dir,svc){
   const isS=!!svc,old=isS?svc:dir;
-  let n=((await askText("Nouveau nom pour « "+old+" » ?",old))||"").trim().slice(0,80);if(!n||n===old)return;
+  let n=((await askText("Nouveau nom pour « "+old+" » ?",old))||"").trim().slice(0,80);if(!n||n===old)return;
   const same=norm(n)===norm(old),exists=!same&&(isS?orgSrvs(dir):orgDirs()).some(x=>norm(x)===norm(n));
   if(exists)n=(isS?orgSrvs(dir):orgDirs()).find(x=>norm(x)===norm(n));
   const aff=isS?docs.filter(d=>d.direction===dir&&d.service===old):docs.filter(d=>d.direction===old);
-  const msg=(exists?"« "+n+" » existe déjà : fusionner « "+old+" » dedans ?":"Renommer « "+old+" » en « "+n+" » ?")+"\n"+aff.length+" entrée(s) seront mises à jour. Les cotes déjà attribuées ne changent pas.";
+  const msg=(exists?"« "+n+" » existe déjà : fusionner « "+old+" » dedans ?":"Renommer « "+old+" » en « "+n+" » ?")+"\n"+aff.length+" entrée(s) seront mises à jour. Les cotes déjà attribuées ne changent pas.";
   if(!(await ask(msg,exists?"Fusionner":"Renommer")))return;
   const ops=[],U=(p,o)=>ops.push(["u",p,o]),D=p=>ops.push(["d",p]),nd=norm(n);
   if(isS){
@@ -2618,10 +2635,10 @@ async function qSrv(){
 function openAide(){
   const s=(t,x)=>`<h4>${t}</h4><div class="mu">${x}</div>`;
   $("#dlg").innerHTML=`<h2>Aide</h2>`+
-  s("Inventaire","« + Ajouter » crée une entrée (direction, service, année, intitulé, support, nombre). La cote est automatique. Choisissez la catégorie de conservation : l’échéance en découle. Importer Excel ajoute des entrées sans doublons ; Étiquettes imprime des codes QR.")+
+  s("Inventaire","« + Ajouter » crée une entrée (direction, service, année, intitulé, support, nombre). La cote est automatique. Choisissez la catégorie de conservation : l’échéance en découle. Importer Excel ajoute des entrées sans doublons ; Étiquettes imprime des codes QR.")+
   s("Versements","Un service remet des documents : saisissez le bordereau, contrôlez-le, puis acceptez-le. Les entrées sont alors créées dans l’inventaire.")+
   s("Prêts et consultations","Demande, validation par le responsable, traitement par l’archiviste sous 24 h ouvrables, puis retour. Un prêt interne doit être validé par le chef de service ou le directeur.")+
-  s("Copies scannées","Quand un agent vous demande une pièce (une facture, par exemple) dans son chrono : « Copie scannée » enregistre la demande, retrouve le chrono, prépare le message et ouvre WhatsApp ou l’e-mail. La demande reste dans l’historique de l’onglet Prêts. Vous pouvez joindre le scan : il reste dans l’application et peut être réutilisé si on vous redemande la même pièce.")+
+  s("Copies scannées","Quand un agent vous demande une pièce (une facture, par exemple) dans son chrono : « Copie scannée » enregistre la demande, retrouve le chrono, prépare le message et ouvre WhatsApp ou l’e-mail. La demande reste dans l’historique de l’onglet Prêts. Vous pouvez joindre le scan : il reste dans l’application et peut être réutilisé si on vous redemande la même pièce.")+
   s("Conservation","Les entrées à éliminer sont regroupées en liste. Il faut 4 validations (5 si document sensible), puis la destruction, qui est définitive. Faites signer le procès-verbal sur papier avant de détruire.")+
   s("Contrôles","Le contrôle périodique vérifie chaque entrée : présente, absente ou dégradée. Clôturez-le à la fin.")+
   s("Sauvegardes","Téléchargez une sauvegarde complète chaque semaine (onglet Équipe et accès) et gardez-la hors de l’application. Les copies automatiques restent sur l’appareil, non chiffrées.")+
@@ -2662,7 +2679,7 @@ async function genLabels(list){
   z.innerHTML=`<style>${sc}</style><div class="pzbar"><b>${list.length} étiquette(s) · format A4, 12 par page</b><span><button class="pri" id="pzp">Imprimer / PDF</button><button id="pzf">Fichier</button><button id="pzx">Fermer</button></span></div><div class="pzw"><div class="pzg">${corps}</div></div>`;
   if($("#dlg").open)$("#dlg").close();
   document.body.classList.add("pzon");z.scrollTop=0;
-  $("#pzp").onclick=()=>{try{window.print()}catch(e){toast("Impression impossible ici : utilisez « Fichier ».")}};
+  $("#pzp").onclick=()=>{try{window.print()}catch(e){toast("Impression impossible ici : utilisez « Fichier ».")}};
   $("#pzx").onclick=()=>{document.body.classList.remove("pzon");z.innerHTML=""};
   $("#pzf").onclick=async()=>{let dl=null;try{dl=await PF.use("downloads")}catch(e){}if(!dl)return toast("Le téléchargement n’est pas disponible dans cette vue.");try{await dl.save({filename:"etiquettes.html",data:html})}catch(e){if(!e||e.code!=="declined")toast("Export impossible : "+(e&&e.message||e))}};
   jr("Étiquettes préparées",list.length+" étiquette(s)");
@@ -2681,12 +2698,12 @@ function chkList(k){
   const line=(d,x)=>`<div class="card"><div class="top"><div><b>${esc(d.intitule)}</b><div class="mu">${esc(d.service)} · ${esc(d.annee)}${d.mois?" · "+esc(d.mois):""}${d.cote?" · "+esc(d.cote):""}${x||""}</div></div><button class="sm w" data-a="edit" data-v="${esc(d.id)}">Modifier</button></div></div>`;
   let h="";
   if(k==="empl")h=`<h2>Entrées sans emplacement (${L.length})</h2><p class="mu">Ouvrez chaque entrée pour indiquer où elle est rangée (étage, étagère, armoire…).</p>`+L.slice(0,300).map(d=>line(d)).join("")+(L.length>300?`<p class="mu">… et ${L.length-300} autre(s).</p>`:"");
-  else if(k==="dbl")h=`<h2>Doublons probables (${C.dbl.length} groupe(s))</h2><p class="mu">Ces entrées ont le même service, la même année, le même mois et le même intitulé. Vérifiez sur le rayonnage : s’il s’agit de deux chemises distinctes, précisez l’intitulé (ex. « (1/2) », « (2/2) ») ; sinon supprimez le doublon.</p>`+C.dbl.map(a=>`<h4>${esc(a[0].intitule)} · ${esc(a[0].annee)} (${a.length} entrées)</h4>`+a.map(d=>line(d,d.empl?" · "+esc(d.empl):"")).join("")).join("");
+  else if(k==="dbl")h=`<h2>Doublons probables (${C.dbl.length} groupe(s))</h2><p class="mu">Ces entrées ont le même service, la même année, le même mois et le même intitulé. Vérifiez sur le rayonnage : s’il s’agit de deux chemises distinctes, précisez l’intitulé (ex. « (1/2) », « (2/2) ») ; sinon supprimez le doublon.</p>`+C.dbl.map(a=>`<h4>${esc(a[0].intitule)} · ${esc(a[0].annee)} (${a.length} entrées)</h4>`+a.map(d=>line(d,d.empl?" · "+esc(d.empl):"")).join("")).join("");
   else if(k==="np")h=`<h2>Sorties sans date de retour prévue (${C.np.length})</h2><p class="mu">Sans date prévue, l’application ne peut pas signaler les retards. Ouvrez l’onglet Prêts pour relancer les emprunteurs ou enregistrer les retours.</p>`+C.np.slice().sort((a,b)=>(a.sortie||"")<(b.sortie||"")?-1:1).slice(0,300).map(p=>`<div class="card"><b>${esc(p.docLabel||p.docId)}</b><div class="mu">${esc(p.demandeur)} · ${esc(p.service)} · sortie le ${fmt(p.sortie)}</div></div>`).join("")+`<div class="acts"><button class="pri" data-a="tab" data-v="pret">Ouvrir les prêts</button></div>`;
   $("#dlg").innerHTML=h+`<div class="acts"><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
 }
-/* ---- Panneau « À traiter » et export du PV de destruction ---- */
+/* ---- Panneau « À traiter » et export du PV de destruction ---- */
 function todo(){
   const L=[],dv=demandes.filter(x=>x.statut==="a_valider").length,dt=demandes.filter(x=>x.statut==="validee"),dl=dt.filter(x=>(a=>!!a&&a<today())(addWork(x.valLe,1))).length;
   const rl=prets.filter(late).length,lv=destr.filter(x=>x.statut==="a_valider").length,cc=controles.filter(c=>c.statut==="en_cours").length,va=versements.filter(v=>v.statut==="a_controler").length,sc=docs.filter(d=>!d.cat&&d.statut!=="detruit").length;
@@ -2811,12 +2828,11 @@ const VSTAT={a_controler:"À contrôler",accepte:"Accepté"};
 const nAnom=v=>v.lignes.filter(l=>l[2]).length;
 function vers(){
   const a=[...versements].sort((x,y)=>(/HIST/.test(x.num)-/HIST/.test(y.num))||cmp(y.num,x.num));
-  return `<div class="row"><button class="pri w" data-a="nvers">+ Nouveau versement</button></div>
-  <p class="mu">Un versement est reçu, contrôlé, puis accepté : l’acceptation ajoute les dossiers à l’inventaire.</p>
+  return `${a.length?`<div class="row"><button class="pri w" data-a="nvers">+ Nouveau versement</button></div>`:""}
   ${a.map(v=>`<div class="card"><div class="top"><b>${esc(v.num)}</b><span class="b ${v.statut==="accepte"?"ok":"wa"}">${VSTAT[v.statut]}</span></div>
   <div class="mu">${esc(v.direction)} › ${esc(v.service)} · ${esc(v.type)} · ${esc(v.periode)}</div>
   <div class="mu">${v.lignes.length} dossiers · ${v.date?"pris en charge le "+fmt(v.date):"régularisation historique"}${nAnom(v)?` · <span style="color:var(--er)">${nAnom(v)} anomalie(s)</span>`:""}</div>
-  <div class="acts"><button class="sm" data-a="vdet" data-v="${esc(v.id)}">Voir le bordereau</button></div></div>`).join("")||'<p class="mu">Aucun versement enregistré.</p>'}`;
+  <div class="acts"><button class="sm" data-a="vdet" data-v="${esc(v.id)}">Voir le bordereau</button></div></div>`).join("")||empty("vers","Aucun versement pour l’instant","Quand un service vous remet des dossiers, enregistrez le versement : vous le contrôlez, puis son acceptation ajoute les dossiers à l’inventaire.",'<button class="pri w" data-a="nvers">+ Nouveau versement</button>')}`;
 }
 function openVers(){
   $("#dlg").innerHTML=`<h2>Nouveau versement</h2>
@@ -3027,7 +3043,7 @@ async function backupXls(){
   const eq=membres.map(m=>({"Nom":m.nom,"Prénom":m.prenom,"Fonction":m.fonction,"Actif":m.actif===false?"Non":"Oui"}));
   const jr2=gen(jrn.sort((a,b)=>String(b.t).localeCompare(String(a.t))),["t","nom","act","label"]);
   const wb=XLSX.utils.book_new(),add=(rows,name)=>{const ws=XLSX.utils.json_to_sheet(rows.length?rows:[{"(vide)":""}]);const k=Object.keys(rows[0]||{"(vide)":""});ws["!cols"]=k.map(h=>({wch:Math.min(60,Math.max(12,h.length+2))}));XLSX.utils.book_append_sheet(wb,ws,name)};
-  const info=[["SAUVEGARDE – Archives, inventaire et suivi – NITA SA"],[""],["Date de la sauvegarde",new Date().toLocaleString("fr-FR")],["Établie par",(P.name||"")+(P.email?" ("+P.email+")":"")],[""],["Contenu","Lignes"],["Inventaire (documents)",inv.length],["Sorties / prêts",sor.length],["Versements (lignes)",ver.length],["Demandes",dem.length],["Destructions (listes)",destr.length],["Contrôles",ctrl.length],["Directions",dirs.length],["Services",srvs.length],["Journal",jrn.length],[""],["Remarque","Cette sauvegarde est une copie à la date indiquée : elle ne se met pas à jour toute seule. L’application reste la référence. Refaire une sauvegarde régulièrement (bouton « Sauvegarde Excel » dans l’Inventaire)."]];
+  const info=[["SAUVEGARDE – Archives, inventaire et suivi – NITA SA"],[""],["Date de la sauvegarde",new Date().toLocaleString("fr-FR")],["Établie par",(P.name||"")+(P.email?" ("+P.email+")":"")],[""],["Contenu","Lignes"],["Inventaire (documents)",inv.length],["Sorties / prêts",sor.length],["Versements (lignes)",ver.length],["Demandes",dem.length],["Destructions (listes)",destr.length],["Contrôles",ctrl.length],["Directions",dirs.length],["Services",srvs.length],["Journal",jrn.length],[""],["Remarque","Cette sauvegarde est une copie à la date indiquée : elle ne se met pas à jour toute seule. L’application reste la référence. Refaire une sauvegarde régulièrement (bouton « Sauvegarde Excel » dans l’Inventaire)."]];
   const w0=XLSX.utils.aoa_to_sheet(info);w0["!cols"]=[{wch:34},{wch:90}];XLSX.utils.book_append_sheet(wb,w0,"Lisez-moi");
   const w1=XLSX.utils.aoa_to_sheet([["Fonctionnalité","Description"],...FEATS]);w1["!cols"]=[{wch:24},{wch:120}];XLSX.utils.book_append_sheet(wb,w1,"Fonctionnalités");
   add(inv,"Inventaire");add(sor,"Sorties");add(ver,"Versements");add(gen(dem),"Demandes");add(gen(destr),"Destructions");add(gen(ctrl),"Contrôles");
@@ -3095,7 +3111,7 @@ function loadLot(id){
   const l=lots.find(x=>x.id===id);if(!l)return;
   const all=l.items.map(i=>({id:i[0],direction:l.direction,service:i[1],annee:i[2],mois:"",type:i[3],intitule:i[4],nb:i[5],cote:"",empl:i[6],mots:i[7],obs:i[8],cat:"",gel:false})),have=new Set(docs.map(d=>d.id));
   pend=all.filter(e=>!have.has(e.id));
-  $("#imsg").innerHTML=`Lot « ${esc(l.titre)} » : ${all.length} entrées (${all.reduce((n,e)=>n+e.nb,0)} unités).<br>Déjà présentes : ${all.length-pend.length}. À importer : <b>${pend.length}</b>.`;
+  $("#imsg").innerHTML=`Lot « ${esc(l.titre)} » : ${all.length} entrées (${all.reduce((n,e)=>n+e.nb,0)} unités).<br>Déjà présentes : ${all.length-pend.length}. À importer : <b>${pend.length}</b>.`;
   $("#go").disabled=!pend.length;
 }
 async function readXls(file){
@@ -3107,7 +3123,7 @@ async function readXls(file){
     if(!b){pend=[];$("#go").disabled=true;out.innerHTML="Aucune feuille avec les colonnes <b>Direction</b>, <b>Service</b> et <b>Année</b> n’a été trouvée. Feuilles lues : "+esc(wb.SheetNames.join(", "));return}
     const all=toEntries(b),have=new Set(docs.map(d=>d.id));skipN+=b.sans||0;
     pend=all.filter(e=>!have.has(e.id));
-    out.innerHTML=`Feuille « ${esc(b.name)} » : ${b.data.length} lignes, soit ${all.length} entrées (${all.reduce((n,e)=>n+e.nb,0)} unités).<br>Déjà présentes : ${all.length-pend.length}. À importer : <b>${pend.length}</b>.${skipN?`<br><span style="color:var(--wa)">Lignes ignorées (année invalide, direction ou service manquant) : <b>${skipN}</b>.</span>`:""}`;
+    out.innerHTML=`Feuille « ${esc(b.name)} » : ${b.data.length} lignes, soit ${all.length} entrées (${all.reduce((n,e)=>n+e.nb,0)} unités).<br>Déjà présentes : ${all.length-pend.length}. À importer : <b>${pend.length}</b>.${skipN?`<br><span style="color:var(--wa)">Lignes ignorées (année invalide, direction ou service manquant) : <b>${skipN}</b>.</span>`:""}`;
     $("#go").disabled=!pend.length;
   }catch(e){out.textContent="Fichier illisible : "+e.message}
 }
@@ -3127,7 +3143,8 @@ const G={FAV:new Set(),SR:[],OT:null,seen:false,prevVu:"",drop:null,ready:false,
   R:{dir:"",srv:"",per:"mois",mois:"",tri:"",an:"",d1:"",d2:"",cons:false,tous:false,data:null,busy:false}};
 const gsb=()=>window.GEDSB?window.GEDSB():null;
 const GEXT={pdf:"application/pdf",png:"image/png",jpg:"image/jpeg",jpeg:"image/jpeg",webp:"image/webp",txt:"text/plain",csv:"text/csv",doc:"application/msword",xls:"application/vnd.ms-excel",ppt:"application/vnd.ms-powerpoint",docx:"application/vnd.openxmlformats-officedocument.wordprocessingml.document",xlsx:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",pptx:"application/vnd.openxmlformats-officedocument.presentationml.presentation"};
-const GMAX=50*1024*1024,GQUOTA=1073741824;
+const GMAX_TEL=200*1024*1024,GMAX_PC=1024*1024*1024,GBIG=64*1024*1024,GQUOTA=10737418240;   /* 200 Mo sur téléphone, 1 Go sur ordinateur ; au-delà de 64 Mo : envoi en morceaux */
+const gMaxF=()=>gTel()?GMAX_TEL:GMAX_PC,GMAX=GMAX_TEL;
 const GR={deposant:1,lecteur:2,contributeur:3,responsable:4},GRN=[null,"deposant","lecteur","contributeur","responsable"];
 const GNIV={admin:"Administrateur (tous les droits)",archiviste:"Archiviste (tous les espaces)",deposant:"Déposant (voit seulement ses propres dépôts)",lecteur:"Lecture seule",contributeur:"Lecture et dépôt",responsable:"Lecture, dépôt et modification"};
 const GROLE={admin:"Administrateur",archiviste:"Archiviste",responsable:"Responsable de service",demandeur:"Demandeur",lecteur:"Lecteur"};
@@ -3194,7 +3211,7 @@ function gedList(){
   if(ds.length)h+=`<div class="gfolds">${ds.map(d=>`<button class="gfold" data-g="dos" data-id="${esc(d.id)}"><span class="gfi" aria-hidden="true"></span><span><b>${esc(d.nom)}</b><br><span class="mu">${cnt(d.id)} élément(s)</span></span></button>`).join("")}</div>`;
   h+=fs.slice(0,G.lim).map(f=>gedCard(f,!!flat)).join("");
   if(fs.length>G.lim)h+=`<div class="row"><button data-g="more">Afficher la suite (${fs.length-G.lim} autres)</button></div>`;
-  if(!ds.length&&!fs.length)h+=`<div class="card gempty"><b>${ws.length||G.typ?"Aucun document ne correspond.":tr?"La corbeille est vide.":"Ce dossier est vide."}</b>${!flat&&gW()?`<div class="mu">Touchez « + Déposer des fichiers », ou glissez ici des fichiers ou un dossier entier.${gniv(G.srv)==="deposant"?" Vous ne voyez dans cet espace que vos propres dépôts.":""}</div>`:""}</div>`;
+  if(!ds.length&&!fs.length)h+=`<div class="card gempty"><b>${ws.length||G.typ?"Aucun document ne correspond.":tr?"La corbeille est vide.":"Ce dossier est vide."}</b>${!flat&&gW()?`<div class="mu">Touchez « + Déposer des fichiers », ou glissez ici des fichiers ou un dossier entier.${gniv(G.srv)==="deposant"?" Vous ne voyez dans cet espace que vos propres dépôts.":""}</div>`:""}</div>`;
   return h;
 }
 function gedDocs(){
@@ -3202,7 +3219,7 @@ function gedDocs(){
   if(!mine.length)return `<div class="card"><b>Aucun espace ne vous est encore ouvert.</b><div class="mu">Demandez à l’administrateur de vous donner un accès à l’espace de votre service.</div></div>`;
   const dn=s=>s.direction||"Sans direction",dirs=[...new Set(mine.map(dn))].sort(ocmp),cs=gsrv(G.srv),nd=id=>+(G.res[id]||{}).docs||0,tot=Object.values(G.res).reduce((n,r)=>n+(+r.octets||0),0);
   const nav=`<aside class="gnav"><div class="gnt">Directions et services</div>${dirs.map(d=>{const ss=mine.filter(s=>dn(s)===d);return `<details data-gd="${esc(d)}" ${d===dn(cs)||G.open[d]?"open":""}><summary><span>${esc(d)}</span><span class="gct">${ss.reduce((k,s)=>k+nd(s.id),0)}</span></summary>${ss.map(s=>`<button class="gsv ${s.id===G.srv?"on":""}" data-g="srv" data-id="${esc(s.id)}"><span>${esc(s.nom)}</span><span class="gct">${nd(s.id)}</span></button>`).join("")}</details>`}).join("")}
-  <div class="gquota"><div class="mu">Espace utilisé</div><b>${gsz(tot)}</b> <span class="mu">sur 1 Go</span><div class="bar"><i style="width:${Math.min(100,tot/GQUOTA*100).toFixed(1)}%"></i></div></div></aside>`;
+  <div class="gquota"><div class="mu">Espace utilisé</div><b>${gsz(tot)}</b> <span class="mu">sur 10 Go</span><div class="bar"><i style="width:${Math.min(100,tot/GQUOTA*100).toFixed(1)}%"></i></div></div></aside>`;
   const sel=`<select id="gsel" class="gsel" aria-label="Choisir un espace">${dirs.map(d=>`<optgroup label="${esc(d)}">${mine.filter(s=>dn(s)===d).map(s=>`<option value="${esc(s.id)}" ${s.id===G.srv?"selected":""}>${esc(s.nom)} (${nd(s.id)})</option>`).join("")}</optgroup>`).join("")}</select>`;
   if(G.sload)return `<div class="gwrap">${nav}<div class="gcol">${sel}<div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div></div></div>`;
   const cur=G.F.filter(f=>f.courant&&f.statut!=="corbeille"),sz=G.F.reduce((n,f)=>n+(+f.taille||0),0),nt=G.F.filter(f=>f.statut==="corbeille").length,bc=gpath(G.dos);
@@ -3263,7 +3280,7 @@ async function gedOther(){
 function gOtherHTML(){
   const o=G.OT;if(!o||o.q!==G.q.trim())return "";
   if(o.err)return `<p class="mu">Recherche dans les autres espaces impossible : ${esc(o.err)}</p>`;
-  if(!o.L.length)return `<p class="mu" style="margin-top:12px">Aucun résultat pour « ${esc(o.q)} » dans les autres espaces.</p>`;
+  if(!o.L.length)return `<p class="mu" style="margin-top:12px">Aucun résultat pour « ${esc(o.q)} » dans les autres espaces.</p>`;
   return `<h3>Dans les autres espaces (${o.L.length})</h3>`+o.L.map(gMini).join("");
 }
 function gMini(f){const k=gkind(f),s=gsrv(f.service_id),nv=f.modifie_le&&f.modifie_le>f.cree_le,nouv=G.prevVu&&f.cree_le>G.prevVu&&f.cree_par!==P.id;
@@ -3285,7 +3302,7 @@ async function gedRecLoad(){
 }
 function gedRecView(){
   if(!G.RC||!G.FV){if(!G.RC)gedRecLoad();if(!G.FV)gedFavLoad().then(()=>{if(tab==="ged"&&G.view==="recent")render()});return '<div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div><div class="sk" style="height:76px"></div>'}
-  const fav=G.FV.length?`<h3>Épinglés (${G.FV.length})</h3>`+G.FV.map(gMini).join(""):`<div class="card gempty" style="margin-bottom:6px"><b>Aucun document épinglé</b><div class="mu">Touchez « ☆ Épingler » sur un document pour le retrouver ici en un geste. Vos épinglés ne sont visibles que par vous.</div></div>`;
+  const fav=G.FV.length?`<h3>Épinglés (${G.FV.length})</h3>`+G.FV.map(gMini).join(""):`<div class="card gempty" style="margin-bottom:6px"><b>Aucun document épinglé</b><div class="mu">Touchez « ☆ Épingler » sur un document pour le retrouver ici en un geste. Vos épinglés ne sont visibles que par vous.</div></div>`;
   if(!G.RC.length)return fav+'<div class="card gempty"><b>Aucun document récent</b><div class="mu">Les derniers documents déposés ou modifiés dans les espaces auxquels vous avez accès apparaîtront ici.</div></div>';
   const jr=t=>{const d=new Date(t),n=new Date(),k=Math.floor((new Date(n.toDateString())-new Date(d.toDateString()))/864e5);return k<=0?"Aujourd’hui":k===1?"Hier":k<7?"Cette semaine":k<31?"Ce mois-ci":"Plus ancien"};
   const nn=G.prevVu?G.RC.filter(f=>f.cree_le>G.prevVu&&f.cree_par!==P.id).length:0;let last="";
@@ -3315,7 +3332,7 @@ async function gedZip(){
   if(!fs.length)return toast("Aucun document à télécharger dans ce dossier.");
   if(tot>300*1048576)return toast("Ce dossier fait "+gsz(tot)+" : le ZIP est limité à 300 Mo. Ouvrez un sous-dossier et téléchargez-le séparément.");
   const base=root?(G.D.find(d=>d.id===root)||{}).nom:cs.nom;
-  if(!await ask("Télécharger "+fs.length+" document(s) ("+gsz(tot)+") de « "+base+" » dans un fichier ZIP ? Chaque téléchargement sera inscrit au journal de la GED.","Télécharger"))return;
+  if(!await ask("Télécharger "+fs.length+" document(s) ("+gsz(tot)+") de « "+base+" » dans un fichier ZIP ? Chaque téléchargement sera inscrit au journal de la GED.","Télécharger"))return;
   const rel=id=>{const o=[];let d=G.D.find(x=>x.id===id),n=0;while(d&&d.id!==root&&n++<30){o.unshift(d.nom);d=G.D.find(x=>x.id===d.parent)}return o};
   const clean=x=>String(x||"").replace(/[\\/:*?"<>|]+/g,"_").trim()||"sans nom",seen=new Set(),items=[];let i=0;
   for(const f of fs){i++;toast("Préparation du ZIP : "+i+" / "+fs.length+"…");
@@ -3337,7 +3354,7 @@ function gedAccView(){
   const SL={deposant:"déposant",lecteur:"lecture seule",contributeur:"lecture et dépôt",responsable:"lecture, dépôt et modification"};
   let right;
   if(!u)right='<div class="card gempty"><b>Choisissez un utilisateur</b><div class="mu">Vous définissez ensuite, direction par direction et service par service, ce qu’il peut faire dans la GED.</div></div>';
-  else if(all(u))right=`<div class="card"><h3 style="margin:0">${esc(gun(u))}</h3><div class="mu">${esc(u.email||"")} · ${esc(GROLE[u.role]||u.role)}</div><p>Ce compte voit et gère <b>tous les espaces</b> de la GED du fait de sa fonction. ${u.role==="admin"?"L’administrateur peut tout faire, y compris gérer les accès et supprimer définitivement.":"L’archiviste peut déposer, modifier, classer comme archive et geler dans tous les espaces."}</p><div class="mu">Pour limiter ce compte, changez d’abord sa fonction dans « Équipe et accès ».</div></div>`;
+  else if(all(u))right=`<div class="card"><h3 style="margin:0">${esc(gun(u))}</h3><div class="mu">${esc(u.email||"")} · ${esc(GROLE[u.role]||u.role)}</div><p>Ce compte voit et gère <b>tous les espaces</b> de la GED du fait de sa fonction. ${u.role==="admin"?"L’administrateur peut tout faire, y compris gérer les accès et supprimer définitivement.":"L’archiviste peut déposer, modifier, classer comme archive et geler dans tous les espaces."}</p><div class="mu">Pour limiter ce compte, changez d’abord sa fonction dans « Équipe et accès ».</div></div>`;
   else{
     const dirs=[...refDir].sort((a,b)=>ocmp(a.nom,b.nom));
     right=`<div class="card"><div class="top"><div><h3 style="margin:0">${esc(gun(u))}</h3><div class="mu">${esc(u.email||"")} · fonction : ${esc(GROLE[u.role]||u.role)}</div></div>${nb(u)?`<button class="sm" data-g="acc-clear" data-id="${esc(u.user_id)}">Retirer tous ses accès</button>`:""}</div>
@@ -3347,7 +3364,7 @@ function gedAccView(){
       return `<div class="gad"><div class="gar"><span>${esc(d.nom)}<br><span class="mu" style="font-weight:400">Toute la direction</span></span><select data-gc="dir" data-id="${esc(d.id)}" aria-label="Accès à la direction ${esc(d.nom)}">${opt(dv)}</select></div>
       ${ss.map(s=>{const sv=(G.acc.find(a=>a.user_id===u.user_id&&a.service_id===s.id)||{}).niveau||"",ef=gnivU(u.user_id,s.id,G.acc,G.accd);return `<div class="gar"><span>${esc(s.nom)}${dv&&(GR[dv]||0)>=(GR[sv]||0)?`<br><span class="mu">hérite de la direction : ${SL[dv]}</span>`:ef&&sv?`<br><span class="mu">accès effectif : ${SL[ef]}</span>`:""}</span><select data-gc="srv" data-id="${esc(s.id)}" aria-label="Accès au service ${esc(s.nom)}">${opt(sv)}</select></div>`}).join("")||'<div class="gar"><span class="mu">Aucun service dans cette direction.</span></div>'}</div>`}).join("")}`;
   }
-  return `<div class="card" style="margin-bottom:10px"><b>Gestion des accès à la GED</b> <span class="b">Réservé à l’administrateur</span><div class="mu">Choisissez un utilisateur, puis les directions et services qu’il peut voir et ce qu’il peut y faire. Seuls les comptes ayant une fonction dans « Équipe et accès » apparaissent ici.</div>
+  return `<div class="card" style="margin-bottom:10px"><b>Gestion des accès à la GED</b> <span class="b">Réservé à l’administrateur</span><div class="mu">Choisissez un utilisateur, puis les directions et services qu’il peut voir et ce qu’il peut y faire. Seuls les comptes ayant une fonction dans « Équipe et accès » apparaissent ici.</div>
   <div class="acts"><button class="sm" data-g="acc-pdf">Tableau des accès (PDF)</button></div></div>
   <div class="gacc"><div><input id="gaq" type="search" placeholder="Rechercher un utilisateur" value="${esc(G.aq)}"><div class="gul" id="gul">${gedUsers(lst,nb,all)}</div></div><div>${right}</div></div>`;
 }
@@ -3404,7 +3421,7 @@ function gedJrnView(){
     :R.per==="trimestre"?`<div><label for="gr_tri">Trimestre</label><select id="gr_tri" data-gr="tri">${[1,2,3,4].map(q=>`<option value="${esc(q)}" ${(+R.tri||Math.floor(now.getMonth()/3)+1)===q?"selected":""}>${q===1?"1er":q+"e"} trimestre</option>`).join("")}</select></div><div><label for="gr_an">Année</label><select id="gr_an" data-gr="an">${yrs.map(y=>`<option ${(+R.an||y0)===y?"selected":""}>${y}</option>`).join("")}</select></div>`
     :R.per==="annee"?`<div><label for="gr_an">Année</label><select id="gr_an" data-gr="an">${yrs.map(y=>`<option ${(+R.an||y0)===y?"selected":""}>${y}</option>`).join("")}</select></div>`
     :`<div><label for="gr_d1">Date (ou début)</label><input id="gr_d1" type="date" data-gr="d1" value="${esc(R.d1||now.toISOString().slice(0,10))}"></div><div><label for="gr_d2">Fin (facultatif)</label><input id="gr_d2" type="date" data-gr="d2" value="${esc(R.d2||"")}"></div>`;
-  let res='<div class="card gempty"><b>Choisissez la période et les filtres, puis « Afficher ».</b><div class="mu">Le rapport PDF reprend les mêmes réglages.</div></div>';
+  let res='<div class="card gempty"><b>Choisissez la période et les filtres, puis « Afficher ».</b><div class="mu">Le rapport PDF reprend les mêmes réglages.</div></div>';
   if(R.busy)res='<p class="mu">Préparation du rapport…</p>';
   else if(R.data){const C=gRepCalc(),nd=C.jr.filter(j=>j.action==="depot").length,nc=G.R.data.jr.filter(j=>GCONS.includes(j.action)).length,nm=C.jr.filter(j=>!GCONS.includes(j.action)&&j.action!=="depot").length;
     res=`<h3 style="margin:14px 0 6px">${esc(C.per.label)}</h3><div class="kpis"><div class="kpi"><b>${C.docs.length}</b><span class="mu">Documents</span></div><div class="kpi"><b>${nd}</b><span class="mu">Dépôts</span></div><div class="kpi"><b>${nm}</b><span class="mu">Modifications</span></div><div class="kpi"><b>${nc}</b><span class="mu">Consultations</span></div></div>
@@ -3437,11 +3454,11 @@ function gClose(){const L=$("#dlg");if(L.open)L.close();L.classList.remove("wide
 const gCatSel=v=>`<label for="g_cat">Catégorie de conservation</label><select id="g_cat"><option value="">Non classé</option>${CAL.map(c=>`<option value="${esc(c[0])}" ${c[0]===v?"selected":""}>${esc(c[0]+" – "+c[1])} (${c[2]?c[2]+" ans":"sans limite"})</option>`).join("")}</select>`;
 function gedDepotDlg(prev,dir,drop){
   G.drop=drop||null;const nd=drop?new Set(drop.map(x=>x.rel.join("/")).filter(Boolean)).size:0;
-  gDlg(`<h2>${prev?"Nouvelle version":dir||drop?"Déposer un dossier entier":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
+  gDlg(`<h2>${prev?"Nouvelle version":dir||drop?"Déposer un dossier entier":"Déposer des documents"}</h2><div class="mu">${prev?"Remplace « "+esc(prev.nom)+" » (v"+prev.version+"). L’ancienne version reste consultable dans l’historique.":"Espace : "+esc(gsrv(G.srv).nom)+(G.dos?" › "+esc(gpath(G.dos).map(d=>d.nom).join(" › ")):"")}</div>
   ${drop?`<p><b>${drop.length}</b> fichier(s) dans <b>${nd}</b> dossier(s) prêts à être déposés. Les dossiers et sous-dossiers seront recréés à l’identique.</p>`:dir?`<label for="g_files">Dossier à déposer</label><input id="g_files" type="file" webkitdirectory multiple><div class="mu">Choisissez un dossier : tous ses fichiers sont déposés, et ses sous-dossiers sont recréés à l’identique dans la GED.</div>`:`<label for="g_files">${prev?"Fichier":"Fichiers (plusieurs possibles)"}</label><input id="g_files" type="file" ${prev?"":"multiple"} accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx">`}
-  <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · 50 Mo maximum par fichier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
+  <div class="mu">PDF, images, Word, Excel, PowerPoint, texte · jusqu’à 1 Go par fichier sur ordinateur (200 Mo sur téléphone), sans limite pour un dossier entier. Le PDF est recommandé pour les documents à conserver longtemps.</div>
   ${prev?"":`<label for="g_desc">Description (facultatif)</label><input id="g_desc" maxlength="300"><label for="g_an">Année du document (facultatif)</label><input id="g_an" type="number" min="1900" max="2100" value="${esc(new Date().getFullYear())}">${gCatSel("")}
-  <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des personnes ayant le niveau « modification » et du Service Archives)</label>`}
+  <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input id="g_conf" type="checkbox" style="width:auto"> Confidentiel (visible seulement du déposant, des personnes ayant le niveau « modification » et du Service Archives)</label>`}
   <div id="g_prog" class="mu" style="margin-top:8px"></div>
   <div class="acts"><button class="pri" data-g="${esc(prev?"ver-go":"depot-go")}" data-id="${esc(prev?prev.id:"")}">Déposer</button><button data-a="close">Annuler</button></div>`);
 }
@@ -3462,8 +3479,9 @@ async function gScan(name,buf){
   const lat=(a,b)=>{let t="";const n=Math.min(u.length,b);for(let i=a;i<n;i+=65536)t+=String.fromCharCode.apply(null,u.subarray(i,Math.min(n,i+65536)));return t};
   if(e==="pdf"){
     if(!lat(0,1024).includes("%PDF-"))return "ce n’est pas un vrai PDF (contenu d’un autre type)";
-    const t=lat(0,u.length).replace(/\/[A-Za-z0-9#]+/g,m=>m.indexOf("#")<0?m:m.replace(/#([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16))));
-    const k=(t.match(/\/(JavaScript|JS|Launch|EmbeddedFiles?|RichMedia|ImportData)(?![A-Za-z])/)||[])[1];
+    /* lecture par tranches de 8 Mo (avec chevauchement) : un PDF de 200 Mo ne sature pas la mémoire du téléphone */
+    const W=8<<20,OV=4096,nrm=t=>t.replace(/\/[A-Za-z0-9#]+/g,m=>m.indexOf("#")<0?m:m.replace(/#([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16))));
+    let k=null;for(let a=0;a<u.length&&!k;a+=W){k=(nrm(lat(Math.max(0,a-OV),a+W)).match(/\/(JavaScript|JS|Launch|EmbeddedFiles?|RichMedia|ImportData)(?![A-Za-z])/)||[])[1]||null}
     if(k)return "le PDF contient du code actif ou un fichier caché ("+({JavaScript:"JavaScript",JS:"JavaScript",Launch:"lancement de programme",EmbeddedFile:"fichier joint caché",EmbeddedFiles:"fichiers joints cachés",RichMedia:"contenu multimédia actif",ImportData:"import de données"}[k])+"). Réimprimez-le en PDF ou rescannez le document papier";
     return "";
   }
@@ -3490,7 +3508,7 @@ async function gScan(name,buf){
   }
   if(e==="doc"||e==="xls"||e==="ppt"){
     if(!hx(0,[0xD0,0xCF,0x11,0xE0,0xA1,0xB1,0x1A,0xE1]))return "ce n’est pas un vrai fichier "+e.toUpperCase()+" (ancien format Office)";
-    const t=lat(0,u.length),w=s=>[...s].map(c=>c+"\u0000").join("");
+    const w=s=>[...s].map(c=>c+"\u0000").join(""),W=8<<20,has=x=>{for(let a=0;a<u.length;a+=W){if(lat(Math.max(0,a-256),a+W).includes(x))return true}return false},t={includes:has,slice:(a,b)=>lat(a,b)};
     if(t.includes(w("_VBA_PROJECT")))return "le document contient des macros (code VBA). Enregistrez-le au format récent (.docx, .xlsx, .pptx) sans macros, ou en PDF";
     if(t.includes(w("\u0001Ole10Native")))return "le document contient un objet incorporé (paquet OLE). Enregistrez-le en PDF";
     if(e==="xls"&&/\x85\x00[\x08-\x3f]\x00[\s\S]{4}[\x00-\x02]\x01/.test(t.slice(0,4e6)))return "le classeur contient une feuille de macros Excel 4.0";
@@ -3505,8 +3523,25 @@ async function gedUpload(items,meta,prev){
     const f=items[i].f,rel=items[i].rel,mime=GEXT[gext(f.name)],lab=(rel.length?rel.join("/")+"/":"")+f.name;
     if(out)out.textContent=`Dépôt ${i+1} / ${items.length} : ${lab}…`;
     if(!mime){errs.push(lab+" : type de fichier non accepté");continue}
-    if(f.size>GMAX){errs.push(lab+" : plus de 50 Mo");continue}
+    if(f.size>gMaxF()){errs.push(lab+" : "+Math.round(f.size/1048576)+" Mo, au-delà de la limite "+(gTel()?"sur téléphone (200 Mo) : déposez-le depuis un ordinateur (jusqu’à 1 Go)":"de 1 Go : compressez le PDF ou découpez-le en plusieurs parties"));continue}
     if(!f.size){errs.push(lab+" : fichier vide");continue}
+    if(f.size>GBIG&&!gTel()){
+      try{
+        const say=t=>{if(out)out.textContent=`${t} ${i+1} / ${items.length} : ${lab}`};
+        const {bad,sha}=await gScanGros(f,pc=>say("Contrôle et empreinte ("+pc+" %)"));
+        if(bad){errs.push(lab+" : refusé pour votre sécurité — "+bad+".");gj0("refus_securite",lab+" : "+bad);continue}
+        let dos=prev?prev.dossier:G.dos,key="";
+        for(const seg of rel){const nm=String(seg).replace(GBIDI,"").trim().slice(0,120);if(!nm)continue;key+="/"+nm.toLowerCase();if(!dirs[key])dirs[key]=await gFolder(dos,nm);dos=dirs[key]}
+        const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(lab+" : fichier identique déjà présent (« "+du.nom+" »)");continue}
+        const path=await gEnvoiMorceaux(f,mime,G.srv,(pc,mo)=>say(`Envoi (${pc} %, ${mo} / ${Math.round(f.size/1048576)} Mo) — gardez cet onglet ouvert`));
+        const row={stockage:"r2",service_id:G.srv,dossier:dos||null,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
+        if(prev){row.lignee=prev.lignee;row.description=prev.description||"";row.annee=prev.annee||null;row.cat=prev.cat||"";row.confidentiel=!!prev.confidentiel}
+        const ins=await sb.from("ged_fichiers").insert(row);
+        if(ins.error){try{await gR2("annuler",{chemin:path})}catch(e){}throw new Error(ins.error.message||"enregistrement refusé")}
+        G.F.push({sha256:sha,statut:"actif",courant:true,nom:f.name,lignee:"",version:1});ok++;
+      }catch(e){errs.push(lab+" : "+(e.message||e))}
+      continue;
+    }
     try{
       const buf=await f.arrayBuffer();
       if(out)out.textContent=`Contrôle de sécurité ${i+1} / ${items.length} : ${lab}…`;
@@ -3515,9 +3550,9 @@ async function gedUpload(items,meta,prev){
       let dos=prev?prev.dossier:G.dos,key="";
       for(const seg of rel){const nm=String(seg).replace(GBIDI,"").trim().slice(0,120);if(!nm)continue;key+="/"+nm.toLowerCase();if(!dirs[key])dirs[key]=await gFolder(dos,nm);dos=dirs[key]}
       const sha=await gsha(buf);
-      if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(lab+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
+      if(sha){const du=G.F.find(x=>x.sha256===sha&&x.statut!=="corbeille"&&x.courant);if(du){errs.push(lab+" : fichier identique déjà présent (« "+du.nom+" »)");continue}}
       const dep=await gR2("depot",{service_id:G.srv,mime,taille:buf.byteLength}),path=dep.chemin;
-      const up=await fetch(dep.url,{method:"PUT",body:new Blob([buf],{type:mime}),headers:{"content-type":mime}});
+      const up=await gPut(dep.url,new Blob([buf],{type:mime}),mime,pc=>{if(out)out.textContent=`Envoi ${i+1} / ${items.length} : ${lab} — ${pc} %`+(f.size>20971520?` (${Math.round(f.size/1048576)} Mo, gardez l’application ouverte)`:"")});
       if(!up.ok)throw new Error("envoi refusé par le stockage ("+up.status+")");
       const row={stockage:"r2",service_id:G.srv,dossier:dos||null,nom:f.name,mime,taille:f.size,sha256:sha,chemin:path,description:meta.description||"",annee:meta.annee||null,cat:meta.cat||"",confidentiel:!!meta.confidentiel};
       if(prev){row.lignee=prev.lignee;row.description=prev.description||"";row.annee=prev.annee||null;row.cat=prev.cat||"";row.confidentiel=!!prev.confidentiel}
@@ -3535,6 +3570,69 @@ async function gWalk(en,rel,out){
   if(en.isFile){const f=await new Promise((r,j)=>en.file(r,j));out.push({f,rel});return}
   if(en.isDirectory){const rd=en.createReader(),sub=[...rel,en.name];for(;;){const b=await new Promise((r,j)=>rd.readEntries(r,j));if(!b.length)break;for(const c of b)await gWalk(c,sub,out)}}
 }
+/* ===== Gros fichiers (ordinateur, jusqu'à 1 Go) ===== */
+/* SHA-256 calculé par tranches : la mémoire utilisée reste faible, quelle que soit la taille du fichier */
+function Sha256(){const H=this.h=new Int32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);this.b=new Uint8Array(64);this.n=0;this.len=0;this.w=new Int32Array(64)}
+Sha256.K=new Int32Array([0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+Sha256.prototype.blk=function(d,o){const w=this.w,K=Sha256.K,H=this.h;for(let i=0;i<16;i++,o+=4)w[i]=(d[o]<<24)|(d[o+1]<<16)|(d[o+2]<<8)|d[o+3];
+  for(let i=16;i<64;i++){const x=w[i-15],y=w[i-2];w[i]=(((x>>>7)|(x<<25))^((x>>>18)|(x<<14))^(x>>>3))+w[i-7]+(((y>>>17)|(y<<15))^((y>>>19)|(y<<13))^(y>>>10))+w[i-16]|0}
+  let a=H[0],b=H[1],c=H[2],e=H[3],f=H[4],g=H[5],h=H[6],k=H[7];
+  for(let i=0;i<64;i++){const t1=k+(((f>>>6)|(f<<26))^((f>>>11)|(f<<21))^((f>>>25)|(f<<7)))+((f&g)^(~f&h))+K[i]+w[i]|0,t2=(((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10)))+((a&b)^(a&c)^(b&c))|0;k=h;h=g;g=f;f=e+t1|0;e=c;c=b;b=a;a=t1+t2|0}
+  H[0]=H[0]+a|0;H[1]=H[1]+b|0;H[2]=H[2]+c|0;H[3]=H[3]+e|0;H[4]=H[4]+f|0;H[5]=H[5]+g|0;H[6]=H[6]+h|0;H[7]=H[7]+k|0};
+Sha256.prototype.update=function(d){let i=0;this.len+=d.length;if(this.n){while(this.n<64&&i<d.length)this.b[this.n++]=d[i++];if(this.n<64)return this;this.blk(this.b,0);this.n=0}
+  for(;i+64<=d.length;i+=64)this.blk(d,i);while(i<d.length)this.b[this.n++]=d[i++];return this};
+Sha256.prototype.hex=function(){const L=this.len*8,p=new Uint8Array(((this.n<56)?64:128)-this.n);p[0]=0x80;const hi=Math.floor(L/4294967296),lo=L>>>0,q=p.length;
+  p[q-8]=hi>>>24;p[q-7]=hi>>>16;p[q-6]=hi>>>8;p[q-5]=hi;p[q-4]=lo>>>24;p[q-3]=lo>>>16;p[q-2]=lo>>>8;p[q-1]=lo;this.update(p);
+  return Array.from(this.h,x=>(x>>>0).toString(16).padStart(8,"0")).join("")};
+/* Contrôle de sécurité + empreinte en un seul passage, par tranches de 8 Mo */
+async function gScanGros(f,onp){
+  const e=gext(f.name),T=8<<20,sh=new Sha256(),head=await f.slice(0,1<<20).arrayBuffer();
+  if(e!=="pdf"){const bad=await gScan(f.name,head);if(bad)return {bad};
+    if(/^(docx|xlsx|pptx|doc|xls|ppt)$/.test(e)){const buf=await f.arrayBuffer(),b2=await gScan(f.name,buf);if(b2)return {bad:b2};return {sha:await gsha(buf)||new Sha256().update(new Uint8Array(buf)).hex()}}}
+  else{const bad=await gScan(f.name,head);if(bad)return {bad}}   /* premier Mo : contrôle habituel (en-tête, nom, code actif) ; la suite est lue par tranches ci-dessous */
+  const RE=/\/(JavaScript|JS|Launch|EmbeddedFiles?|RichMedia|ImportData)(?![A-Za-z])/,nrm=t=>t.replace(/\/[A-Za-z0-9#]+/g,m=>m.indexOf("#")<0?m:m.replace(/#([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16))));
+  let tail="",last=-1;
+  for(let a=0;a<f.size;a+=T){const u=new Uint8Array(await f.slice(a,Math.min(f.size,a+T)).arrayBuffer());sh.update(u);
+    if(e==="pdf"){let t="";for(let i=0;i<u.length;i+=65536)t+=String.fromCharCode.apply(null,u.subarray(i,Math.min(u.length,i+65536)));const w=tail+t;const m=nrm(w).match(RE);
+      if(m)return {bad:"le PDF contient du code actif ou un fichier caché ("+({JavaScript:"JavaScript",JS:"JavaScript",Launch:"lancement de programme",EmbeddedFile:"fichier joint caché",EmbeddedFiles:"fichiers joints cachés",RichMedia:"contenu multimédia actif",ImportData:"import de données"}[m[1]])+"). Réimprimez-le en PDF ou rescannez le document papier"};
+      tail=w.slice(-4096)}
+    const pc=Math.floor(Math.min(f.size,a+T)/f.size*100);if(pc!==last){last=pc;onp&&onp(pc)}
+    await new Promise(r=>setTimeout(r,0))}
+  return {bad:"",sha:sh.hex()};
+}
+/* Envoi en morceaux de 16 Mo, 3 à la fois, chaque morceau réessayé jusqu'à 4 fois (coupure réseau) */
+async function gEnvoiMorceaux(f,mime,srv,onp){
+  const dep=await gR2("depot_mp",{service_id:srv,mime,taille:f.size}),P=dep.part,n=dep.urls.length,charge=new Array(n).fill(0);
+  let fini=0,erreur=null,suiv=0,last=-1;
+  const maj=()=>{const t=charge.reduce((a,b)=>a+b,0),pc=Math.min(100,Math.floor(t/f.size*100));if(pc!==last){last=pc;onp&&onp(pc,Math.round(t/1048576))}};
+  const garde=e=>{e.preventDefault();e.returnValue=""};addEventListener("beforeunload",garde);
+  const un=async i=>{const b=f.slice(i*P,Math.min(f.size,(i+1)*P));
+    for(let essai=1;essai<=4;essai++){const r=await new Promise(res=>{const x=new XMLHttpRequest();x.open("PUT",dep.urls[i]);x.upload.onprogress=e=>{charge[i]=e.loaded;maj()};x.onload=()=>res(x.status>=200&&x.status<300);x.onerror=x.ontimeout=()=>res(false);x.send(b)});
+      if(r){charge[i]=b.size;maj();return}charge[i]=0;maj();if(essai<4)await new Promise(r=>setTimeout(r,[0,2000,6000,15000][essai]))}
+    throw new Error("le morceau "+(i+1)+" / "+n+" n’a pas pu être envoyé après 4 essais (connexion instable)")};
+  const ouvrier=async()=>{while(!erreur&&suiv<n){const i=suiv++;try{await un(i);fini++}catch(e){erreur=e}}};
+  try{
+    await Promise.all([ouvrier(),ouvrier(),ouvrier()]);
+    if(erreur)throw erreur;
+    await gR2("fin_mp",{chemin:dep.chemin,uploadId:dep.uploadId,taille:f.size});
+    return dep.chemin;
+  }catch(e){try{await gR2("annuler_mp",{chemin:dep.chemin,uploadId:dep.uploadId})}catch(x){}throw e}
+  finally{removeEventListener("beforeunload",garde)}
+}
+const GLOURD=200*1024*1024,gLourd=f=>(+f.taille||0)>GLOURD;
+/* Ouverture et téléchargement directs pour les gros fichiers (le navigateur lit le fichier lui-même, sans le charger dans la page) */
+async function gLienDirect(f,dl){const {url}=await gR2("lien",dl?{chemin:f.chemin,telecharger:f.nom}:{chemin:f.chemin});return url}
+async function gedOuvrirLourd(f){toast("Préparation…");const url=await gLienDirect(f,false);gj("consultation",f);
+  gDlg(`<h2>${esc(f.nom)}</h2><p>Fichier volumineux (${gsz(+f.taille||0)}) : il s’ouvre dans un nouvel onglet, avec le lecteur de votre navigateur.</p><div class="acts"><button class="pri" id="g_lien_ouvrir">Ouvrir le document</button><button data-a="close">Fermer</button></div><p class="mu" style="font-size:12px">Le lien est valable 5 minutes.</p>`);
+  const b=document.getElementById("g_lien_ouvrir");if(b)b.onclick=()=>{window.open(url,"_blank","noopener");const d=b.closest("dialog");if(d)d.close()}}
+async function gedTelechargerLourd(f){toast("Préparation du téléchargement…");const url=await gLienDirect(f,true);gj("telechargement",f);const a=document.createElement("a");a.href=url;a.rel="noopener";document.body.appendChild(a);a.click();a.remove();toast("Téléchargement lancé ("+gsz(+f.taille||0)+") : suivez-le dans votre navigateur.")}
+async function gedVerifierLourd(f){const url=await gLienDirect(f,false),r=await fetch(url,{cache:"no-store"});if(!r.ok||!r.body)throw new Error("fichier introuvable");
+  const rd=r.body.getReader(),sh=new Sha256(),T=+f.taille||1;let n=0,last=-1;for(;;){const {done,value}=await rd.read();if(done)break;sh.update(value);n+=value.length;const pc=Math.floor(n/T*100);if(pc!==last&&pc%5===0){last=pc;toast("Vérification… "+pc+" %")}}
+  return sh.hex()}
+/* Envoi direct vers le stockage avec suivi de la progression (les gros fichiers prennent plusieurs minutes en 4G) */
+function gPut(url,blob,mime,onp){return new Promise(res=>{const x=new XMLHttpRequest();let last=-1;x.open("PUT",url);x.setRequestHeader("content-type",mime);
+  x.upload.onprogress=e=>{if(!e.lengthComputable||!onp)return;const p=Math.floor(e.loaded/e.total*100);if(p!==last){last=p;onp(p)}};
+  x.onload=()=>res({ok:x.status>=200&&x.status<300,status:x.status});x.onerror=()=>res({ok:false,status:"réseau interrompu"});x.ontimeout=()=>res({ok:false,status:"délai dépassé"});x.send(blob)})}
 async function gR2(action,o){const {data,error}=await gsb().functions.invoke("ged-r2",{body:Object.assign({action},o)});
   if(error){let m=error.message||"service indisponible";try{const j=await error.context.json();if(j&&j.erreur)m=j.erreur}catch(e){}throw new Error(m)}
   if(data&&data.erreur)throw new Error(data.erreur);return data}
@@ -3578,9 +3676,9 @@ async function gPdfOf(f,b){
     if(!await libX()||!window.XLSX)throw new Error("le module Excel n’a pas pu être chargé : vérifiez la connexion");
     const wb=await xlsxSafe(await b.arrayBuffer(),false);
     wb.SheetNames.forEach(nm=>{const rows=wb.Sheets[nm].filter(r=>r.some(c=>String(c).trim())),nc=Math.min(8,Math.max(0,...rows.map(r=>r.length)));
-      if(!nc)return sections.push({titre:"Feuille « "+nm+" »",cols:[],head:[],rows:[]});
+      if(!nc)return sections.push({titre:"Feuille « "+nm+" »",cols:[],head:[],rows:[]});
       const line=r=>{const o=[];for(let i=0;i<nc;i++)o.push(String(r[i]==null?"":r[i]).slice(0,300));return o};
-      sections.push({titre:"Feuille « "+nm+" »"+(rows.some(r=>r.length>8)?" (8 premières colonnes)":""),cols:Array.from({length:nc},()=>({w:515.28/nc})),head:line(rows[0]),rows:rows.slice(1,3000).map(line)})});
+      sections.push({titre:"Feuille « "+nm+" »"+(rows.some(r=>r.length>8)?" (8 premières colonnes)":""),cols:Array.from({length:nc},()=>({w:515.28/nc})),head:line(rows[0]),rows:rows.slice(1,3000).map(line)})});
   }
   else if(e==="docx"){const z=await gUnzip(await b.arrayBuffer(),n=>n==="word/document.xml");if(!z["word/document.xml"])throw new Error("document Word illisible");note=gParas(z["word/document.xml"],"w:p","w:t").join("\n")}
   else if(e==="pptx"){const z=await gUnzip(await b.arrayBuffer(),n=>/^ppt\/slides\/slide\d+\.xml$/.test(n)),ks=Object.keys(z).sort((p,q)=>+p.match(/\d+/)[0]-+q.match(/\d+/)[0]);if(!ks.length)throw new Error("présentation illisible");note=ks.map((n,i)=>"— Diapositive "+(i+1)+" —\n"+gParas(z[n],"a:p","a:t").join("\n")).join("\n\n")}
@@ -3593,13 +3691,13 @@ async function gPdfOf(f,b){
 const gTel=()=>/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform));
 async function gSave(blob,fn){
   if(gTel()&&navigator.canShare){const fl=new File([blob],fn,{type:blob.type||"application/octet-stream"});
-    if(navigator.canShare({files:[fl]})){try{await navigator.share({files:[fl]});toast("Choisissez « Enregistrer dans Fichiers » / « Enregistrer sur l’appareil ».");return}catch(e){if(e&&e.name==="AbortError")return}}}
+    if(navigator.canShare({files:[fl]})){try{await navigator.share({files:[fl]});toast("Choisissez « Enregistrer dans Fichiers » / « Enregistrer sur l’appareil ».");return}catch(e){if(e&&e.name==="AbortError")return}}}
   const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);
 }
 /* sur téléphone, l'enregistrement doit suivre un appui : le fichier est préparé puis proposé */
 function gOffer(blob,fn,titre){
   if(!gTel())return gSave(blob,fn);
-  G.pend={blob,fn};gDlg(`<h2>${esc(titre)}</h2><p>Le fichier est prêt : <b>${esc(fn)}</b> (${gsz(blob.size)}).</p><div class="acts"><button class="pri" data-g="save-go">Enregistrer ou partager</button><button data-a="close">Fermer</button></div><p class="mu" style="font-size:12px">Un menu s’ouvre : choisissez « Enregistrer dans Fichiers », ou une application (WhatsApp, e-mail…).</p>`);
+  G.pend={blob,fn};gDlg(`<h2>${esc(titre)}</h2><p>Le fichier est prêt : <b>${esc(fn)}</b> (${gsz(blob.size)}).</p><div class="acts"><button class="pri" data-g="save-go">Enregistrer ou partager</button><button data-a="close">Fermer</button></div><p class="mu" style="font-size:12px">Un menu s’ouvre : choisissez « Enregistrer dans Fichiers », ou une application (WhatsApp, e-mail…).</p>`);
 }
 /* ---- Lecteur PDF intégré (téléphones et tablettes) : pdf.js vérifié par empreinte, rendu page par page ---- */
 const PJ="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/",PJS="sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e",PJW="sha384-SnzOobpRMLXZ52iJvZm/C0fYw0OQemTXzTjIsdsfMcrCtCEe9qgzxTd3RSklO5x2";let _pj=null;
@@ -3625,7 +3723,7 @@ async function gPdfView(el,blob){
       for(let i=1;i<=doc.numPages;i++){const d=document.createElement("div");d.className="gpp";d.dataset.p=i;d.style.width=Math.floor(W*z)+"px";d.style.height=Math.floor(W*z*r1.height/r1.width)+"px";box.appendChild(d);io.observe(d)}};
     el.querySelectorAll("[data-z]").forEach(b=>b.onclick=e=>{e.stopPropagation();const nz=Math.max(1,Math.min(3,z+(b.dataset.z==="+"?.5:-.5)));if(nz!==z){z=nz;draw()}});
     await draw();
-  }catch(x){el.innerHTML=`<p class="mu">Aperçu impossible sur cet appareil (${esc(x.message||x)}). Utilisez « Télécharger ».</p>`}
+  }catch(x){el.innerHTML=`<p class="mu">Aperçu impossible sur cet appareil (${esc(x.message||x)}). Utilisez « Télécharger ».</p>`}
 }
 /* ---- Copie de conservation PDF/A-2b (ISO 19005-2) : rendu fidèle de chaque page, profil sRGB, métadonnées XMP ---- */
 const PLU="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js",PLSRI="sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI";let _pl=null;
@@ -3634,6 +3732,7 @@ function gPdfLibW(){return _pl=_pl||new Promise((ok,ko)=>{if(window.PDFLib)retur
 const gxA=t=>String(t||"").replace(/[<>&"']/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&apos;"}[c]));
 const gcv2jpg=c=>new Promise((ok,ko)=>c.toBlob(b=>b?b.arrayBuffer().then(x=>ok(new Uint8Array(x))):ko(new Error("rendu impossible")),"image/jpeg",.88));
 async function gPdfABuild(f,prog){
+  if(gLourd(f))throw new Error("copie PDF/A non créée au-delà de 200 Mo : l’original est conservé tel quel");
   const k=gkind(f);if(k!=="PDF"&&k!=="IMG")throw new Error("Copie PDF/A possible pour les PDF et les images. Pour un fichier Word, Excel ou PowerPoint, déposez-en une version PDF.");
   const blob=await gblob(f),PL=await gPdfLibW(),{PDFDocument,PDFName,PDFString,PDFHexString,PDFArray,PDFNumber}=PL;
   const out=await PDFDocument.create({updateMetadata:false});
@@ -3733,7 +3832,7 @@ async function gedAct(g,id){
   if(g==="newdos"){const n=(await askText("Nom du nouveau dossier","")||"").trim();if(!n)return;await gq(sb.from("ged_dossiers").insert({service_id:G.srv,parent:G.dos,nom:n}));toast("Dossier créé.");return gAfter()}
   if(g==="rendos"){const d=G.D.find(x=>x.id===G.dos);if(!d)return;const n=(await askText("Nouveau nom du dossier",d.nom)||"").trim();if(!n||n===d.nom)return;await gq(sb.from("ged_dossiers").update({nom:n}).eq("id",d.id));toast("Dossier renommé.");return gAfter()}
   if(g==="deldos"){const d=G.D.find(x=>x.id===G.dos);if(!d)return;if(G.D.some(x=>x.parent===d.id)||G.F.some(x=>x.dossier===d.id))return toast("Suppression impossible : le dossier contient encore des documents (y compris en corbeille ou en anciennes versions) ou des sous-dossiers.");
-    if(!await ask("Supprimer le dossier « "+d.nom+" » ?","Supprimer"))return;await gq(sb.from("ged_dossiers").delete().eq("id",d.id));G.dos=d.parent||null;toast("Dossier supprimé.");return gAfter()}
+    if(!await ask("Supprimer le dossier « "+d.nom+" » ?","Supprimer"))return;await gq(sb.from("ged_dossiers").delete().eq("id",d.id));G.dos=d.parent||null;toast("Dossier supprimé.");return gAfter()}
   if(g==="depot")return gedDepotDlg(null);
   if(g==="depotdir")return gedDepotDlg(null,true);
   if(g==="ver"&&f)return gedDepotDlg(f);
@@ -3753,7 +3852,10 @@ async function gedAct(g,id){
   if(g==="acc-pdf")return gedAccPdf();
   if(g==="rep-show"||g==="rep-pdf"){G.R.busy=true;if(g==="rep-show")render();try{await gRepLoad()}finally{G.R.busy=false}if(g==="rep-pdf"){render();return gedRepPdf()}return render()}
   if(!f)return toast("Document introuvable : actualisez la page.");
-  if(g==="open")return gedOpen(f);
+  if(g==="open")return gLourd(f)?gedOuvrirLourd(f).catch(x=>toast("Ouverture impossible : "+(x.message||x))):gedOpen(f);
+  if(g==="dl"&&gLourd(f))return gedTelechargerLourd(f).catch(x=>toast("Téléchargement impossible : "+(x.message||x)));
+  if(g==="pdf"&&gLourd(f))return toast("Copie PDF non proposée au-delà de 200 Mo : utilisez « Télécharger ».");
+  if(g==="verif"&&gLourd(f)){try{const h=await gedVerifierLourd(f),ok=h===f.sha256;gj("verification",f,f.nom+(ok?" : intègre":" : EMPREINTE DIFFÉRENTE"));return toast(ok?"Fichier intègre : identique au dépôt.":"ATTENTION : le fichier ne correspond plus au dépôt.")}catch(x){return toast("Vérification impossible : "+(x.message||x))}}
   if(g==="dl"){toast("Préparation…");const b=await gblob(f);gj("telechargement",f);return gOffer(new Blob([b],{type:f.mime||b.type}),f.nom,"Télécharger le document")}
   if(g==="pdf"){toast("Préparation du PDF…");let r;try{r=await gPdfOf(f)}catch(x){return toast("PDF impossible : "+(x.message||x))}gj("telechargement",f,f.nom+" (copie PDF)");return pdfDialog("PDF du document",r.fn,r.blob,f.nom,"Document issu de la GED : "+f.nom)}
   if(g==="det")return gedDet(f);
@@ -3762,12 +3864,12 @@ async function gedAct(g,id){
   if(g==="edit-go"){const nom=$("#g_nom").value.replace(GBIDI,"").replace(/[\/\\]+/g,"-").trim(),an=+$("#g_an").value||null;if(!nom)return toast("Le nom est obligatoire.");if(an&&(an<1900||an>2100))return toast("Année invalide.");
     if(gext(nom)!==gext(f.nom))return toast("L’extension du fichier ne peut pas changer (."+gext(f.nom)+").");
     return upd({nom,description:$("#g_desc").value.trim(),annee:an,cat:$("#g_cat").value,dossier:$("#g_dos").value||null,confidentiel:$("#g_conf").checked},"Fiche enregistrée.")}
-  if(g==="trash"){if(!await ask("Mettre « "+f.nom+" » à la corbeille ? Il pourra être restauré.","Corbeille"))return;return upd({statut:"corbeille"},"Document mis à la corbeille.")}
+  if(g==="trash"){if(!await ask("Mettre « "+f.nom+" » à la corbeille ? Il pourra être restauré.","Corbeille"))return;return upd({statut:"corbeille"},"Document mis à la corbeille.")}
   if(g==="restore")return upd({statut:"actif"},"Document restauré.");
-  if(g==="arch"){if(!f.cat)return toast("Indiquez d’abord la catégorie de conservation (Modifier la fiche).");if(!await ask("Classer « "+f.nom+" » comme archive ? Le service ne pourra plus le modifier ni le supprimer.","Archiver"))return;await upd({statut:"archive"},"Document classé comme archive.");const k=gkind(f);if(k==="PDF"||k==="IMG")gPdfAMake(f,true).then(ok=>{if(ok)toast("Copie de conservation PDF/A créée.")});return}
-  if(g==="unarch"){if(!await ask("Retirer « "+f.nom+" » des archives ?","Confirmer"))return;return upd({statut:"actif"},"Document retiré des archives.")}
+  if(g==="arch"){if(!f.cat)return toast("Indiquez d’abord la catégorie de conservation (Modifier la fiche).");if(!await ask("Classer « "+f.nom+" » comme archive ? Le service ne pourra plus le modifier ni le supprimer.","Archiver"))return;await upd({statut:"archive"},"Document classé comme archive.");const k=gkind(f);if(k==="PDF"||k==="IMG")gPdfAMake(f,true).then(ok=>{if(ok)toast("Copie de conservation PDF/A créée.")});return}
+  if(g==="unarch"){if(!await ask("Retirer « "+f.nom+" » des archives ?","Confirmer"))return;return upd({statut:"actif"},"Document retiré des archives.")}
   if(g==="gel")return upd({gel:!f.gel},f.gel?"Gel levé.":"Document gelé : aucune suppression possible.");
-  if(g==="purge"){if(!await ask("Supprimer définitivement « "+f.nom+" » (v"+f.version+") ? Cette action est irréversible et reste inscrite au journal.","Supprimer définitivement"))return;
+  if(g==="purge"){if(!await ask("Supprimer définitivement « "+f.nom+" » (v"+f.version+") ? Cette action est irréversible et reste inscrite au journal.","Supprimer définitivement"))return;
     await gq(sb.from("ged_fichiers").delete().eq("id",id));try{if(f.stockage==="r2")await gR2("supprimer",{chemin:f.chemin});else await sb.storage.from("ged").remove([f.chemin])}catch(e){}toast("Document supprimé définitivement.");return gAfter()}
   if(g==="pdfa_mk"){if(!f)return;const ok=await gPdfAMake(f);if(ok)gPdfAInfo(f);return}
   if(g==="pdfa_dl"){if(!f)return;try{toast("Préparation…");const {url}=await gR2("lien_pdfa",{fichier_id:f.id});const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error("copie introuvable");return gOffer(new Blob([await r.blob()],{type:"application/pdf"}),f.nom.replace(/\.[^.]+$/,"")+" (PDF-A).pdf")}catch(e){return toast(e.message||String(e))}}
@@ -3809,7 +3911,7 @@ document.addEventListener("click",async e=>{
   else if(a==="imp")openImp();
   else if(a==="doimp")doImp();
   else if(a==="lot")loadLot(v);
-  else if(a==="nvers")openVers();else if(a==="savevers")saveVers();else if(a==="vdet")vdet(v);else if(a==="vacc")accVers(v);else if(a==="vexp")expVers(v);else if(a==="bulkcat")openBulk();else if(a==="dobulk")doBulk();else if(a==="rgen"){rp.rep=RMAKE[rp.t]();render()}else if(a==="rexp")expRep();
+  else if(a==="nvers")openVers();else if(a==="savevers")saveVers();else if(a==="vdet")vdet(v);else if(a==="vacc")accVers(v);else if(a==="vexp")expVers(v);else if(a==="bulkcat")openBulk();else if(a==="dobulk")doBulk();else if(a==="rgen"){rp.rep=RMAKE[rp.t]();render()}else if(a==="rtype"){if(rp.t!==v){rp.t=v;rp.rep=null;renderNow()}}else if(a==="rexp")expRep();
   else if(a==="nctl")openCtl();else if(a==="savectl")saveCtl();else if(a==="octl"){ctlId=v;ctlFilt="todo";render()}else if(a==="bctl"){ctlId=null;render()}else if(a==="cset")setCtl(v,b.dataset.k,b.dataset.s);else if(a==="cctl")closeCtl(v);else if(a==="xctl")expCtl(v);
   else if(a==="fiche")openFiche(v);else if(a==="flend"){$("#dlg").close();openLend(v)}else if(a==="fedit"){$("#dlg").close();openDoc(v)}else if(a==="lab1"){const d=docs.find(x=>x.id===v);if(d)genLabels([d])}else if(a==="labs")openLabs();else if(a==="dolabs")genLabels(labSel());else if(a==="xpv")expPV(v);else if(a==="xall")expAll();else if(a==="rall")openRest();else if(a==="dorest")doRest();
   else if(a==="invpdf")invPdf();else if(a==="backup")backupXls();else if(a==="exp")exportXls();else if(a==="saveagain"){const vals=Object.fromEntries(["direction","service","annee","mois","type","cat","empl","mots"].map(k=>[k,($("#f_"+k)||{}).value]));await saveDoc("");if(!$("#dlg").open){openDoc();for(const k in vals){const e=$("#f_"+k);if(e&&vals[k]!==undefined)e.value=vals[k]}toast("Enregistré. Saisissez l’entrée suivante.")}}
@@ -3829,7 +3931,7 @@ document.addEventListener("click",async e=>{
   else if(a==="newlist")newList();else if(a==="cxl")cancelList(v);else if(a==="apv")approve(v,b.dataset.k);else if(a==="sens")toggleSens(v);else if(a==="exec")openExec(v);else if(a==="doexec")doExec(v);
   else if(a==="addm")addMember(v);
   else if(a==="delm"&&await ask("Retirer cette personne de l’équipe ?"))db.doc("membres/"+v).delete().catch(fail);
-  else if(a==="deldoc"){if(!(P.admin||P.owner))return toast("Seul l’administrateur peut supprimer une entrée.");const d0=docs.find(x=>x.id===v);if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");if(!await ask("Supprimer définitivement « "+(d0?d0.intitule:"cette entrée")+" » ? Cette action est irréversible."))return;try{if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");await db.doc("docs/"+v).delete();jr("Suppression d’une entrée",d0?d0.intitule+" ("+(d0.cote||"sans cote")+")":v);$("#dlg").close()}catch(x){fail(x)}}
+  else if(a==="deldoc"){if(!(P.admin||P.owner))return toast("Seul l’administrateur peut supprimer une entrée.");const d0=docs.find(x=>x.id===v);if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");if(!await ask("Supprimer définitivement « "+(d0?d0.intitule:"cette entrée")+" » ? Cette action est irréversible."))return;try{if(d0&&(d0.statut==="en_pret"||d0.statut==="detruit"||d0.liste))return toast("Suppression impossible : l’entrée est en sortie, dans une liste de destruction ou déjà détruite.");await db.doc("docs/"+v).delete();jr("Suppression d’une entrée",d0?d0.intitule+" ("+(d0.cote||"sans cote")+")":v);$("#dlg").close()}catch(x){fail(x)}}
 });
 document.addEventListener("click",e=>{const b=e.target.closest("button[data-a]");if(!b)return;const n=Date.now();if(b.dataset.t&&n-b.dataset.t<800){e.stopImmediatePropagation();e.preventDefault();return}b.dataset.t=n},true);
 document.addEventListener("input",e=>{if(e.target.id==="iq")iaDraft=e.target.value});
@@ -3871,7 +3973,7 @@ init();
       ds.forEach(d=>out.push(mk("Inventaire","inv",d.intitule||"(sans intitulé)",[d.service,d.annee,d.mois,d.empl,d.cote,d.statut==="en_pret"?"en sortie":""].filter(Boolean).join(" · "),()=>{Object.assign(f,{q:d.intitule||"",dir:"",an:"",typ:"",s:"",st:""});if("srv" in f)f.srv="";lim=LIM0;if(tab==="inv")render();else goTab("inv");setTimeout(()=>{const i=document.getElementById("q");if(i)i.value=f.q},60)})));
       const gs=gedFiles().filter(x=>hit(norm([x.nom,x.description,x.cat,x.annee,x.cree_nom].join(" ")))).slice(0,8);
       gs.forEach(x=>{const sv=(typeof gsrv==="function"?gsrv(x.service_id):{nom:""});out.push(gi(x,sv,))});
-      if(typeof G!=="undefined"&&window.PLATFORM_SB&&!gs.length)out.push(mk("GED","ged","Chercher « "+s+" » dans la GED","Ouvre la GED avec cette recherche",()=>{goTab("ged");setTimeout(()=>{const i=document.getElementById("gq");if(i){i.value=s;i.dispatchEvent(new Event("input",{bubbles:true}))}},400)}));
+      if(typeof G!=="undefined"&&window.PLATFORM_SB&&!gs.length)out.push(mk("GED","ged","Chercher « "+s+" » dans la GED","Ouvre la GED avec cette recherche",()=>{goTab("ged");setTimeout(()=>{const i=document.getElementById("gq");if(i){i.value=s;i.dispatchEvent(new Event("input",{bubbles:true}))}},400)}));
     }
     items=out;sel=0;paint();if(ws.length)srvSearch(s);
   }
@@ -3915,7 +4017,7 @@ init();
   document.addEventListener("visibilitychange",()=>{if(touch)document.body.classList.toggle("veil",document.visibilityState==="hidden")});
   addEventListener("pagehide",()=>{if(touch)document.body.classList.add("veil")});addEventListener("pageshow",()=>document.body.classList.remove("veil"));
   if(!window.PLATFORM_SB)return;
-  /* Bouton « Mon compte » */
+  /* Bouton « Mon compte » */
   const hb=document.getElementById("acct");
   const ini=n=>String(n||"?").split(/[\s@.]+/).filter(Boolean).slice(0,2).map(x=>x[0].toUpperCase()).join("")||"?";
   const paint=()=>{if(!hb)return;const me=window.SBME&&window.SBME();if(!me){hb.style.display="none";return}hb.style.display="";const nm=((me.prenom||"")+" "+(me.nom||"")).trim()||me.email,court=me.prenom||nm.split(" ")[0];hb.innerHTML='<span class="av">'+esc(ini(nm))+'</span><span class="tl">'+esc(court)+'</span>';hb.title="Mon compte ("+me.email+")";hb.setAttribute("aria-label","Mon compte")};
@@ -3989,9 +4091,9 @@ init();
       cb.onchange=async()=>{cb.disabled=true;const {data,error}=await sb.rpc("mes_notifs",{p_actif:cb.checked});cb.disabled=false;if(error){cb.checked=!cb.checked;return toast("Réglage impossible : "+error.message)}cb.checked=!!data;toast(data?"Notifications par e-mail activées.":"Notifications par e-mail désactivées.")};
       if(me.role==="admin"){try{const {data:e}=await sb.rpc("notif_etat");if(e)st.innerHTML=e.configure?`Service d’envoi <b style="color:var(--ok)">actif</b> · ${e.envoyes_7j} envoyé(s) sur 7 jours · ${e.attente} en attente${e.echecs_7j?` · <b style="color:var(--er)">${e.echecs_7j} échec(s)</b>`:""}${e.derniere_erreur&&e.echecs_7j?"<br>Dernière erreur : "+esc(String(e.derniere_erreur).slice(0,160)):""}`:'Service d’envoi <b style="color:var(--er)">pas encore configuré</b> : les e-mails sont mis en attente et partiront dès la configuration (clé Brevo).'}catch(x){}}
       $("#nt_test").onclick=async()=>{const b=$("#nt_test");b.disabled=true;const {data,error}=await sb.rpc("notif_test");b.disabled=false;if(error)return toast(error.message);
-        if(!cb.checked)return toast("Activez d’abord la case « Recevoir les e-mails ».");toast(data==="ok"?"E-mail de test envoyé : vérifiez votre boîte (et les indésirables) d’ici 1 à 2 minutes.":"E-mail de test mis en attente : il partira dès que le service d’envoi sera configuré.")}})();
+        if(!cb.checked)return toast("Activez d’abord la case « Recevoir les e-mails ».");toast(data==="ok"?"E-mail de test envoyé : vérifiez votre boîte (et les indésirables) d’ici 1 à 2 minutes.":"E-mail de test mis en attente : il partira dès que le service d’envoi sera configuré.")}})();
     const pa=$("#pk_add");if(pa)pa.onclick=async()=>{const m=$("#pk_m");pa.disabled=true;m.style.color="var(--mu)";m.textContent="Suivez les instructions de votre appareil…";
-      try{const {error}=await sb.auth.registerPasskey();if(error)throw error;m.style.color="var(--ok)";m.textContent="Activé : à la prochaine connexion, touchez « Face ID / empreinte ».";toast("Face ID / empreinte activé sur cet appareil.");pkList()}
+      try{const {error}=await sb.auth.registerPasskey();if(error)throw error;m.style.color="var(--ok)";m.textContent="Activé : à la prochaine connexion, touchez « Face ID / empreinte ».";toast("Face ID / empreinte activé sur cet appareil.");pkList()}
       catch(e){m.style.color="var(--er)";m.textContent=window.SBPK.err(e)}pa.disabled=false};
   }
   if(hb)hb.addEventListener("click",open);
@@ -4102,11 +4204,11 @@ init();
   const steps=()=>{const ro=(window.SBME&&window.SBME()||{}).role||"",nm=(P&&P.name)||"";
     const L=[["Bienvenue"+(nm?", "+nm.split(" ")[0]:""),"L’application Archives NITA réunit l’inventaire des archives papier, les sorties et demandes de documents, et la GED pour les fichiers numériques. Cette visite dure 30 secondes.","dash"],
       ["Tout trouver en un geste","La loupe en haut (ou Ctrl+K sur ordinateur) cherche à la fois dans l’inventaire, dans la GED et dans les onglets. Tapez quelques lettres : intitulé, cote, service, année…","rap"]];
-    if(ro==="demandeur")L.push(["Demander un document","Depuis l’accueil, « Demander » envoie une demande de consultation au Service Archivage. Vous suivez ensuite son avancement.","pret"]);
+    if(ro==="demandeur")L.push(["Demander un document","Depuis l’accueil, « Demander » envoie une demande de consultation au Service Archivage. Vous suivez ensuite son avancement.","pret"]);
     else if(ro==="lecteur")L.push(["Consulter l’inventaire","L’onglet Inventaire liste tous les documents archivés, avec filtres par direction, service, année et support.","inv"]);
-    else L.push(["Inventaire et sorties","L’onglet Inventaire liste les documents archivés ; « + Nouvelle entrée » en ajoute un. Les sorties, retours et demandes se suivent dans l’onglet Prêts.","inv"]);
-    if(window.PLATFORM_SB)L.push(["La GED","Déposez vos fichiers dans l’espace de votre service, épinglez ceux que vous utilisez souvent, et retrouvez les nouveautés dans « Récents ». Chaque fichier est contrôlé avant le dépôt.","ged"]);
-    L.push(["Votre sécurité","Votre rond d’initiales ouvre « Mon compte » : mot de passe, appareil personnel, déconnexion de tous les appareils. Sans activité pendant 30 minutes, l’application vous déconnecte.","team"]);
+    else L.push(["Inventaire et sorties","L’onglet Inventaire liste les documents archivés ; « + Nouvelle entrée » en ajoute un. Les sorties, retours et demandes se suivent dans l’onglet Prêts.","inv"]);
+    if(window.PLATFORM_SB)L.push(["La GED","Déposez vos fichiers dans l’espace de votre service, épinglez ceux que vous utilisez souvent, et retrouvez les nouveautés dans « Récents ». Chaque fichier est contrôlé avant le dépôt.","ged"]);
+    L.push(["Votre sécurité","Votre rond d’initiales ouvre « Mon compte » : mot de passe, appareil personnel, déconnexion de tous les appareils. Sans activité pendant 30 minutes, l’application vous déconnecte.","team"]);
     return L};
   let i=0;const d=document.createElement("dialog");d.className="ask tour";document.body.appendChild(d);
   const show=()=>{const L=steps(),s=L[i];d.innerHTML=`<div class="tico">${navIco(s[2])}</div><h2>${esc(s[0])}</h2><p>${esc(s[1])}</p><div class="tdots">${L.map((_,k)=>`<i class="${k===i?"on":""}"></i>`).join("")}</div><div class="acts">${i>0?'<button id="t_prev">Précédent</button>':'<button id="t_skip">Passer</button>'}<button class="pri" id="t_next">${i<L.length-1?"Suivant":"Terminer"}</button></div>`;
@@ -4144,9 +4246,9 @@ init();
     box.querySelector("#inst_go").onclick=async()=>{const p=dp;dp=null;close(false);if(!p)return;p.prompt();try{const r=await p.userChoice;if(r&&r.outcome==="dismissed")close(true)}catch(x){}}});
   addEventListener("appinstalled",()=>{close(false);try{toast("Application installée : retrouvez l’icône Archives NITA sur votre écran d’accueil.")}catch(e){}});
   setTimeout(()=>{if(box.classList.contains("on"))return;
-    if(inApp){const nav=ios?"Safari":"Chrome";show(`<b>Ouvrez ce lien dans ${nav}</b><span>Ce navigateur intégré ne permet pas d’installer l’application. Touchez le menu (⋮ ou •••), puis « Ouvrir dans ${nav} » (ou « Ouvrir dans le navigateur »).</span>`,'<button type="button" class="pri" id="inst_cp">Copier le lien</button>');
+    if(inApp){const nav=ios?"Safari":"Chrome";show(`<b>Ouvrez ce lien dans ${nav}</b><span>Ce navigateur intégré ne permet pas d’installer l’application. Touchez le menu (⋮ ou •••), puis « Ouvrir dans ${nav} » (ou « Ouvrir dans le navigateur »).</span>`,'<button type="button" class="pri" id="inst_cp">Copier le lien</button>');
       const c=box.querySelector("#inst_cp");c.onclick=async()=>{try{await navigator.clipboard.writeText(location.origin+"/");c.textContent="Lien copié"}catch(e){c.textContent=location.host}};return}
-    if(ios)show(`<b>Installer Archives NITA sur l’iPhone</b><span>Touchez <span class="ish">${SH}</span> <b>Partager</b> (en bas de l’écran, ou dans « ••• »), puis <b>« Sur l’écran d’accueil »</b> et <b>Ajouter</b>.</span>`);
+    if(ios)show(`<b>Installer Archives NITA sur l’iPhone</b><span>Touchez <span class="ish">${SH}</span> <b>Partager</b> (en bas de l’écran, ou dans « ••• »), puis <b>« Sur l’écran d’accueil »</b> et <b>Ajouter</b>.</span>`);
   },android||ios?2500:1500);
 })();
 </script>
@@ -4164,10 +4266,25 @@ init();
     const sig=hs.map(h=>clean(h.textContent)).join("|");if(old&&old.dataset.sig===sig)return;
     const n=document.createElement("div");n.className="secnav";n.dataset.sig=sig;n.setAttribute("role","navigation");n.setAttribute("aria-label","Sections de la page");
     hs.forEach((h,i)=>{if(!h.id)h.id="sec_"+i;const b=document.createElement("button");b.type="button";b.textContent=clean(h.textContent);b.onclick=()=>{const y=h.getBoundingClientRect().top+scrollY-(innerWidth<1024?70:16);scrollTo({top:y,behavior:"smooth"})};n.appendChild(b)});
-    if(old)old.replaceWith(n);else app.prepend(n);
+    const ph=app.querySelector(":scope > .phd");if(old)old.replaceWith(n);else if(ph)ph.after(n);else app.prepend(n);
   }finally{busy=false}}
-  let t=null;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(build,60)}).observe(app,{childList:true,subtree:false});
+  /* construit avant l’affichage de l’écran : le contenu ne « saute » plus vers le bas */
+  new MutationObserver(build).observe(app,{childList:true,subtree:false});
   setTimeout(build,800);
+})();
+/* ---- Fiche : historique des versions (administrateur, lecture seule ; copie conservée par le serveur à chaque modification) ---- */
+(function(){
+  const NOMS={intitule:"Intitulé",direction:"Direction",service:"Service",annee:"Année",mois:"Mois",type:"Support",nb:"Unités",cote:"Cote",empl:"Emplacement",cat:"Catégorie",statut:"Statut",obs:"Observations",mots:"Mots-clés",gel:"Destruction suspendue",pv:"PV",detruitLe:"Détruit le",liste:"Liste de destruction"};
+  const val=v=>v===undefined||v===null||v===""?"(vide)":typeof v==="object"?"(modifié)":String(v);
+  document.addEventListener("toggle",async e=>{const d=e.target;if(!d.classList||!d.classList.contains("vh")||!d.open||d.dataset.ok)return;d.dataset.ok="1";
+    const box=d.querySelector(".vhl"),sb=window.GEDSB&&window.GEDSB(),cur=(typeof docs!=="undefined"&&docs.find(x=>x.id===d.dataset.id))||{};
+    try{const {data,error}=await sb.from("documents_historique").select("t,nom,op,ancien").eq("collection","docs").eq("doc_id",d.dataset.id).order("t",{ascending:false}).limit(20);if(error)throw error;
+      if(!data.length){box.textContent="Aucune modification enregistrée depuis la mise en place de l’historique (17/11/2026).";return}
+      let apres=cur;const out=[];
+      for(const v of data){const av=v.ancien||{},ch=[...new Set([...Object.keys(av),...Object.keys(apres)])].filter(k=>!/^(moves|t|id|_.*)$/.test(k)&&JSON.stringify(av[k])!==JSON.stringify(apres[k]));
+        out.push(`<div class="vhi"><b>${esc(new Date(v.t).toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}))}</b> · ${esc(v.nom||"–")}${v.op==="delete"?" · <span style=\"color:var(--er)\">suppression</span>":""}<br>${ch.length?ch.slice(0,8).map(k=>`${esc(NOMS[k]||k)} : <s>${esc(val(av[k]))}</s> → ${esc(val(apres[k]))}`).join("<br>"):"(aucun champ visible modifié)"}</div>`);apres=av}
+      box.innerHTML=out.join("");
+    }catch(x){box.textContent="Historique indisponible : "+(x&&x.message||x)}},true);
 })();
 /* ---- Inventaire : toucher une carte ouvre sa fiche ---- */
 document.addEventListener("click",e=>{const c=e.target.closest&&e.target.closest("#lst .card");if(!c||e.target.closest("button,a,input,select,textarea,label"))return;if(getSelection&&String(getSelection()).length)return;const f=c.querySelector('button[data-a="fiche"]');if(f)f.click()});
