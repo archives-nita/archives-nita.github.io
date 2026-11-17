@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-qcpbBV66wDlFzhobVHPSRw81jJoVN+eUH6qo71GPu8o=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-UD6WDMz4Q9Rl8e8YS8TR68uZ2lpRB9Q5Fq4RJMfXBE0=' 'sha256-dx3IYVyjWGN+yTy4Rz0kHrI5uNFDD/xH5MF/2SwtBXE=' 'sha256-O9/EWuAqikuCkOedPYlQHzxbEsZ3thNX+BgTZS2ZAkg=' 'sha256-g+4g/hfYisAAidsMi64BJb+t1/DAuogzk08LgOblOlI=' 'sha256-uXuhYEta1IvdRCMr9/9DC8Oz2V9jxxprxZqU71Oo2go=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-qcpbBV66wDlFzhobVHPSRw81jJoVN+eUH6qo71GPu8o=' 'sha256-0CjdCFftZn372Kgakj4pfpnr+N/WGDy/IB0TY1mdpc0=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-+h8dqrXEdy1Wx59Zz6y3b6HwRIg5PMfqR6+YAe3kVY8=' 'sha256-UqKAvypXI1amBrFzkvrg69OMJ7nc/2mY2rwwBF9QJ3g=' 'sha256-O9/EWuAqikuCkOedPYlQHzxbEsZ3thNX+BgTZS2ZAkg=' 'sha256-+bFOj5BviCm1fgE/5t3dqwhs7FlskKDR6P+Af8fGfxg=' 'sha256-YTLTpZvrGQPOT5zhyIjQem5bY3ZQ3tn+qzOxDQQnQ/8=' 'sha256-9Lg/BVsz8qBBQlhpNqnx58wdTeye0rMWejYn0dby/k4=' 'sha256-WhJhylqjnuHplOExL9Wl4k13uJxgRsnHrvzwyHNszYI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://api.pwnedpasswords.com https://cdn.jsdelivr.net https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob:; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
@@ -560,6 +560,8 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
    Seules la clé PUBLIQUE (publishable) et l'adresse du projet sont ici : elles ne donnent aucun droit par elles-mêmes,
    tout est contrôlé côté serveur (RLS). Ne mettez JAMAIS la clé « service_role » dans cette page. */
 (function(){
+  /* Protection contre l'intégration dans un autre site (clics piégés) : GitHub Pages ne permet pas l'en-tête frame-ancestors */
+  if(window.self!==window.top){document.documentElement.style.display="none";return}
   const CFG=window.SB_CONFIG||{};
   window.PLATFORM_SB=true;
   const ROLE_FN={admin:"Administrateur",archiviste:"Archiviste",responsable:"Responsable de service",demandeur:"Demandeur",lecteur:"Lecteur"};
@@ -583,6 +585,89 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
     if(/not support/i.test(m))return "Ce navigateur ne permet pas Face ID / empreinte.";
     return fr(m)};
   window.SBPK={ok:PK_OK,err:pkErr};
+
+  /* Mots de passe connus des pirates (NIST SP 800-63B-4 : liste de refus obligatoire).
+     Méthode « k-anonymat » : seuls les 5 premiers caractères de l'empreinte SHA-1 sont envoyés, jamais le mot de passe.
+     Renvoie le nombre de fuites connues (0 = inconnu des fuites), ou -1 si le service ne répond pas. */
+  async function pwned(pw){
+    try{
+      const h=Array.from(new Uint8Array(await crypto.subtle.digest("SHA-1",new TextEncoder().encode(String(pw)))),x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();
+      const ctl=new AbortController(),t=setTimeout(()=>ctl.abort(),6000);
+      const r=await fetch("https://api.pwnedpasswords.com/range/"+h.slice(0,5),{headers:{"Add-Padding":"true"},credentials:"omit",referrerPolicy:"no-referrer",cache:"no-store",signal:ctl.signal}).finally(()=>clearTimeout(t));
+      if(!r.ok)return -1;
+      const suf=h.slice(5);for(const l of (await r.text()).split("\n")){const i=l.indexOf(":");if(i>0&&l.slice(0,i).trim()===suf)return +l.slice(i+1)||0}
+      return 0;
+    }catch(e){return -1}
+  }
+  const PWNED_MSG=n=>"Ce mot de passe figure dans des fuites de données publiées sur internet"+(n>1?" ("+n.toLocaleString("fr-FR")+" fois)":"")+" : les pirates l’essaient en premier. Choisissez-en un autre.";
+  window.SBPWNED={check:pwned,msg:PWNED_MSG};
+
+  /* Double vérification (code à 6 chiffres d'une application d'authentification), obligatoire pour les administrateurs.
+     Le serveur l'impose aussi : un administrateur qui l'a activée n'a aucun droit sans le code (fonction mon_role). */
+  const MFA={
+    async factors(){try{const {data,error}=await sb.auth.mfa.listFactors();if(error)return [];return (data&&data.totp||[]).filter(f=>f.status==="verified")}catch(e){return []}},
+    async level(){try{const {data}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();return (data&&data.currentLevel)||"aal1"}catch(e){return "aal1"}},
+    async needed(){return (await MFA.factors()).length>0},
+    async verify(code){
+      code=String(code||"").replace(/\D/g,"");if(code.length!==6)throw new Error("Le code comporte 6 chiffres.");
+      const fs=await MFA.factors();if(!fs.length)throw new Error("Aucune application d’authentification n’est configurée sur ce compte.");
+      let last=null;for(const f of fs){const {error}=await sb.auth.mfa.challengeAndVerify({factorId:f.id,code});if(!error)return true;last=error}
+      const m=(last&&last.message)||"";throw new Error(/invalid|expired|incorrect/i.test(m)?"Code incorrect ou expiré : saisissez le code affiché en ce moment dans l’application.":/rate|too many/i.test(m)?"Trop d’essais : patientez quelques minutes.":fr(m||"Vérification impossible"));
+    }
+  };
+  window.SBMFA=MFA;
+  const codeInput=id=>`<input id="${id}" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="7" placeholder="123456" style="font-size:24px;letter-spacing:.3em;text-align:center">`;
+  const AIDE_PERTE="Téléphone perdu ou changé ? Le propriétaire du projet Supabase peut retirer le code : Authentication → Users → votre compte → supprimer le facteur « TOTP ». Vous en activerez alors un nouveau à la connexion suivante.";
+  function mfaChallengeView(){
+    return new Promise(res=>{
+      const o=overlay(`<p style="margin:0 0 8px"><b>Double vérification</b> : ouvrez votre application d’authentification (Google Authenticator, Microsoft Authenticator…) et saisissez le code « Archives NITA ».</p><label for="sb_code">Code à 6 chiffres</label>${codeInput("sb_code")}<div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0"></div><div class="acts"><button class="pri" id="sb_cok">Valider</button><button id="sb_cout">Se déconnecter</button></div><p class="mu" style="font-size:12.5px;margin:12px 0 0">${esc(AIDE_PERTE)}</p>`);
+      const m=o.querySelector("#sb_msg"),b=o.querySelector("#sb_cok"),inp=o.querySelector("#sb_code");
+      const go=async()=>{b.disabled=true;m.style.color="var(--mu,#5f6580)";m.textContent="Vérification…";
+        try{await MFA.verify(inp.value);res()}catch(e){b.disabled=false;m.style.color="var(--er,#b3261e)";m.textContent=e.message;inp.select()}};
+      b.onclick=go;inp.addEventListener("keydown",e=>{if(e.key==="Enter")go()});inp.addEventListener("input",()=>{if(inp.value.replace(/\D/g,"").length===6)go()});
+      o.querySelector("#sb_cout").onclick=async()=>{await sb.auth.signOut();if(window.localWipe)try{await window.localWipe()}catch(e){}location.reload()};
+      setTimeout(()=>inp.focus(),50);
+    });
+  }
+  function qrSrc(q){q=String(q||"");if(/^data:/.test(q)){if(/;base64,/.test(q))return q;const i=q.indexOf(",");let svg=q.slice(i+1);try{svg=decodeURIComponent(svg)}catch(e){}return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)}return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(q)}
+  function mfaEnrollView(){
+    return new Promise(res=>{
+      const o=overlay(`<p style="margin:0 0 6px"><b>Double vérification obligatoire pour les administrateurs.</b> Elle protège l’application même si votre mot de passe est découvert. À faire une seule fois (2 minutes).</p><div id="sb_mfa" class="mu">Préparation…</div>`);
+      const box=o.querySelector("#sb_mfa");
+      const start=async()=>{
+        try{
+          const {data:l}=await sb.auth.mfa.listFactors();for(const f of ((l&&l.all)||[]).filter(f=>f.factor_type==="totp"&&f.status!=="verified")){try{await sb.auth.mfa.unenroll({factorId:f.id})}catch(e){}}
+          const {data,error}=await sb.auth.mfa.enroll({factorType:"totp",issuer:"Archives NITA",friendlyName:"Téléphone "+new Date().toLocaleDateString("fr-FR")+" "+Math.random().toString(36).slice(2,6)});
+          if(error)throw error;
+          box.innerHTML=`<ol style="padding-left:20px;margin:6px 0 10px;line-height:1.5"><li>Installez sur votre téléphone une application d’authentification : <b>Google Authenticator</b> ou <b>Microsoft Authenticator</b> (gratuites).</li><li>Dans l’application, touchez <b>+</b> puis <b>Scanner un code QR</b> et visez ce code :</li></ol>
+            <div style="text-align:center;margin:6px 0"><img alt="Code QR à scanner" src="${esc(qrSrc(data.totp.qr_code))}" style="width:200px;height:200px;background:#fff;border-radius:12px;padding:8px"></div>
+            <details style="margin:4px 0 10px"><summary>Impossible de scanner ? Saisir la clé à la main</summary><code style="display:block;word-break:break-all;user-select:all;padding:8px;background:var(--as,#eef);border-radius:8px;margin-top:6px">${esc(data.totp.secret)}</code></details>
+            <p style="margin:0 0 6px"><b>Conseil de secours :</b> scannez aussi ce même code avec un deuxième téléphone ou une tablette. Si vous perdez le premier, le second donnera les mêmes codes.</p>
+            <label for="sb_code">3. Saisissez le code à 6 chiffres affiché par l’application</label>${codeInput("sb_code")}
+            <div id="sb_msg" class="mu" style="color:var(--er,#b3261e);min-height:20px;margin:8px 0"></div><div class="acts"><button class="pri" id="sb_cok">Activer</button><button id="sb_cout">Se déconnecter</button></div>`;
+          const m=box.querySelector("#sb_msg"),b=box.querySelector("#sb_cok"),inp=box.querySelector("#sb_code");
+          const go=async()=>{const code=inp.value.replace(/\D/g,"");if(code.length!==6){m.textContent="Le code comporte 6 chiffres.";return}
+            b.disabled=true;m.style.color="var(--mu,#5f6580)";m.textContent="Vérification…";
+            const {error:e2}=await sb.auth.mfa.challengeAndVerify({factorId:data.id,code});
+            if(e2){b.disabled=false;m.style.color="var(--er,#b3261e)";m.textContent=/invalid|expired/i.test(e2.message||"")?"Code incorrect : vérifiez l’heure du téléphone (réglage automatique) et saisissez le code affiché maintenant.":fr(e2.message);inp.select();return}
+            try{await sb.from("documents").insert({collection:"journal",id:newId(),data:{t:new Date().toISOString(),par:ME.id,nom:ME.name||"",act:"Double vérification activée",label:"Compte "+(ME.email||"")}})}catch(x){}
+            res()};
+          b.onclick=go;inp.addEventListener("keydown",e=>{if(e.key==="Enter")go()});
+          box.querySelector("#sb_cout").onclick=async()=>{await sb.auth.signOut();if(window.localWipe)try{await window.localWipe()}catch(e){}location.reload()};
+          setTimeout(()=>inp.focus(),50);
+        }catch(e){box.innerHTML=`<p style="color:var(--er,#b3261e)">Activation impossible : ${esc(fr((e&&e.message)||String(e)))}</p><div class="acts"><button class="pri" id="sb_retry">Réessayer</button><button id="sb_cout">Se déconnecter</button></div>`;
+          box.querySelector("#sb_retry").onclick=start;box.querySelector("#sb_cout").onclick=async()=>{await sb.auth.signOut();location.reload()}}
+      };
+      start();
+    });
+  }
+  /* Renvoie true si une vérification a eu lieu (les données préchargées avec l'ancienne session sont alors à recharger) */
+  async function mfaGate(){
+    if(!ME||ME.role!=="admin")return false;
+    if(await MFA.level()==="aal2")return false;
+    if(await MFA.needed())await mfaChallengeView();else await mfaEnrollView();
+    return true;
+  }
 
   /* ---------- Écran de connexion ---------- */
   function overlay(html){
@@ -624,6 +709,10 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
       const a=o.querySelector("#sb_n1").value,b=o.querySelector("#sb_n2").value,m=o.querySelector("#sb_msg");
       if(a.length<8||!/[a-z]/.test(a)||!/[A-Z]/.test(a)||!/[0-9]/.test(a)){m.textContent="8 caractères minimum, avec au moins une majuscule, une minuscule et un chiffre.";return}
       if(a!==b){m.textContent="Les deux mots de passe sont différents.";return}
+      m.style.color="var(--mu,#5f6580)";m.textContent="Vérification…";
+      const n=await pwned(a);m.style.color="var(--er,#b3261e)";if(n>0){m.textContent=PWNED_MSG(n);return}
+      if(await MFA.needed()&&await MFA.level()!=="aal2"){const c=o.querySelector("#sb_rc");if(!c){m.insertAdjacentHTML("beforebegin",'<label for="sb_rc">Code de double vérification (6 chiffres)</label>'+codeInput("sb_rc"));m.textContent="Saisissez le code de votre application d’authentification, puis validez à nouveau.";return}
+        try{await MFA.verify(c.value)}catch(e){m.textContent=e.message;return}}
       const {error}=await sb.auth.updateUser({password:a});
       if(error){m.textContent=fr(error.message);return}
       location.href=location.origin+location.pathname;
@@ -914,6 +1003,8 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
     try{
       if(!(await loadMe(session))){blockedView("Votre compte existe mais n'a pas encore de rôle ou a été désactivé. Contactez l'administrateur.");readyRes(null);return}
     }catch(e){blockedView("Impossible de vérifier votre compte : "+(e&&e.message||e));readyRes(null);return}
+    try{if(await mfaGate()){for(const k in PREF)delete PREF[k];prefetch(["docs","prets"])}}
+    catch(e){blockedView("Double vérification impossible : "+(e&&e.message||e));readyRes(null);return}
     if(!ME.nom||!ME.prenom){try{await identityView()}catch(e){}}
     DB=makeDB();hideOverlay();addLogout();idleGuard();readyRes(true);logConnexion();
   }
@@ -943,7 +1034,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="14 nov. 2026 – Design 4.5";
+const APP_VER="17 nov. 2026 – Sécurité 4.6";
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 const LIM0=40,LIMP=80;let lim=LIM0,ready=false;
 
@@ -3852,8 +3943,11 @@ init();
     <label for="acc_n1">Nouveau mot de passe</label><input id="acc_n1" type="password" autocomplete="new-password">
     <div class="pwm"><i id="acc_bar"></i></div><div id="acc_f" class="mu">8 caractères minimum, avec au moins une majuscule, une minuscule et un chiffre.</div>
     <label for="acc_n2">Confirmez le nouveau mot de passe</label><input id="acc_n2" type="password" autocomplete="new-password">
+    <div id="acc_codew" style="display:none"><label for="acc_code">Code de double vérification (6 chiffres)</label><input id="acc_code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456"></div>
     <div id="acc_msg" class="mu" style="min-height:20px;margin:6px 0"></div>
     <div class="acts" style="position:static;border:0;padding:0;margin:0"><button class="pri" id="acc_pw">Changer le mot de passe</button></div>
+    <h3>Double vérification</h3>
+    <p class="mu" id="acc_mfa">Vérification…</p>
     <h3>Notifications par e-mail</h3>
     <label class="lsr" style="border:0"><input type="checkbox" id="nt_on" disabled> <span><b>Recevoir les e-mails</b> à <b>${esc(me.email)}</b> : demandes de consultation, validations, documents prêts, rappels de restitution${["admin","archiviste"].includes(me.role)?", nouveaux versements et récapitulatif chaque matin":""}.</span></label>
     <div id="nt_st" class="mu" style="min-height:18px"></div>
@@ -3871,11 +3965,17 @@ init();
     if(!d.open)d.showModal();
     const f=()=>{const r=force($("#acc_n1").value,me),b=$("#acc_bar");b.style.width=[8,35,70,100][r[0]]+"%";b.className="s"+r[0];$("#acc_f").textContent=$("#acc_n1").value?"Force : "+r[1]+".":"8 caractères minimum, avec au moins une majuscule, une minuscule et un chiffre."};
     $("#acc_n1").addEventListener("input",f);
+    (async()=>{const e=$("#acc_mfa");if(!e)return;const on=window.SBMFA&&await window.SBMFA.needed();
+      if(on){$("#acc_codew").style.display="";e.innerHTML="<b style=\"color:var(--ok)\">Activée</b> : un code à 6 chiffres de votre application d’authentification est demandé à chaque connexion. Téléphone perdu ? Le propriétaire du projet Supabase peut retirer le code (Authentication → Users → votre compte), puis vous en activerez un nouveau."}
+      else e.textContent=me.role==="admin"?"Non activée : elle vous sera demandée à la prochaine connexion.":"Non activée (obligatoire seulement pour les administrateurs)."})();
     $("#acc_perso").addEventListener("change",e=>{try{e.target.checked?localStorage.setItem("arch_perso","1"):localStorage.setItem("arch_perso","0")}catch(x){}toast(e.target.checked?"Appareil personnel : les sauvegardes locales sont conservées.":"Appareil partagé : tout sera effacé de cet appareil à la déconnexion.")});
     $("#acc_pw").onclick=async()=>{const m=$("#acc_msg"),o=$("#acc_old").value,a=$("#acc_n1").value,b=$("#acc_n2").value,r=force(a,me);m.style.color="var(--er)";
       if(!o)return m.textContent="Saisissez votre mot de passe actuel.";if(r[0]<2)return m.textContent="Nouveau mot de passe refusé : "+r[1]+".";if(a!==b)return m.textContent="Les deux nouveaux mots de passe sont différents.";if(a===o)return m.textContent="Le nouveau mot de passe doit être différent de l’actuel.";
       const bt=$("#acc_pw");bt.disabled=true;m.style.color="var(--mu)";m.textContent="Vérification…";
+      const n=window.SBPWNED?await window.SBPWNED.check(a):-1;if(n>0){bt.disabled=false;m.style.color="var(--er)";return m.textContent=window.SBPWNED.msg(n)}
+      const mf=window.SBMFA&&await window.SBMFA.needed();if(mf&&!$("#acc_code").value.trim()){bt.disabled=false;$("#acc_codew").style.display="";m.style.color="var(--er)";$("#acc_code").focus();return m.textContent="Saisissez aussi le code de votre application d’authentification."}
       const v=await sb.auth.signInWithPassword({email:me.email,password:o});if(v.error){bt.disabled=false;m.style.color="var(--er)";return m.textContent="Mot de passe actuel incorrect."}
+      if(mf){try{await window.SBMFA.verify($("#acc_code").value)}catch(e){bt.disabled=false;m.style.color="var(--er)";return m.textContent=e.message}$("#acc_code").value=""}
       const up=await sb.auth.updateUser({password:a});bt.disabled=false;if(up.error){m.style.color="var(--er)";return m.textContent="Changement refusé : "+(up.error.message||up.error)}
       ["acc_old","acc_n1","acc_n2"].forEach(i=>$("#"+i).value="");f();m.style.color="var(--ok)";m.textContent="Mot de passe changé. Pensez à déconnecter les autres appareils si besoin.";toast("Mot de passe changé.")};
     $("#acc_all").onclick=async()=>{if(!await ask("Se déconnecter de tous les appareils, y compris celui-ci ? Il faudra se reconnecter partout.","Tout déconnecter"))return;try{await sb.auth.signOut({scope:"global"})}catch(e){}try{await window.localWipe()}catch(e){}location.reload()};
@@ -3915,7 +4015,15 @@ init();
   let okT=0,busy=false;
   const SENS={a:{delm:"retirer une personne de l’équipe",deldoc:"supprimer une entrée de l’inventaire",doexec:"enregistrer une destruction",dorest:"restaurer une sauvegarde",bkrs:"restaurer une sauvegarde locale"},g:{purge:"supprimer définitivement un document de la GED","acc-clear":"retirer tous les accès d’un utilisateur à la GED"}};
   const dlg=document.createElement("dialog");dlg.className="ask sudo";document.body.appendChild(dlg);
-  function sudo(what){return new Promise(res=>{
+  async function sudoCode(what){const me=window.SBME&&window.SBME();if(!me)return false;return new Promise(res=>{
+    dlg.innerHTML=`<h2>Confirmez votre identité</h2><p class="mu">Action sensible : <b>${esc(what)}</b>. Saisissez le code de votre application d’authentification. Cette confirmation reste valable 10 minutes.</p><label for="sudo_code">Code à 6 chiffres</label><input id="sudo_code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456" style="font-size:22px;letter-spacing:.3em;text-align:center"><div id="sudo_m" class="mu" style="min-height:20px;margin:6px 0;color:var(--er)"></div><div class="acts"><button class="pri" id="sudo_ok">Confirmer</button><button id="sudo_no">Annuler</button></div>`;
+    const end=v=>{dlg.close();res(v)};dlg.querySelector("#sudo_no").onclick=()=>end(false);dlg.oncancel=e=>{e.preventDefault();end(false)};
+    const go=async()=>{const b=dlg.querySelector("#sudo_ok"),m=dlg.querySelector("#sudo_m");b.disabled=true;m.style.color="var(--mu)";m.textContent="Vérification…";
+      try{await window.SBMFA.verify(dlg.querySelector("#sudo_code").value);okT=Date.now();end(true)}catch(e){b.disabled=false;m.style.color="var(--er)";m.textContent=e.message}};
+    dlg.querySelector("#sudo_ok").onclick=go;dlg.querySelector("#sudo_code").addEventListener("keydown",e=>{if(e.key==="Enter")go()});
+    dlg.showModal();setTimeout(()=>dlg.querySelector("#sudo_code").focus(),40)})}
+  async function sudo(what){if(window.SBMFA&&await window.SBMFA.needed())return sudoCode(what);return sudoPw(what)}
+  function sudoPw(what){return new Promise(res=>{
     const me=window.SBME&&window.SBME(),sb=window.GEDSB&&window.GEDSB();if(!me||!sb)return res(false);
     dlg.innerHTML=`<h2>Confirmez votre identité</h2><p class="mu">Action sensible : <b>${esc(what)}</b>. Saisissez votre mot de passe ou utilisez Face ID / empreinte. Cette confirmation reste valable 10 minutes.</p><label for="sudo_pw">Mot de passe</label><input id="sudo_pw" type="password" autocomplete="current-password"><div id="sudo_m" class="mu" style="min-height:20px;margin:6px 0;color:var(--er)"></div><div class="acts"><button class="pri" id="sudo_ok">Confirmer</button>${window.SBPK&&window.SBPK.ok()?'<button id="sudo_pk">Face ID / empreinte</button>':""}<button id="sudo_no">Annuler</button></div>`;
     const end=v=>{dlg.close();res(v)};
