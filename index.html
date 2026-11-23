@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js https://cdn.jsdelivr.net/gh/cozmo/jsQR@8e6a036beafa7053dd44b1b76ac578d22b1b3311/dist/jsQR.js https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js 'wasm-unsafe-eval' blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-k893zB7JW+FItULDf2eNrj34BLhzByL672r4Greww2g=' 'sha256-EKm2cQYa72r1cJBW00ElaHb8qyB4XDDQEdGFzouUEkw=' 'sha256-7UemRhjWvHxcC0CH1rUQ57E9fWaU2oBiOjdkQ4rNlxo=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-kX6IGPVpjAE3J3OEqgTroL3zXeIxGiUGK6mxSaYNIwE=' 'sha256-RFlyJxpx/e89BltQfmevJet3PnQYCJftAlWc3s2m8Lw=' 'sha256-m1xdG0mNUaBidyTW95VSwh4CRM/kv313oPXAbUBWUKg=' 'sha256-ORG99NNSsnYqTYWmgBgdcxJPQidES32/aZ5TS8VnrKk=' 'sha256-CpX0G827zd85WY9Sz/lW5uUz2LBWxDc81jDXTs65Tk8=' 'sha256-f0KQ4aeYnhZe1HCktV6o+SW0nIuyLurTSkJsdwCg3+k=' 'sha256-WcmhI9eHTNgLk6dO6LFOXTpZre0paNpo/kl1SWMQQ6I='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/ data:; img-src 'self' data: blob:; connect-src 'self' https://api.pwnedpasswords.com https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/ https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/worker.min.js https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/ https://cdn.jsdelivr.net/npm/@tesseract.js-data/fra@1.0.0/ https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob: https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.3/dist/umd/supabase.js https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js https://cdn.jsdelivr.net/gh/cozmo/jsQR@8e6a036beafa7053dd44b1b76ac578d22b1b3311/dist/jsQR.js https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js 'wasm-unsafe-eval' blob: 'sha256-395BwPsj9cRjhEYOVht9ZufGPi721D0KcqIUYF5CAt0=' 'sha256-oF5EO5U+n5XoGQPVto4sgd9ouC6VRXQLcb6u00XocbY=' 'sha256-EKm2cQYa72r1cJBW00ElaHb8qyB4XDDQEdGFzouUEkw=' 'sha256-B9nfm43jTRn6YC/WDxN/mpTEGtfn1mtv+esabPlQM4E=' 'sha256-76zngcAjR6ahK1BmkLKXfqGiWVEDkGdtPoVBwMloNjA=' 'sha256-kX6IGPVpjAE3J3OEqgTroL3zXeIxGiUGK6mxSaYNIwE=' 'sha256-5t9HmfAvoSAbHZ1zLaZzjB3ZCS9LKDF1fjwcLeU+MWg=' 'sha256-m1xdG0mNUaBidyTW95VSwh4CRM/kv313oPXAbUBWUKg=' 'sha256-ORG99NNSsnYqTYWmgBgdcxJPQidES32/aZ5TS8VnrKk=' 'sha256-/WsQqnTGU1LPL8xx/9QPLs1ikXFpOAZPkIOCf09PtsM=' 'sha256-f0KQ4aeYnhZe1HCktV6o+SW0nIuyLurTSkJsdwCg3+k=' 'sha256-WcmhI9eHTNgLk6dO6LFOXTpZre0paNpo/kl1SWMQQ6I='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/ data:; img-src 'self' data: blob:; connect-src 'self' https://api.pwnedpasswords.com https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/ https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/worker.min.js https://cdn.jsdelivr.net/npm/tesseract.js-core@7.0.0/ https://cdn.jsdelivr.net/npm/@tesseract.js-data/fra@1.0.0/ https://yyuvzfibbpexundcxsrb.supabase.co wss://yyuvzfibbpexundcxsrb.supabase.co https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com data: blob:; frame-src blob: https://f92edec61ff92d382d5b06cca034e830.r2.cloudflarestorage.com; worker-src 'self' blob:; object-src blob:; media-src blob:; manifest-src 'self' data:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer"><script>if(window.top!==window.self){document.documentElement.style.visibility="hidden";try{window.top.location.replace(window.self.location.href)}catch(e){}}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <link rel="preconnect" href="https://yyuvzfibbpexundcxsrb.supabase.co" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <title>Archives – inventaire et suivi</title>
+<meta name="description" content="NITA SA – Service Archivage : inventaire, GED, prêts et suivi des archives (accès réservé).">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f3f4f9;--cd:#fff;--tx:#1b1f33;--mu:#5f6580;--bd:#dde0ec;--ac:#25348A;--as:#e9ecf8;--or:#E8561A;--ok:#2f7d4f;--wa:#b45309;--er:#b42318}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]):not([data-theme="doux"]){--bg:#12142a;--cd:#1c2040;--tx:#ececf4;--mu:#a0a6c8;--bd:#32385f;--ac:#8d9cf0;--as:#262c52;--or:#ff7a3d;--ok:#5ac08a;--wa:#e0a458;--er:#f1867b}}
@@ -237,6 +238,12 @@ main{max-width:none;width:100%;margin:0;padding:0}
 .ni{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav{position:fixed;left:10px;right:10px;top:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;margin:0;padding:6px;display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:2px;overflow-x:auto;overscroll-behavior-x:contain;background:var(--glass);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);border:1px solid var(--gbd);border-radius:24px;box-shadow:var(--sh2);scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
+#nplus{display:none}
+@media(max-width:1023px){nav button.nmore{display:none!important}#nplus:not([hidden]){display:flex}nav{overflow-x:visible}nav button{flex:1 1 0!important;min-width:0!important}}
+.nmgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:8px 0 6px}
+.nmi{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:92px;padding:14px 8px;border-radius:18px;background:var(--cd);border:1px solid var(--bd);color:var(--tx);font-weight:600;font-size:14px;text-align:center}
+.nmi .ni{width:26px;height:26px;color:var(--ac)}.nmi.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,var(--cd))}
+.nmi .nbg{position:absolute;top:8px;right:10px}
 nav button{position:relative;flex:1 0 auto;min-width:68px;min-height:56px;padding:7px 8px 6px;margin:0;border:0;background:transparent;box-shadow:none;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;letter-spacing:0;color:var(--mu);white-space:nowrap}
 @media(hover:hover){nav button:not(.on):hover{box-shadow:none;color:var(--tx);background:var(--as)}}
 nav button .ni{width:22px;height:22px}
@@ -440,7 +447,7 @@ body.r-dem .nodem,body.r-lect .nolec,body.r-lect .rq{display:none!important}
 <link rel="manifest" href="manifest.json">
 <meta name="color-scheme" content="light dark"><meta name="theme-color" content="#f2f4fb" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#060a1b" media="(prefers-color-scheme: dark)">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
+<link id="fnt" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" media="print">
 <script>
 /* Thème (automatique / clair / sombre) et icônes du menu */
 /* La balise color-scheme reste « light dark » : elle empêche Chrome et Samsung Internet d'assombrir la page de force, quel que soit le thème choisi */
@@ -465,9 +472,28 @@ light:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M1
 dark:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
 out:'<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M14 17l5-5-5-5M19 12H9"/>',
 auto:'<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/>'};
+NAVI.plus='<circle cx="5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="12" r="2" fill="currentColor"/>';
 const navIco=v=>'<svg class="ni" viewBox="0 0 24 24" aria-hidden="true">'+(NAVI[v]||"")+'</svg>';
 const navEsc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function navH(b,n){const l=b.dataset.l||b.textContent;return navIco(b.dataset.v||b.dataset.i)+'<span class="nl">'+navEsc(l)+'</span><span class="ns">'+navEsc(b.dataset.s||l)+'</span>'+(n?'<em class="nbg">'+n+'</em>':'')}
+/* Téléphone et tablette : 4 onglets principaux + « Plus » (les autres onglets dans un panneau) */
+const NAV_PRI=["dash","inv","ged","pret","vers","isad","rap","cons"];
+function navMore(){const nv=document.querySelector("nav");if(!nv)return;let pb=document.getElementById("nplus");
+  if(!pb){pb=document.createElement("button");pb.type="button";pb.id="nplus";pb.setAttribute("aria-haspopup","dialog");nv.appendChild(pb);pb.addEventListener("click",navMoreOpen)}
+  const all=[...nv.querySelectorAll("button")].filter(b=>b!==pb);all.forEach(b=>b.classList.remove("nmore"));
+  const vis=all.filter(b=>b.style.display!=="none"&&getComputedStyle(b).display!=="none"),keep=[];
+  NAV_PRI.forEach(v=>{const b=vis.find(x=>x.dataset.v===v);if(b&&keep.length<4)keep.push(b)});vis.forEach(b=>{if(keep.length<4&&!keep.includes(b))keep.push(b)});
+  const more=vis.filter(b=>!keep.includes(b));more.forEach(b=>b.classList.add("nmore"));
+  const n=more.reduce((t,b)=>{const e=b.querySelector(".nbg");return t+(e?(+e.textContent||0):0)},0),on=more.some(b=>b.classList.contains("on"));
+  const h=navIco("plus")+'<span class="nl">Plus</span><span class="ns">Plus</span>'+(n?'<em class="nbg">'+n+'</em>':'');
+  if(pb._h!==h){pb.innerHTML=h;pb._h=h}pb.classList.toggle("on",on);pb.hidden=!more.length;pb.setAttribute("aria-label","Plus d’onglets"+(n?" ("+n+" à traiter)":""))}
+function navMoreOpen(){const more=[...document.querySelectorAll("nav button.nmore")];const d=document.getElementById("dlg");
+  d.innerHTML='<h2>Plus</h2><div class="nmgrid">'+more.map((b,i)=>{const e=b.querySelector(".nbg");return '<button type="button" class="nmi'+(b.classList.contains("on")?" on":"")+'" data-nm="'+i+'">'+navIco(b.dataset.v||b.dataset.i)+'<span>'+navEsc(b.dataset.l||b.textContent)+'</span>'+(e?'<em class="nbg">'+e.textContent+'</em>':'')+'</button>'}).join("")+'</div><div class="acts"><button data-a="close">Fermer</button></div>';
+  d.querySelectorAll("[data-nm]").forEach(x=>x.addEventListener("click",()=>{d.close();more[+x.dataset.nm].click()}));if(!d.open)d.showModal()}
+addEventListener("resize",()=>{clearTimeout(window.__nmT);window.__nmT=setTimeout(navMore,150)});
+/* Barres d'outils qui défilent : fondu à droite tant qu'il reste des boutons à voir */
+function toolsFade(){document.querySelectorAll(".row.tools").forEach(t=>t.classList.toggle("ovf",t.scrollWidth-t.clientWidth-t.scrollLeft>4))}
+document.addEventListener("scroll",e=>{const t=e.target;if(t&&t.classList&&t.classList.contains("tools"))toolsFade()},true);
 function navSync(){const nv=document.querySelector("nav"),on=nv&&nv.querySelector("button.on");if(!on||nv._on===on||nv.scrollWidth<=nv.clientWidth+2)return;nv._on=on;nv.scrollTo({left:on.offsetLeft-(nv.clientWidth-on.offsetWidth)/2,behavior:"smooth"})}
 const THN={doux:"Thème doux (confort de lecture)",auto:"Thème automatique (Doux le jour, Sombre en mode sombre)",light:"Thème clair",dark:"Thème sombre"},THS={doux:"Doux",auto:"Auto",light:"Clair",dark:"Sombre"};
 function thmPaint(){const b=document.getElementById("thm");if(!b)return;const m=THM;b.innerHTML=navIco(m)+'<span class="tl">'+THS[m]+'</span>';b.title=THN[m]+" (cliquer pour changer)";b.setAttribute("aria-label",b.title)}
@@ -581,6 +607,8 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
 .clst{display:flex;flex-direction:column;gap:4px;margin:4px 0 2px;max-height:240px;overflow:auto}.clst:empty{display:none}.csug{height:auto;min-height:0;white-space:normal;line-height:1.3;flex:none;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;padding:9px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--cd);color:var(--tx);width:100%}.csug .mu{font-size:12.5px}.csel{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid var(--ac);border-radius:10px;background:var(--as);margin:2px 0}.csel span{display:flex;flex-direction:column}.csel .mu{font-size:12.5px}
 .rcl{display:block;width:100%;text-align:left;background:transparent;border:1px solid var(--bd);border-radius:12px;padding:8px 10px;margin:6px 0;color:inherit;font:inherit;cursor:pointer}.rcl:hover{border-color:var(--ac)}
 .rcsug{margin:4px 0 6px}.rcs{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--bd);border-radius:10px;margin:4px 0}.rcs>div{min-width:0}.rcs button{flex:none;width:auto}.rch{font-size:12px;margin-top:6px;text-transform:uppercase;letter-spacing:.04em}
+.row.tools.ovf{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+.fsec{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:10px 0 0;padding:10px;border:1px dashed var(--bd);border-radius:14px}.fsec[hidden]{display:none}.fsec button{width:100%}
 .devl{display:flex;flex-direction:column;gap:6px;margin:6px 0 10px}.devi{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--bd);border-radius:12px;background:var(--cd)}.devi.moi{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 7%,var(--cd))}.devic{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--as);color:var(--ac)}.devic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.devt{flex:1;min-width:0}.devt .mu{font-size:12.5px;line-height:1.35}.devi button{flex:none;width:auto}
 .rclien{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--ac) 8%,transparent)}.rclien button{width:auto}
 </style></head>
@@ -599,7 +627,8 @@ h2 .hn{display:inline-block;vertical-align:middle;margin-left:6px;font:700 12px/
 <button class="adm" data-a="tab" data-v="ia" data-s="IA" id="nia" style="display:none">Assistant IA</button>
 <button data-a="aide">Aide</button>
 </nav></aside>
-<script>(function(){var ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20"/><path d="M6.7 6.7C4 8.3 2 12 2 12s3.5 7 10 7c2 0 3.8-.5 5.3-1.3"/><path d="M9.9 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.4 3.3"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
+<script>(function(){var l=document.getElementById("fnt");if(!l)return;var on=function(){l.media="all"};if(l.sheet)on();else{l.addEventListener("load",on);l.addEventListener("error",on)}})();
+(function(){var ON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>',OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20"/><path d="M6.7 6.7C4 8.3 2 12 2 12s3.5 7 10 7c2 0 3.8-.5 5.3-1.3"/><path d="M9.9 5.2A10.6 10.6 0 0 1 12 5c6.5 0 10 7 10 7a18 18 0 0 1-2.4 3.3"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
 window.addEye=function(root){(root||document).querySelectorAll('input[type="password"]').forEach(function(inp){if(inp.dataset.eye||(inp.parentNode&&inp.parentNode.classList&&inp.parentNode.classList.contains("pwwrap")))return;inp.dataset.eye="1";
 var w=document.createElement("div");w.className="pwwrap";inp.parentNode.insertBefore(w,inp);w.appendChild(inp);var b=document.createElement("button");b.type="button";b.className="pweye";b.tabIndex=-1;b.setAttribute("aria-label","Afficher le mot de passe");b.innerHTML=ON;w.appendChild(b);
 b.addEventListener("click",function(){var sh=inp.getAttribute("type")==="password";inp.setAttribute("type",sh?"text":"password");b.innerHTML=sh?OFF:ON;b.setAttribute("aria-label",sh?"Masquer le mot de passe":"Afficher le mot de passe");try{inp.focus()}catch(e){}})})}})();
@@ -1157,7 +1186,7 @@ const nextNum=(p,a)=>{const y=new Date().getFullYear(),re=new RegExp("^"+p+"-"+y
 async function freeNum(c,p,a){let n=nextNum(p,a);for(let i=0;i<50;i++){const s=await db.doc(c+"/"+hid(n)).get();if(!s||!s.exists)return n;n=n.replace(/\d+$/,k=>String(+k+1).padStart(3,"0"))}return n}
 const fmt=d=>d?esc(String(d).split("-").reverse().join("/")):"–";
 const TYPES=["Chrono","Carton","Chemise","Volume relié"],MODES=["Consultation sur place","Prêt interne","Remise au service"];
-const APP_VER="20 nov. 2026 – Appareils, alertes de connexion, recherche rapide enrichie 4.59";
+const APP_VER="22 nov. 2026 – Chargement allégé, navigation mobile, fiche simplifiée 4.60";
 document.addEventListener("wheel",e=>{const n=e.target.closest&&e.target.closest(".secnav,.gtabs");if(!n||n.scrollWidth<=n.clientWidth+1||Math.abs(e.deltaX)>Math.abs(e.deltaY))return;n.scrollLeft+=e.deltaY;e.preventDefault()},{passive:false});
 let db=null,docs=[],prets=[],membres=[],destr=[],demandes=[],lots=[],versements=[],controles=[],user=null,P={id:null,name:"",email:"",owner:false,admin:false,write:true},tab="dash",f={q:"",dir:"",an:"",typ:"",s:"",st:""};
 const LIM0=40,LIMP=80;let lim=LIM0,ready=false;
@@ -1382,7 +1411,7 @@ function render0(){
   $("#app").innerHTML=(PH[tab]?phd(tab):"")+(tab==="dash"?dash():tab==="inv"?inv():tab==="pret"?pret():tab==="cons"?cons():tab==="vers"?vers():tab==="rap"?rapports():tab==="isad"?isadView():tab==="ia"?iaView():tab==="fic"?ficView():tab==="ged"?gedView():team());
   {const fb=$("#fab");if(fb)fb.style.visibility=tab==="dash"||tab==="inv"?"":"hidden"}
   const badge=v=>{let n=0;if(v==="ged")n+=window.GNEW||0;if(v==="pret"){if(P.arch)n+=prets.filter(p=>p.statut==="en_cours"&&late(p)).length+demandes.filter(x=>x.statut==="validee").length;if(P.val)n+=demandes.filter(demCanVal).length}else if(P.arch&&v==="cons")n=nEchu();else if(P.arch&&v==="vers")n=versements.filter(x=>x.statut==="a_controler").length;return n};
-  let nTot=0;document.querySelectorAll("nav button[data-v]").forEach(b=>{b.classList.toggle("on",b.dataset.v===tab);if(!b.dataset.l)b.dataset.l=b.textContent;const n=badge(b.dataset.v);nTot+=n;const h=navH(b,n);if(b._h!==h){b.innerHTML=h;b._h=h}});navSync();
+  let nTot=0;document.querySelectorAll("nav button[data-v]").forEach(b=>{b.classList.toggle("on",b.dataset.v===tab);if(!b.dataset.l)b.dataset.l=b.textContent;const n=badge(b.dataset.v);nTot+=n;const h=navH(b,n);if(b._h!==h){b.innerHTML=h;b._h=h}});navMore();navSync();requestAnimationFrame(toolsFade);
   /* pastille sur l’icône de l’application installée (iPhone, Android, ordinateur) */
   if(nTot!==window.__nTot){window.__nTot=nTot;try{if(navigator.setAppBadge)nTot?navigator.setAppBadge(nTot):navigator.clearAppBadge()}catch(e){}}
   if(P.admin&&(!SVG||Date.now()-SVG.t>6e5))svgLoad().then(()=>{if(tab==="dash")render()});
@@ -2412,8 +2441,10 @@ function openFiche(id){
   ${(d.moves&&d.moves.length)?`<h4>Historique des emplacements (${d.moves.length})</h4>`+[...d.moves].reverse().slice(0,10).map(m=>`<div class="mu">${fmt((m.t||"").slice(0,10))} · ${esc(m.de||"—")} → ${esc(m.vers)}${m.nom?" · "+esc(m.nom):""}</div>`).join(""):""}
   ${(()=>{const h=prets.filter(p=>p.docId===d.id).sort((a,b)=>cmp(b.sortie||"",a.sortie||""));return h.length?`<h4>Historique des sorties (${h.length})</h4>`+h.slice(0,10).map(p=>`<div class="mu">${fmt(p.sortie)} → ${p.statut==="annule"?"annulée":p.retour?fmt(p.retour):"en cours"} · ${esc(p.demandeur)} (${esc(p.service)}) · ${esc(p.mode)}</div>`).join(""):""})()}
   ${P.admin&&window.GEDSB?`<details class="vh" data-id="${esc(d.id)}"><summary>Historique des modifications</summary><div class="vhl mu">Chargement…</div></details>`:""}
-  <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${esc(d.id)}">Marquer retrouvé / en bon état</button>`:""}<button class="w" data-a="mloc" data-v="${esc(d.id)}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${esc(d.id)}">Dupliquer</button><button class="w" data-a="copie" data-v="${esc(d.id)}">Délivrer une reproduction</button><button data-a="fprint" data-v="${esc(d.id)}">Imprimer la fiche</button>${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${esc(d.id)}">Prêter / consulter</button>`:""}${d.statut==="en_pret"?(pr=>pr?`<button class="pri w" data-fb="${esc(pr.id)}">Enregistrer le retour</button>`:"")(prets.find(x=>x.docId===d.id&&x.statut==="en_cours")):""}<button class="w" data-a="fedit" data-v="${esc(d.id)}">Modifier</button>${!P.arch&&d.statut==="disponible"?`<button class="pri rq" data-a="fdem" data-v="${esc(d.id)}">Demander ce document</button>`:""}<button data-a="lab1" data-v="${esc(d.id)}">Étiquette</button><button data-a="close">Fermer</button></div>`;
+  <div class="fsec" id="fsec" hidden><button class="w" data-a="mloc" data-v="${esc(d.id)}">Changer l’emplacement</button><button class="w" data-a="dup" data-v="${esc(d.id)}">Dupliquer</button><button class="w" data-a="copie" data-v="${esc(d.id)}">Délivrer une reproduction</button><button data-a="fprint" data-v="${esc(d.id)}">Imprimer la fiche</button><button data-a="lab1" data-v="${esc(d.id)}">Étiquette</button></div>
+  <div class="acts">${d.ctl?`<button class="w" data-a="found" data-v="${esc(d.id)}">Marquer retrouvé / en bon état</button>`:""}${d.statut==="disponible"?`<button class="pri w" data-a="flend" data-v="${esc(d.id)}">Prêter / consulter</button>`:""}${d.statut==="en_pret"?(pr=>pr?`<button class="pri w" data-fb="${esc(pr.id)}">Enregistrer le retour</button>`:"")(prets.find(x=>x.docId===d.id&&x.statut==="en_cours")):""}${!P.arch&&d.statut==="disponible"?`<button class="pri rq" data-a="fdem" data-v="${esc(d.id)}">Demander ce document</button>`:""}<button class="w" data-a="fedit" data-v="${esc(d.id)}">Modifier</button><button type="button" class="fsecb" data-fsec aria-expanded="false" aria-controls="fsec">Autres actions</button><button data-a="close">Fermer</button></div>`;
   if(!$("#dlg").open)$("#dlg").showModal();
+  {const ae=document.activeElement;if(ae&&ae.tagName==="SUMMARY")ae.blur()}
 }
 function topStats(){
   const y=new Date().getFullYear(),c={},s={};
@@ -5022,6 +5053,7 @@ document.addEventListener("click",e=>{const t=e.target.closest&&e.target;if(!t)r
 document.addEventListener("change",e=>{const t=e.target;if(!t)return;if(t.id==="f_ccan"||t.id==="f_csens")csCheck();if(t.id==="f_ccam"||t.id==="f_cfile"){csAjout(t.files,t.id==="f_ccam");t.value=""}});
 document.addEventListener("click",e=>{const t=e.target.closest&&e.target;if(!t)return;const r=t.closest("[data-csr]");if(r){const p=CSC.pages[+r.dataset.csr];if(p){p.rot=(p.rot+90)%360;csPaint()}return}const x=t.closest("[data-csd]");if(x){CSC.pages.splice(+x.dataset.csd,1);csPaint();return}if(t.closest("[data-csx]")){CSC.file=null;csPaint()}});
 document.addEventListener("input",e=>{if(e.target.id==="f_direction")srvList(e.target.value);if(e.target.id==="fq"){fq=e.target.value;$("#flist").innerHTML=ficList();return}if(/^f_(cs|cy|cx|ce2|cl)$/.test(e.target.id))return compPrev();if(e.target.id==="f_cq")return fillCopieDocs(e.target.value);if(e.target.id==="f_cdem"){delete e.target.dataset.uid;delete e.target.dataset.mail;CSC.u=null;csCheck();return cDemList(e.target.value)}if(e.target.id==="f_cmot"){CSC.mot=e.target.value;return}if(e.target.id==="f_dq")return fillDocs();if(e.target.id==="ps")return searchPeople(e.target.value);if(e.target.id==="pq"){pq=e.target.value;PRL=40;PRO=60;$("#plst").innerHTML=pbody();fillNames();return}if(e.target.id==="q"){f.q=e.target.value;lim=LIM0;clearTimeout(qT);qT=setTimeout(()=>{const l=$("#lst");if(l)l.innerHTML=listHTML()},docs.length>20000?220:70)}});
+document.addEventListener("click",e=>{const t=e.target.closest&&e.target.closest("[data-fsec]");if(!t)return;const x=document.getElementById("fsec");if(!x)return;x.hidden=!x.hidden;t.setAttribute("aria-expanded",String(!x.hidden));t.textContent=x.hidden?"Autres actions":"Moins d’actions";if(!x.hidden)try{x.scrollIntoView({block:"nearest",behavior:"smooth"})}catch(err){}});
 document.addEventListener("change",e=>{if(e.target.id==="f_ddir"){dsSrv();return fillDocs()}if(e.target.id==="f_dsrv"||e.target.id==="f_dan")return fillDocs();if(e.target.dataset&&e.target.dataset.dd){const id=e.target.dataset.dd,d=docs.find(z=>z.id===id);if(e.target.checked&&d)DS.set(id,d.intitule+" ("+d.annee+")");else DS.delete(id);return dsSel()}if(e.target.id==="xf")return readXls(e.target.files[0]);if(e.target.id==="rf")return readRest(e.target.files[0]);if(rptChange(e))return;const m={fs:"s",fd:"dir",fv:"srv",fa:"an",ft:"typ",fe:"st"}[e.target.id];if(m){f[m]=e.target.value;lim=LIM0;if(m==="dir"){f.srv="";render()}else $("#lst").innerHTML=listHTML()}});
 init();
 </script>
@@ -5272,11 +5304,19 @@ init();
      à l'ouverture, à la connexion et au retour sur l'application, sans jamais interrompre une saisie en cours. */
   let majEnCours=false;
   const tranquille=()=>!document.querySelector("dialog[open]")&&!(document.activeElement&&/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)&&document.activeElement.value)&&!window.__envoi&&!(typeof IX!=="undefined"&&IX.run);
+  /* Vérification légère : une requête HEAD (moins de 1 Ko) compare la signature de la page publiée (ETag / date / taille)
+     avec celle de la version en cours ; la page complète (≈ 240 Ko) n'est téléchargée que si elle a changé. */
   window.verMaj=async function(quand,force){
-    if(majEnCours||!window.PLATFORM_SB||!navigator.onLine)return false;majEnCours=true;
-    try{const r=await fetch("./?version="+Date.now(),{cache:"no-store",credentials:"same-origin"});if(!r.ok)return false;
+    if(majEnCours||!window.PLATFORM_SB||!navigator.onLine)return false;
+    majEnCours=true;
+    try{let sig="";
+      if(!force){try{const h=await fetch("./?v="+Date.now(),{method:"HEAD",cache:"no-store",credentials:"same-origin"});
+          if(h.ok)sig=[h.headers.get("etag"),h.headers.get("last-modified"),h.headers.get("content-length")].filter(Boolean).join("|")}catch(e){}
+        let mem=null;try{mem=JSON.parse(localStorage.getItem("maj_sig")||"null")}catch(e){}
+        if(sig&&mem&&mem.v===APP_VER&&mem.s===sig)return false;}
+      const r=await fetch("./?version="+Date.now(),{cache:"no-store",credentials:"same-origin"});if(!r.ok)return false;
       const html=await r.text(),m=html.match(/const APP_VER="([^"]+)"/);if(!m||!/Content-Security-Policy/.test(html))return false;
-      if(m[1]===APP_VER&&!force)return false;
+      if(m[1]===APP_VER&&!force){if(sig)try{localStorage.setItem("maj_sig",JSON.stringify({v:APP_VER,s:sig}))}catch(e){}return false}
       const garder=async()=>{try{if(window.caches){for(const k of await caches.keys())if(k.startsWith("archives-")){const c=await caches.open(k);await c.put(new Request("./"),new Response(html,{headers:{"content-type":"text/html; charset=utf-8"}}))}}}catch(e){}};
       // écran de connexion ou de code affiché : jamais de rechargement pendant la saisie ; la mise à jour attend l'entrée dans l'application
       const ecr=document.getElementById("sbauth"),saisie=()=>!!(ecr&&window.__tape);
@@ -5287,6 +5327,7 @@ init();
       await garder();
       if(!force&&ecr&&saisie()){window.__majAttente=1;return false}   // l'utilisateur a commencé à taper pendant la vérification
       try{if(sessionStorage.getItem("maj_essai")===m[1]){updBar();return false}sessionStorage.setItem("maj_essai",m[1]);sessionStorage.setItem("maj_faite",m[1])}catch(e){}   // jamais deux rechargements pour la même version
+      if(sig)try{localStorage.setItem("maj_sig",JSON.stringify({v:m[1],s:sig}))}catch(e){}   // la signature relevée est celle de la nouvelle version : pas de second téléchargement après le rechargement
       location.reload();return true;
     }catch(e){return false}finally{majEnCours=false}};
   window.addEventListener("nita-pret",()=>{if(window.__majAttente){window.__majAttente=0;setTimeout(()=>{if(tranquille())window.verMaj("connexion");else updBar()},600)}});
