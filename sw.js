@@ -1,5 +1,5 @@
-/* Archives NITA – service worker (v4.3) */
-const V = "archives-v4.3";
+/* Archives NITA – service worker (v4.4 : notifications sur le téléphone) */
+const V = "archives-v4.4";
 const SHELL = ["./", "manifest.json", "icone-192.png", "icone-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil((async () => { for (const k of await caches.keys()) if (k !== V && k.startsWith("archives-")) await caches.delete(k); if (self.registration.navigationPreload) try { await self.registration.navigationPreload.enable(); } catch (x) {} await self.clients.claim(); })()); });
@@ -33,3 +33,21 @@ self.addEventListener("fetch", e => {
   if (u.origin === location.origin && /\.(png|json)$/.test(u.pathname)) return e.respondWith(staleWhileRevalidate(req));
 });
 self.addEventListener("message", e => { if (e.data === "purge") e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k.startsWith("archives-")).map(k => caches.delete(k))))); });
+
+/* Notifications (Web Push) : affichage du message reçu, puis ouverture de l'application au bon endroit */
+self.addEventListener("push", e => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch (x) { d = { t: "Archives NITA", b: e.data ? e.data.text() : "" }; }
+  const titre = String(d.t || "Archives NITA").slice(0, 120);
+  e.waitUntil(self.registration.showNotification(titre, { body: String(d.b || "").slice(0, 300), icon: "icone-192.png", badge: "icone-192.png", lang: "fr", tag: "nita-" + Date.now(), data: { u: d.u || "./" } }));
+});
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  let u; try { u = new URL((e.notification.data && e.notification.data.u) || "./", self.registration.scope); } catch (x) { u = new URL("./", self.registration.scope); }
+  if (u.origin !== self.location.origin) u = new URL("./", self.registration.scope);
+  const v = u.searchParams.get("ouvrir") || "";
+  e.waitUntil((async () => {
+    const L = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    for (const c of L) if (c.url.startsWith(self.registration.scope) && "focus" in c) { await c.focus(); c.postMessage({ t: "ouvrir", v }); return; }
+    if (self.clients.openWindow) await self.clients.openWindow(u.href);
+  })());
+});
