@@ -1,8 +1,12 @@
-/* Archives NITA – service worker (v4.4 : notifications sur le téléphone) */
-const V = "archives-v4.4";
+/* Archives NITA – service worker (v4.5 : notifications ; mise à jour forcée des pages anciennes) */
+const V = "archives-v4.5";
 const SHELL = ["./", "manifest.json", "icone-192.png", "icone-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(V).then(c => c.addAll(SHELL)).catch(() => {})); self.skipWaiting(); });
-self.addEventListener("activate", e => { e.waitUntil((async () => { for (const k of await caches.keys()) if (k !== V && k.startsWith("archives-")) await caches.delete(k); if (self.registration.navigationPreload) try { await self.registration.navigationPreload.enable(); } catch (x) {} await self.clients.claim(); })()); });
+self.addEventListener("activate", e => { e.waitUntil((async () => { for (const k of await caches.keys()) if (k !== V && k.startsWith("archives-")) await caches.delete(k); if (self.registration.navigationPreload) try { await self.registration.navigationPreload.enable(); } catch (x) {} await self.clients.claim();
+  /* nouvelle version installée : les pages en arrière-plan sont rechargées tout de suite ; les pages affichées sont prévenues
+     et se mettent à jour dès que l'utilisateur n'est pas en train de saisir (versions anciennes : rechargement à la prochaine ouverture, le cache ayant été vidé) */
+  for (const c of await self.clients.matchAll({ type: "window" })) { try { if (c.visibilityState === "hidden" && c.navigate) await c.navigate(c.url); else c.postMessage({ t: "maj" }); } catch (x) {} }
+})()); });
 const okToStore = r => r && r.ok && (r.type === "basic" || r.type === "cors");
 const HORS_LIGNE = () => new Response("<h1>Hors connexion</h1><p>Reconnectez-vous puis actualisez.</p>", { headers: { "content-type": "text/html; charset=utf-8" } });
 async function pageFast(e) {
