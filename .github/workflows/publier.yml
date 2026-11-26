@@ -1,0 +1,56 @@
+# Archives NITA – contrôler puis publier l'application.
+# À chaque dépôt sur la branche principale (main ou master), GitHub lance les contrôles (tests/controles.js).
+# Tout est vert -> l'application est publiée. Un seul échec -> rien n'est publié, la version en ligne reste.
+name: Contrôler et publier
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  controler:
+    name: Contrôles avant publication
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Installer les outils de contrôle
+        working-directory: tests
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Lancer les contrôles
+        working-directory: tests
+        run: node controles.js
+      - name: Préparer les fichiers à publier (sans les tests)
+        run: |
+          mkdir -p _site
+          rsync -a --exclude '.git' --exclude '.github' --exclude 'tests' --exclude '_site' ./ _site/
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  publier:
+    name: Publication
+    needs: controler
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4
