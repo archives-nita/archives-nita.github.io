@@ -1,0 +1,10 @@
+{
+  "name": "archives-nita-controles",
+  "private": true,
+  "description": "Contrôles automatiques lancés par GitHub avant chaque publication de l'application Archives NITA",
+  "scripts": { "test": "node controles.js" },
+  "devDependencies": {
+    "playwright": "1.63.0",
+    "@supabase/supabase-js": "2.117.3"
+  }
+}
